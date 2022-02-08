@@ -12,3 +12,5 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.2
 URL: https://github.com/Moohan/octopusR
 BugReports: https://github.com/Moohan/octopusR/issues
+Suggests: 
+    covr
