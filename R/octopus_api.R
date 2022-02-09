@@ -7,8 +7,8 @@
 #' @import httr
 #'
 #' @examples
-octopus_api <- function(path) {
-  url <- modify_url("https://api.octopus.energy/", path = path)
+octopus_api <- function(path, query = NULL, api_key = NULL) {
+  url <- modify_url("https://api.octopus.energy/", path = path, query = query, username = api_key)
 
   resp <- GET(url, user_agent("https://github.com/Moohan/octopusR"))
   if (http_type(resp) != "application/json") {
