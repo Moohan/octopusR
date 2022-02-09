@@ -6,11 +6,17 @@ Authors@R:
            comment = c(ORCID = "0000-0002-5380-2029"))
 Description: Friendly helpers for interacting with the Octopus Energy API.
 License: MIT + file LICENSE
+URL: https://github.com/Moohan/octopusR
+BugReports: https://github.com/Moohan/octopusR/issues
+Imports: 
+    httr,
+    magrittr,
+    tibble
+Suggests: 
+    covr,
+    testthat
+Config/testthat/edition: 3
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.2
-URL: https://github.com/Moohan/octopusR
-BugReports: https://github.com/Moohan/octopusR/issues
-Suggests: 
-    covr
