@@ -2,7 +2,7 @@ Package: octopusR
 Title: Package for interacting with the Octopus Energy API
 Version: 0.0.0.9000
 Authors@R: 
-    person("James", "McMahon", , "james.mcmahon.0@gmail.com", role = c("aut", "cre"),
+    person("James", "McMahon", , "jamesmcmahon0@gmail.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-5380-2029"))
 Description: Friendly helpers for interacting with the Octopus Energy API
 License: MIT + file LICENSE
