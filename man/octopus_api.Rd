@@ -4,7 +4,7 @@
 \alias{octopus_api}
 \title{Main Octopus API}
 \usage{
-octopus_api(path)
+octopus_api(path, query = NULL, api_key = NULL)
 }
 \arguments{
 \item{path}{the API endpoint}

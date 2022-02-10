@@ -3,10 +3,7 @@
 #' @param path the API endpoint
 #'
 #' @return an Octopus API object
-#' @export
 #' @import httr
-#'
-#' @examples
 octopus_api <- function(path, query = NULL, api_key = NULL) {
   url <- modify_url("https://api.octopus.energy/", path = path, query = query, username = api_key)
 
