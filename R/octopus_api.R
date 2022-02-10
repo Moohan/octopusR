@@ -1,8 +1,10 @@
 #' Main Octopus API
 #'
 #' @param path the API endpoint
+#' @param query optional list passed to [httr::modify_url()]
+#' @param api_key The API key to use for authentication (not required on all endpoints)
 #'
-#' @return an Octopus API object
+#' @return An Octopus API object
 #' @import httr
 octopus_api <- function(path, query = NULL, api_key = NULL) {
   url <- modify_url("https://api.octopus.energy/", path = path, query = query, username = api_key)
