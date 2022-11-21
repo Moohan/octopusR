@@ -4,13 +4,14 @@ Version: 0.0.0.9000
 Authors@R: 
     person("James", "McMahon", , "james.mcmahon.0@gmail.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-5380-2029"))
-Description: Friendly helpers for interacting with the Octopus Energy API
+Description: Wrapper for the Octopus Energy API
 License: MIT + file LICENSE
-Encoding: UTF-8
-LazyData: true
-Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.2
-URL: https://github.com/Moohan/octopusR
+URL: https://github.com/Moohan/octopusR,
+    https://moohan.github.io/octopusR/
 BugReports: https://github.com/Moohan/octopusR/issues
 Suggests: 
     covr
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.2
