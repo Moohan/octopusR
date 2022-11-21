@@ -10,7 +10,8 @@ octopus_api <- function(path, query = NULL, api_key = NULL) {
   url <- modify_url("https://api.octopus.energy/", path = path, query = query, username = api_key)
 
   resp <- RETRY("GET", url, user_agent("https://github.com/Moohan/octopusR"),
-                terminate_on = c(401))
+    terminate_on = c(401)
+  )
   if (http_type(resp) != "application/json") {
     stop("API did not return json", call. = FALSE)
   }
