@@ -2,34 +2,53 @@
 #'
 #' @param path the API endpoint
 #' @param query optional list passed to [httr::modify_url()]
-#' @param api_key The API key to use for authentication (not required on all endpoints)
+#' @param api_key The API key to use for authentication
+#' (not required on all endpoints)
 #'
 #' @return An Octopus API object
-#' @import httr
 octopus_api <- function(path, query = NULL, api_key = NULL) {
-  url <- modify_url("https://api.octopus.energy/", path = path, query = query, username = api_key)
+  url <- httr::modify_url(
+    url = "https://api.octopus.energy/",
+    path = path,
+    query = query,
+    username = api_key
+  )
 
+<<<<<<< HEAD
   resp <- RETRY("GET", url, user_agent("https://github.com/Moohan/octopusR"),
     terminate_on = c(401)
   )
   if (http_type(resp) != "application/json") {
     stop("API did not return json", call. = FALSE)
+=======
+  resp <- httr::RETRY(
+    verb = "GET",
+    url = url,
+    httr::user_agent(agent = "https://github.com/Moohan/octopusR"),
+    terminate_on = c(400L, 401L, 403L)
+  )
+
+  if (httr::http_type(resp) != "application/json") {
+    cli::cli_abort("API did not return json", call = NULL)
+>>>>>>> f3731f3 (Don't import `httr`)
   }
 
-  parsed <- content(resp, "parsed", simplifyDataFrame = TRUE)
+  parsed <- httr::content(
+    x = resp,
+    as = "parsed",
+    simplifyDataFrame = TRUE
+  )
 
-  if (status_code(resp) != 200) {
-    stop(
-      sprintf(
-        "Octopus API request failed [%s]\n%s",
-        status_code(resp),
-        parsed$detail
-      ),
-      call. = FALSE
-    )
+  if (httr::status_code(resp) != 200L) {
+    cli::cli_abort(c(
+      "x" = "Octopus API request failed",
+      "*" = "Status code: {status_code(resp)}",
+      parsed[["detail"]],
+      unname(purrr::map_chr(parsed, ~ .x[[1L]]))
+    ))
   }
 
-  parsed$results <- tibble::as_tibble(parsed$results)
+  parsed[["results"]] <- tibble::as_tibble(parsed[["results"]])
 
   structure(
     list(

@@ -2,6 +2,5 @@
 
 export("%>%")
 export(get_consumption)
-import(httr)
 importFrom(magrittr,"%>%")
 importFrom(tibble,tibble)
