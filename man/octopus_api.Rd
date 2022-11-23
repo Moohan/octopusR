@@ -11,7 +11,8 @@ octopus_api(path, query = NULL, api_key = NULL)
 
 \item{query}{optional list passed to \code{\link[httr:modify_url]{httr::modify_url()}}}
 
-\item{api_key}{The API key to use for authentication (not required on all endpoints)}
+\item{api_key}{The API key to use for authentication
+(not required on all endpoints)}
 }
 \value{
 An Octopus API object
