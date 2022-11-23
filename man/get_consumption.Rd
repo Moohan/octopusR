@@ -18,9 +18,6 @@ get_consumption(
 \arguments{
 \item{group_by}{}
 }
-\value{
-
-}
 \description{
 Get consumption data
 }
