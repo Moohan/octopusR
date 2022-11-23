@@ -14,13 +14,6 @@ octopus_api <- function(path, query = NULL, api_key = NULL) {
     username = api_key
   )
 
-<<<<<<< HEAD
-  resp <- RETRY("GET", url, user_agent("https://github.com/Moohan/octopusR"),
-    terminate_on = c(401)
-  )
-  if (http_type(resp) != "application/json") {
-    stop("API did not return json", call. = FALSE)
-=======
   resp <- httr::RETRY(
     verb = "GET",
     url = url,
@@ -30,7 +23,6 @@ octopus_api <- function(path, query = NULL, api_key = NULL) {
 
   if (httr::http_type(resp) != "application/json") {
     cli::cli_abort("API did not return json", call = NULL)
->>>>>>> f3731f3 (Don't import `httr`)
   }
 
   parsed <- httr::content(
