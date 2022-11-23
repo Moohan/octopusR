@@ -1,8 +1,12 @@
 test_that("Octopus API fails when not authenticated", {
-  expect_error(octopus_api(path = "v1/accounts/"),
-               "Authentication credentials were not provided")
-  expect_error(octopus_api(path = "v1/accounts/", api_key = "incorrect_api_key"),
-               "Invalid API key.")
+  expect_error(
+    octopus_api(path = "v1/accounts/"),
+    "Authentication credentials were not provided"
+  )
+  expect_error(
+    octopus_api(path = "v1/accounts/", api_key = "incorrect_api_key"),
+    "Invalid API key."
+  )
 })
 
 test_that("Octopus API returns correctly", {
@@ -10,19 +14,20 @@ test_that("Octopus API returns correctly", {
   result <- octopus_api(path)
 
   expect_s3_class(result, "octopus_api")
-  expect_type(result$content, "list")
-  expect_s3_class(result$content$results, "tbl_df")
-  expect_type(result$content$count, "integer")
-  expect_null(result$content$`next`)
-  expect_null(result$content$previous)
+  expect_type(result[["content"]], "list")
+  expect_s3_class(result[["content"]][["results"]], "tbl_df")
+  expect_type(result[["content"]][["count"]], "integer")
+  expect_null(result[["content"]][["next"]])
+  expect_null(result[["content"]][["previous"]])
 
-  expect_type(result$path, "character")
-  expect_type(result$response, "list")
+  expect_type(result[["path"]], "character")
+  expect_type(result[["response"]], "list")
 
-  expect_equal(httr::status_code(result$response), 200)
-  expect_equal(result$path, path)
+  expect_identical(httr::status_code(result[["response"]]), 200L)
+  expect_identical(result[["path"]], path)
 
-  expect_named(result$content$results,
+  expect_named(
+    result[["content"]][["results"]],
     c(
       "code",
       "direction",
