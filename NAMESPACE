@@ -2,5 +2,6 @@
 
 export("%>%")
 export(get_consumption)
+export(set_api_key)
 importFrom(magrittr,"%>%")
 importFrom(tibble,tibble)

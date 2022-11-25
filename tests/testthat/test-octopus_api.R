@@ -1,33 +1,34 @@
 test_that("Octopus API fails when not authenticated", {
   expect_error(
     octopus_api(path = "v1/accounts/"),
-    "Authentication credentials were not provided"
+    "You do not have permission to perform this action\\.$"
   )
   expect_error(
     octopus_api(path = "v1/accounts/", api_key = "incorrect_api_key"),
-    "Invalid API key."
+    "Invalid API key\\.$"
   )
 })
 
 test_that("Octopus API returns correctly", {
   path <- "v1/products/"
-  result <- octopus_api(path)
+  resp <- octopus_api(path)
+  data <- resp[["content"]][["results"]]
 
-  expect_s3_class(result, "octopus_api")
-  expect_type(result[["content"]], "list")
-  expect_s3_class(result[["content"]][["results"]], "tbl_df")
-  expect_type(result[["content"]][["count"]], "integer")
-  expect_null(result[["content"]][["next"]])
-  expect_null(result[["content"]][["previous"]])
+  expect_s3_class(resp, "octopus_api")
+  expect_type(resp[["content"]], "list")
+  expect_s3_class(data, "tbl_df")
+  expect_type(resp[["content"]][["count"]], "integer")
+  expect_null(resp[["content"]][["next"]])
+  expect_null(resp[["content"]][["previous"]])
 
-  expect_type(result[["path"]], "character")
-  expect_type(result[["response"]], "list")
+  expect_type(resp[["path"]], "character")
+  expect_type(resp[["response"]], "list")
 
-  expect_identical(httr::status_code(result[["response"]]), 200L)
-  expect_identical(result[["path"]], path)
+  expect_identical(resp[["response"]][["status_code"]], 200L)
+  expect_identical(resp[["path"]], path)
 
   expect_named(
-    result[["content"]][["results"]],
+    data,
     c(
       "code",
       "direction",

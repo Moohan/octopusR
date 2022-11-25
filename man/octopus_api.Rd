@@ -4,12 +4,12 @@
 \alias{octopus_api}
 \title{Main Octopus API}
 \usage{
-octopus_api(path, query = NULL, api_key = NULL)
+octopus_api(path, query = NULL, api_key = get_api_key())
 }
 \arguments{
 \item{path}{the API endpoint}
 
-\item{query}{optional list passed to \code{\link[httr:modify_url]{httr::modify_url()}}}
+\item{query}{optional list of}
 
 \item{api_key}{The API key to use for authentication
 (not required on all endpoints)}

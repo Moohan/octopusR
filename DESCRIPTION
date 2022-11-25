@@ -10,12 +10,10 @@ URL: https://github.com/Moohan/octopusR,
     https://moohan.github.io/octopusR/
 BugReports: https://github.com/Moohan/octopusR/issues
 Imports: 
+    askpass,
     cli,
-    glue,
-    httr,
+    httr2,
     magrittr,
-    purrr,
-    rlang,
     tibble
 Suggests: 
     covr,
