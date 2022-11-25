@@ -22,7 +22,7 @@ get_consumption <-
     if (missing(group_by)) group_by <- NULL
     if (missing(order_by)) order_by <- NULL
 
-    octopus_api(
+    resp <- octopus_api(
       path = paste("/v1/electricity-meter-points",
         mpan,
         "meters",
@@ -39,4 +39,6 @@ get_consumption <-
         group_by = group_by
       )
     )
+
+    return(resp[["content"]][["results"]])
   }
