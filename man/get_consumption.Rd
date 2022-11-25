@@ -10,8 +10,8 @@ get_consumption(
   serial_number,
   period_from = NULL,
   period_to = NULL,
-  page_size = 100,
-  order_by = "-period",
+  page_size = 100L,
+  order_by = c("-period", "period"),
   group_by = c("hour", "day", "week", "month", "quarter")
 )
 }

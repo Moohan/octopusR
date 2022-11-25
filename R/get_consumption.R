@@ -11,9 +11,33 @@
 #'
 #' @return
 #' @export
-get_consumption <- function(api_key, mpan, serial_number, period_from = NULL, period_to = NULL, page_size = 100, order_by = "-period", group_by = c("hour", "day", "week", "month", "quarter")) {
-  octopus_api(
-    path = glue::glue("/v1/electricity-meter-points/{mpan}/meters/{serial_number}/consumption/"),
-    api_key = api_key
-  )
-}
+get_consumption <-
+  function(api_key,
+           mpan,
+           serial_number,
+           period_from = NULL,
+           period_to = NULL,
+           page_size = 100L,
+           order_by = c("-period", "period"),
+           group_by = c("hour", "day", "week", "month", "quarter")) {
+    if (missing(group_by)) group_by <- NULL
+    if (missing(order_by)) order_by <- NULL
+
+    octopus_api(
+      path = paste("/v1/electricity-meter-points",
+        mpan,
+        "meters",
+        serial_number,
+        "consumption/",
+        sep = "/"
+      ),
+      api_key = api_key,
+      query = list(
+        period_from = period_from,
+        period_to = period_to,
+        page_size = page_size,
+        order_by = order_by,
+        group_by = group_by
+      )
+    )
+  }
