@@ -5,9 +5,9 @@
 \title{Get consumption data}
 \usage{
 get_consumption(
-  api_key,
   mpan,
   serial_number,
+  api_key = get_api_key(),
   period_from = NULL,
   period_to = NULL,
   page_size = 100L,
@@ -16,6 +16,9 @@ get_consumption(
 )
 }
 \arguments{
+\item{api_key}{The API key to use for authentication
+(not required on all endpoints)}
+
 \item{group_by}{}
 }
 \description{
