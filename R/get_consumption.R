@@ -10,10 +10,9 @@
 #' @return
 #' @export
 get_consumption <-
-  function(
-           mpan,
+  function(mpan,
            serial_number,
-    api_key = get_api_key(),
+           api_key = get_api_key(),
            period_from = NULL,
            period_to = NULL,
            page_size = 100L,
