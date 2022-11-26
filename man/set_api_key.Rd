@@ -4,10 +4,10 @@
 \alias{set_api_key}
 \title{Set the Octopus API key}
 \usage{
-set_api_key(key = NULL)
+set_api_key(api_key = NULL)
 }
 \arguments{
-\item{key}{the Octopus API key to use}
+\item{api_key}{Your API key. If you are an Octopus Energy customer, you can generate an API key from your \href{https://octopus.energy/dashboard/developer/}{online dashboard}.}
 }
 \description{
 You can find your API key on the \href{https://octopus.energy/dashboard/developer/}{octopus energy developer dashboard}

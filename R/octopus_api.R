@@ -2,15 +2,17 @@
 #'
 #' @param path the API endpoint
 #' @param query optional list of
-#' @param api_key The API key to use for authentication
-#' (not required on all endpoints)
+#' @inheritParams set_api_key
 #'
 #' @return An Octopus API object
 octopus_api <- function(path, query = NULL, api_key = get_api_key()) {
-  resp <- httr2::request(paste0("https://", api_key, "@api.octopus.energy/")) |>
+  req <- httr2::request(glue::glue("https://{api_key}@api.octopus.energy/")) |>
     httr2::req_user_agent("octopusR (https://github.com/Moohan/octopusR)") |>
     httr2::req_url_path_append(path) |>
-    httr2::req_url_query(!!!query) |>
+    httr2::req_url_query(!!!query)
+
+  resp <- req |>
+    httr2::req_throttle(5/1) |>
     httr2::req_error(body = octopus_error_body) |>
     httr2::req_perform()
 

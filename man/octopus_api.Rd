@@ -11,8 +11,7 @@ octopus_api(path, query = NULL, api_key = get_api_key())
 
 \item{query}{optional list of}
 
-\item{api_key}{The API key to use for authentication
-(not required on all endpoints)}
+\item{api_key}{Your API key. If you are an Octopus Energy customer, you can generate an API key from your \href{https://octopus.energy/dashboard/developer/}{online dashboard}.}
 }
 \value{
 An Octopus API object

@@ -3,5 +3,6 @@
 export("%>%")
 export(get_consumption)
 export(set_api_key)
+export(set_meter_details)
 importFrom(magrittr,"%>%")
 importFrom(tibble,tibble)

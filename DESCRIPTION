@@ -12,6 +12,7 @@ BugReports: https://github.com/Moohan/octopusR/issues
 Imports: 
     askpass,
     cli,
+    glue,
     httr2,
     magrittr,
     tibble
