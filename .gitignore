@@ -4,3 +4,6 @@
 docs
 .Renviron
 .Rprofile
+octopusR.Rcheck/
+octopusR*.tar.gz
+octopusR*.tgz
