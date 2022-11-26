@@ -21,7 +21,7 @@
 #' @export
 get_consumption <-
   function(meter_type = c("electricity", "gas"),
-  mpan_mprn = get_meter_details(meter_type)[["mpan_mprn"]],
+           mpan_mprn = get_meter_details(meter_type)[["mpan_mprn"]],
            serial_number = get_meter_details(meter_type)[["serial_number"]],
            api_key = get_api_key(),
            period_from = NULL,
@@ -29,7 +29,7 @@ get_consumption <-
            page_size = 100L,
            order_by = c("-period", "period"),
            group_by = c("hour", "day", "week", "month", "quarter")) {
-    if(missing(meter_type)) {
+    if (missing(meter_type)) {
       cli::cli_abort("You must specify {.val electricity} or {.val gas} for {.arg meter_type}")
     }
     meter_type <- match.arg(meter_type)
@@ -37,7 +37,7 @@ get_consumption <-
       cli::cli_abort("To use {.arg period_to} you must also provide the {.arg period_from} parameter to create a range.")
     }
     if (page_size <= 0 | page_size > 25000) {
-cli::cli_abort("{.arg page_size} must be between 1 and 25000")
+      cli::cli_abort("{.arg page_size} must be between 1 and 25000")
     }
     if (!missing(order_by)) {
       order_by <- match.arg(order_by)
