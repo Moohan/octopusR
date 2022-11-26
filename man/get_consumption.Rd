@@ -2,7 +2,7 @@
 % Please edit documentation in R/get_consumption.R
 \name{get_consumption}
 \alias{get_consumption}
-\title{Get consumption data}
+\title{List consumption for a meter}
 \usage{
 get_consumption(
   meter_type = c("electricity", "gas"),
@@ -52,5 +52,12 @@ Accepted values are:
 a \link[tibble:tibble-package]{tibble} of the requested consumption data.
 }
 \description{
-Get consumption data
+Return a list of consumption values for half-hour periods for a given meter-point and meter.
+
+Unit of measurement:
+\itemize{
+\item Electricity meters: kWh
+\item SMETS1 Secure gas meters: kWh
+\item SMETS2 gas meters: m^3
+}
 }

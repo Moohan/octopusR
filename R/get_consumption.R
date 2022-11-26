@@ -1,4 +1,10 @@
-#' Get consumption data
+#' List consumption for a meter
+#' @description Return a list of consumption values for half-hour periods for a given meter-point and meter.
+#'
+#' Unit of measurement:
+#' * Electricity meters: kWh
+#' * SMETS1 Secure gas meters: kWh
+#' * SMETS2 gas meters: m^3
 #'
 #' @inheritParams set_api_key
 #' @inheritParams set_meter_details
