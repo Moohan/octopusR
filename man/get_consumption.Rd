@@ -61,6 +61,3 @@ Unit of measurement:
 \item SMETS2 gas meters: m^3
 }
 }
-\examples{
-data <- get_consumption("electricity")
-}
