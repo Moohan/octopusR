@@ -18,8 +18,17 @@ get_consumption <-
            page_size = 100L,
            order_by = c("-period", "period"),
            group_by = c("hour", "day", "week", "month", "quarter")) {
-    if (missing(group_by)) group_by <- NULL
-    if (missing(order_by)) order_by <- NULL
+    if (missing(group_by)) {
+      group_by <- NULL
+    } else {
+      group_by <- match.arg(group_by)
+    }
+
+    if (missing(order_by)) {
+      order_by <- NULL
+    } else {
+      order_by <- match.arg(order_by)
+    }
 
     resp <- octopus_api(
       path = paste("/v1/electricity-meter-points",
