@@ -45,10 +45,14 @@ get_consumption <-
     if (page_size <= 0 | page_size > 25000) {
       cli::cli_abort("{.arg page_size} must be between 1 and 25000")
     }
-    if (!missing(order_by)) {
+    if (missing(order_by)) {
+      order_by <- NULL
+    } else {
       order_by <- match.arg(order_by)
     }
-    if (!missing(group_by)) {
+    if (missing(group_by)) {
+      group_by <- NULL
+    } else {
       group_by <- match.arg(group_by)
     }
 
