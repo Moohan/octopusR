@@ -15,4 +15,6 @@ status](https://www.r-pkg.org/badges/version/a11ytables)](https://CRAN.R-project
 coverage](https://codecov.io/gh/Moohan/octopusR/branch/master/graph/badge.svg)](https://codecov.io/gh/Moohan/octopusR?branch=master)
 [![Librepay
 Donate](https://img.shields.io/liberapay/receives/Moohan.svg?logo=liberapay)](https://liberapay.com/Moohan/donate)
+[![Lifecycle:
+experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 <!-- badges: end -->
