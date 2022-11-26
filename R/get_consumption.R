@@ -26,7 +26,7 @@
 #' @return a [tibble][tibble::tibble-package] of the requested consumption data.
 #' @export
 #'
-#' @example
+#' @examples
 #' data <- get_consumption("electricity")
 get_consumption <-
   function(meter_type = c("electricity", "gas"),
