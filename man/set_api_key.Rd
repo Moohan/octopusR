@@ -7,8 +7,11 @@
 set_api_key(api_key = NULL)
 }
 \arguments{
-\item{api_key}{Your API key. If you are an Octopus Energy customer, you can generate an API key from your \href{https://octopus.energy/dashboard/developer/}{online dashboard}.}
+\item{api_key}{Your API key. If you are an Octopus Energy customer,
+you can generate an API key from your
+\href{https://octopus.energy/dashboard/developer/}{online dashboard}.}
 }
 \description{
-You can find your API key on the \href{https://octopus.energy/dashboard/developer/}{octopus energy developer dashboard}
+You can find your API key on the
+\href{https://octopus.energy/dashboard/developer/}{octopus energy developer dashboard}
 }

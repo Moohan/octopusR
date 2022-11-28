@@ -1,8 +1,11 @@
 #' Set the Octopus API key
 #'
-#' @description You can find your API key on the [octopus energy developer dashboard](https://octopus.energy/dashboard/developer/)
+#' @description You can find your API key on the
+#' [octopus energy developer dashboard](https://octopus.energy/dashboard/developer/)
 #'
-#' @param api_key Your API key. If you are an Octopus Energy customer, you can generate an API key from your [online dashboard](https://octopus.energy/dashboard/developer/).
+#' @param api_key Your API key. If you are an Octopus Energy customer,
+#' you can generate an API key from your
+#' [online dashboard](https://octopus.energy/dashboard/developer/).
 #'
 #' @export
 set_api_key <- function(api_key = NULL) {
@@ -21,7 +24,9 @@ get_api_key <- function() {
   if (is_testing()) {
     return(testing_key())
   } else {
-    cli::cli_abort("No API key found, please supply with {.arg key} argument or with {.help [{.fun set_api_key}](octopusR::set_api_key)}")
+    cli::cli_abort(
+      "No API key found, please supply with {.arg key} argument or with {.help [{.fun set_api_key}](octopusR::set_api_key)}"
+    )
   }
 }
 
@@ -30,5 +35,8 @@ is_testing <- function() {
 }
 
 testing_key <- function() {
-  httr2::secret_decrypt("iaSTP6F_jm_pr7dVW2cZkRnKyfS5uRJsklKdcnK0_b7sbeaPz345Cq9IoJmCf9Ha", "OCTOPUSR_SECRET_KEY")
+  httr2::secret_decrypt(
+    "iaSTP6F_jm_pr7dVW2cZkRnKyfS5uRJsklKdcnK0_b7sbeaPz345Cq9IoJmCf9Ha",
+    "OCTOPUSR_SECRET_KEY"
+  )
 }

@@ -23,22 +23,31 @@ get_consumption(
 
 \item{serial_number}{The meter's serial number.}
 
-\item{api_key}{Your API key. If you are an Octopus Energy customer, you can generate an API key from your \href{https://octopus.energy/dashboard/developer/}{online dashboard}.}
+\item{api_key}{Your API key. If you are an Octopus Energy customer,
+you can generate an API key from your
+\href{https://octopus.energy/dashboard/developer/}{online dashboard}.}
 
-\item{period_from}{Show consumption from the given datetime (inclusive). This parameter can be provided on its own.}
+\item{period_from}{Show consumption from the given datetime (inclusive).
+This parameter can be provided on its own.}
 
-\item{period_to}{Show consumption to the given datetime (exclusive). This parameter also requires providing the \code{period_from} parameter to create a range.}
+\item{period_to}{Show consumption to the given datetime (exclusive).
+This parameter also requires providing the \code{period_from} parameter
+to create a range.}
 
-\item{page_size}{Page size of returned results. Default is 100, maximum is 25,000 to give a full year of half-hourly consumption details.}
+\item{page_size}{Page size of returned results. Default is 100, maximum is
+25,000 to give a full year of half-hourly consumption details.}
 
-\item{order_by}{Ordering of results returned. Default is that results are returned in reverse order from latest available figure.
+\item{order_by}{Ordering of results returned. Default is that results are
+returned in reverse order from latest available figure.
 Valid values:
 \itemize{
 \item \code{period}, to give results ordered forward.
 \item \code{-period}, (default), to give results ordered from most recent backwards.
 }}
 
-\item{group_by}{Aggregates consumption over a specified time period. A day is considered to start and end at midnight in the server's timezone. The default is that consumption is returned in half-hour periods.
+\item{group_by}{Aggregates consumption over a specified time period.
+A day is considered to start and end at midnight in the server's timezone.
+The default is that consumption is returned in half-hour periods.
 Accepted values are:
 \itemize{
 \item \code{hour}
@@ -52,7 +61,8 @@ Accepted values are:
 a \link[tibble:tibble-package]{tibble} of the requested consumption data.
 }
 \description{
-Return a list of consumption values for half-hour periods for a given meter-point and meter.
+Return a list of consumption values for half-hour periods for a
+given meter-point and meter.
 
 Unit of measurement:
 \itemize{

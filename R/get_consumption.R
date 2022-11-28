@@ -1,5 +1,6 @@
 #' List consumption for a meter
-#' @description Return a list of consumption values for half-hour periods for a given meter-point and meter.
+#' @description Return a list of consumption values for half-hour periods for a
+#' given meter-point and meter.
 #'
 #' Unit of measurement:
 #' * Electricity meters: kWh
@@ -8,14 +9,21 @@
 #'
 #' @inheritParams set_api_key
 #' @inheritParams set_meter_details
-#' @param period_from Show consumption from the given datetime (inclusive). This parameter can be provided on its own.
-#' @param period_to Show consumption to the given datetime (exclusive). This parameter also requires providing the `period_from` parameter to create a range.
-#' @param page_size Page size of returned results. Default is 100, maximum is 25,000 to give a full year of half-hourly consumption details.
-#' @param order_by Ordering of results returned. Default is that results are returned in reverse order from latest available figure.
+#' @param period_from Show consumption from the given datetime (inclusive).
+#' This parameter can be provided on its own.
+#' @param period_to Show consumption to the given datetime (exclusive).
+#' This parameter also requires providing the `period_from` parameter
+#' to create a range.
+#' @param page_size Page size of returned results. Default is 100, maximum is
+#' 25,000 to give a full year of half-hourly consumption details.
+#' @param order_by Ordering of results returned. Default is that results are
+#' returned in reverse order from latest available figure.
 #' Valid values:
 #' * `period`, to give results ordered forward.
 #' * `-period`, (default), to give results ordered from most recent backwards.
-#' @param group_by Aggregates consumption over a specified time period. A day is considered to start and end at midnight in the server's timezone. The default is that consumption is returned in half-hour periods.
+#' @param group_by Aggregates consumption over a specified time period.
+#' A day is considered to start and end at midnight in the server's timezone.
+#' The default is that consumption is returned in half-hour periods.
 #' Accepted values are:
 #' * `hour`
 #' * `day`
@@ -40,7 +48,9 @@ get_consumption <-
     }
     meter_type <- match.arg(meter_type)
     if (!missing(period_to) & missing(period_from)) {
-      cli::cli_abort("To use {.arg period_to} you must also provide the {.arg period_from} parameter to create a range.")
+      cli::cli_abort(
+        "To use {.arg period_to} you must also provide the {.arg period_from} parameter to create a range."
+      )
     }
     if (page_size <= 0 | page_size > 25000) {
       cli::cli_abort("{.arg page_size} must be between 1 and 25000")
@@ -56,7 +66,8 @@ get_consumption <-
       group_by <- match.arg(group_by)
     }
 
-    path <- glue::glue("/v1",
+    path <- glue::glue(
+      "/v1",
       "{meter_type}-meter-points",
       mpan_mprn,
       "meters",

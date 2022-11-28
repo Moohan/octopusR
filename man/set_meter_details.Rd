@@ -18,5 +18,6 @@ set_meter_details(
 \item{serial_number}{The meter's serial number.}
 }
 \description{
-You can find your meter details on the \href{https://octopus.energy/dashboard/developer/}{octopus energy developer dashboard}
+You can find your meter details on the
+\href{https://octopus.energy/dashboard/developer/}{octopus energy developer dashboard}
 }
