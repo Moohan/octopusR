@@ -4,7 +4,7 @@
 \alias{octopus_api}
 \title{Main Octopus API}
 \usage{
-octopus_api(path, query = NULL, api_key = get_api_key())
+octopus_api(path, query = NULL, api_key = NULL, use_api_key = FALSE)
 }
 \arguments{
 \item{path}{the API endpoint}
@@ -14,6 +14,8 @@ octopus_api(path, query = NULL, api_key = get_api_key())
 \item{api_key}{Your API key. If you are an Octopus Energy customer,
 you can generate an API key from your
 \href{https://octopus.energy/dashboard/developer/}{online dashboard}.}
+
+\item{use_api_key}{Should the request use the api_key for authentication}
 }
 \value{
 An Octopus API object
