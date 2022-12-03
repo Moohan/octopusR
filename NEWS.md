@@ -1,4 +1,4 @@
-# octopusR (development version)
+# octopusR 0.2.0
 
 # octopusR 0.1.0
 
