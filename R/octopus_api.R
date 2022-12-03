@@ -31,7 +31,5 @@ octopus_api <- function(path, query = NULL, api_key = get_api_key()) {
 }
 
 octopus_error_body <- function(resp) {
-  resp |>
-    httr2::resp_body_json() |>
-    magrittr::extract2("detail")
+    httr2::resp_body_json(resp)[["detail"]]
 }
