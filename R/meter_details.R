@@ -45,7 +45,7 @@ get_meter_details <-
       serial_number <- Sys.getenv("OCTOPUSR_GAS_SERIAL_NUM")
     }
 
-    if (!identical(mpan_mprn, "") & !identical(serial_number, "")) {
+    if (!identical(mpan_mprn, "") && !identical(serial_number, "")) {
       meter <- structure(
         list(
           type = meter_type,

@@ -47,12 +47,12 @@ get_consumption <-
       cli::cli_abort("You must specify {.val electricity} or {.val gas} for {.arg meter_type}")
     }
     meter_type <- match.arg(meter_type)
-    if (!missing(period_to) & missing(period_from)) {
+    if (!missing(period_to) && missing(period_from)) {
       cli::cli_abort(
         "To use {.arg period_to} you must also provide the {.arg period_from} parameter to create a range."
       )
     }
-    if (page_size <= 0 | page_size > 25000) {
+    if (page_size <= 0 || page_size > 25000) {
       cli::cli_abort("{.arg page_size} must be between 1 and 25000")
     }
     if (missing(order_by)) {
