@@ -4,7 +4,8 @@
 #' [octopus energy developer dashboard](https://octopus.energy/dashboard/developer/)
 #'
 #' @param meter_type Type of meter-point, electricity or gas
-#' @param mpan_mprn The electricity meter-point's MPAN or gas meter-point’s MPRN.
+#' @param mpan_mprn The electricity meter-point's MPAN or gas meter-point’s
+#' MPRN.
 #' @param serial_number The meter's serial number.
 #'
 #' @export
