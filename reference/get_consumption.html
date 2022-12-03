@@ -24,7 +24,7 @@ SMETS2 gas meters: m^3
     
     <a class="navbar-brand me-2" href="../index.html">octopusR</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -76,7 +76,6 @@ given meter-point and meter.</p>
 <span>  api_key <span class="op">=</span> <span class="fu">get_api_key</span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  period_from <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  period_to <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  page_size <span class="op">=</span> <span class="fl">100L</span>,</span>
 <span>  order_by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"-period"</span>, <span class="st">"period"</span><span class="op">)</span>,</span>
 <span>  group_by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"hour"</span>, <span class="st">"day"</span>, <span class="st">"week"</span>, <span class="st">"month"</span>, <span class="st">"quarter"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
@@ -89,7 +88,8 @@ given meter-point and meter.</p>
 
 
 <dt>mpan_mprn</dt>
-<dd><p>The electricity meter-point's MPAN or gas meter-point’s MPRN.</p></dd>
+<dd><p>The electricity meter-point's MPAN or gas meter-point’s
+MPRN.</p></dd>
 
 
 <dt>serial_number</dt>
@@ -111,11 +111,6 @@ This parameter can be provided on its own.</p></dd>
 <dd><p>Show consumption to the given datetime (exclusive).
 This parameter also requires providing the <code>period_from</code> parameter
 to create a range.</p></dd>
-
-
-<dt>page_size</dt>
-<dd><p>Page size of returned results. Default is 100, maximum is
-25,000 to give a full year of half-hourly consumption details.</p></dd>
 
 
 <dt>order_by</dt>
