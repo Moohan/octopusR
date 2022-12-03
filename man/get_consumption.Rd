@@ -11,7 +11,6 @@ get_consumption(
   api_key = get_api_key(),
   period_from = NULL,
   period_to = NULL,
-  page_size = 100L,
   order_by = c("-period", "period"),
   group_by = c("hour", "day", "week", "month", "quarter")
 )
@@ -19,7 +18,8 @@ get_consumption(
 \arguments{
 \item{meter_type}{Type of meter-point, electricity or gas}
 
-\item{mpan_mprn}{The electricity meter-point's MPAN or gas meter-point’s MPRN.}
+\item{mpan_mprn}{The electricity meter-point's MPAN or gas meter-point’s
+MPRN.}
 
 \item{serial_number}{The meter's serial number.}
 
@@ -33,9 +33,6 @@ This parameter can be provided on its own.}
 \item{period_to}{Show consumption to the given datetime (exclusive).
 This parameter also requires providing the \code{period_from} parameter
 to create a range.}
-
-\item{page_size}{Page size of returned results. Default is 100, maximum is
-25,000 to give a full year of half-hourly consumption details.}
 
 \item{order_by}{Ordering of results returned. Default is that results are
 returned in reverse order from latest available figure.

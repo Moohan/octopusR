@@ -14,8 +14,6 @@
 #' @param period_to Show consumption to the given datetime (exclusive).
 #' This parameter also requires providing the `period_from` parameter
 #' to create a range.
-#' @param page_size Page size of returned results. Default is 100, maximum is
-#' 25,000 to give a full year of half-hourly consumption details.
 #' @param order_by Ordering of results returned. Default is that results are
 #' returned in reverse order from latest available figure.
 #' Valid values:
@@ -40,20 +38,18 @@ get_consumption <-
            api_key = get_api_key(),
            period_from = NULL,
            period_to = NULL,
-           page_size = 100L,
            order_by = c("-period", "period"),
            group_by = c("hour", "day", "week", "month", "quarter")) {
     if (missing(meter_type)) {
-      cli::cli_abort("You must specify {.val electricity} or {.val gas} for {.arg meter_type}")
+      cli::cli_abort(
+        "You must specify {.val electricity} or {.val gas} for {.arg meter_type}"
+      )
     }
     meter_type <- match.arg(meter_type)
     if (!missing(period_to) && missing(period_from)) {
       cli::cli_abort(
         "To use {.arg period_to} you must also provide the {.arg period_from} parameter to create a range."
       )
-    }
-    if (page_size <= 0 || page_size > 25000) {
-      cli::cli_abort("{.arg page_size} must be between 1 and 25000")
     }
     if (missing(order_by)) {
       order_by <- NULL
@@ -66,6 +62,27 @@ get_consumption <-
       group_by <- match.arg(group_by)
     }
 
+    if (!missing(period_to)) {
+      period_to <- check_datetime_format(period_to, "period_to")
+
+      if (missing(period_from)) {
+        cli::cli_abort(
+          "You must also specify {.arg period_to} when specifying {.arg period_from}."
+        )
+      }
+    }
+
+    if (missing(period_from)) {
+      page_size <- 100L
+      cli::cli_inform(c(
+        "i" = "Returning 100 rows only as a date range wasn't provided.",
+        "v" = "Specify a date range with {.arg period_to} and {.arg period_from}."
+      ))
+    } else {
+      period_from <- check_datetime_format(period_from, "period_from")
+      page_size <- 25000L
+    }
+
     path <- glue::glue(
       "/v1",
       "{meter_type}-meter-points",
@@ -76,17 +93,46 @@ get_consumption <-
       .sep = "/"
     )
 
+    query <- list(
+      period_from = period_from,
+      period_to = period_to,
+      page_size = page_size,
+      order_by = order_by,
+      group_by = group_by
+    )
+
     resp <- octopus_api(
       path = path,
       api_key = api_key,
-      query = list(
-        period_from = period_from,
-        period_to = period_to,
-        page_size = page_size,
-        order_by = order_by,
-        group_by = group_by
-      )
+      query = query
     )
 
-    return(resp[["content"]][["results"]])
+    consumption_data <- resp[["content"]][["results"]]
+
+    page <- 1L
+    total_rows <- resp[["content"]][["count"]]
+    total_pages <- ceiling(total_rows / page_size)
+
+    cli::cli_progress_bar("Getting consumption data", total = total_pages)
+
+    while (page_size == 2500L && !is.null(resp[["content"]][["next"]])) {
+      page <- page + 1L
+
+      resp <- octopus_api(
+        path = path,
+        api_key = api_key,
+        query = append(query, list("page" = page))
+      )
+
+      consumption_data <- rbind(
+        consumption_data,
+        resp[["content"]][["results"]]
+      )
+
+      cli::cli_progress_update()
+    }
+
+    cli::cli_progress_done()
+
+    return(consumption_data)
   }

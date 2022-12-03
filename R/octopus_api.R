@@ -12,7 +12,7 @@ octopus_api <- function(path, query = NULL, api_key = get_api_key()) {
     httr2::req_url_query(!!!query)
 
   resp <- req |>
-    httr2::req_throttle(5 / 1) |>
+    httr2::req_throttle(1L) |>
     httr2::req_error(body = octopus_error_body) |>
     httr2::req_perform()
 
@@ -31,7 +31,5 @@ octopus_api <- function(path, query = NULL, api_key = get_api_key()) {
 }
 
 octopus_error_body <- function(resp) {
-  resp |>
-    httr2::resp_body_json() |>
-    magrittr::extract2("detail")
+  httr2::resp_body_json(resp)[["detail"]]
 }

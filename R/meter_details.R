@@ -4,7 +4,8 @@
 #' [octopus energy developer dashboard](https://octopus.energy/dashboard/developer/)
 #'
 #' @param meter_type Type of meter-point, electricity or gas
-#' @param mpan_mprn The electricity meter-point's MPAN or gas meter-point’s MPRN.
+#' @param mpan_mprn The electricity meter-point's MPAN or gas meter-point’s
+#' MPRN.
 #' @param serial_number The meter's serial number.
 #'
 #' @export
@@ -70,12 +71,13 @@ testing_meter <- function(meter_type = c("electricity", "gas")) {
   structure(
     list(
       type = meter_type,
-      mpan_mprn = httr2::secret_decrypt(switch(
-        meter_type,
-        electricity = "OPGJ1brZHps9UGVyAmrmmw_gaD4wxrnCCYURXiQ",
-        gas = ""
+      mpan_mprn = httr2::secret_decrypt(
+        switch(meter_type,
+          electricity = "OPGJ1brZHps9UGVyAmrmmw_gaD4wxrnCCYURXiQ",
+          gas = ""
+        ),
+        "OCTOPUSR_SECRET_KEY"
       ),
-      "OCTOPUSR_SECRET_KEY"),
       serial_number = httr2::secret_decrypt(
         "539iFcHHKYdThm5G3Q6MkDmDIvXj8_Xae1M",
         "OCTOPUSR_SECRET_KEY"
