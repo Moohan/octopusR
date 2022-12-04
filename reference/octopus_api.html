@@ -51,7 +51,7 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">octopus_api</span><span class="op">(</span><span class="va">path</span>, query <span class="op">=</span> <span class="cn">NULL</span>, api_key <span class="op">=</span> <span class="fu">get_api_key</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">octopus_api</span><span class="op">(</span><span class="va">path</span>, query <span class="op">=</span> <span class="cn">NULL</span>, api_key <span class="op">=</span> <span class="cn">NULL</span>, use_api_key <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -68,6 +68,10 @@
 <dd><p>Your API key. If you are an Octopus Energy customer,
 you can generate an API key from your
 <a href="https://octopus.energy/dashboard/developer/" class="external-link">online dashboard</a>.</p></dd>
+
+
+<dt>use_api_key</dt>
+<dd><p>Should the request use the api_key for authentication</p></dd>
 
 </dl></div>
     <div class="section level2">
