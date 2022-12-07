@@ -40,5 +40,5 @@ octopus_api <- function(path, query = NULL, api_key = NULL, use_api_key = FALSE)
 }
 
 octopus_error_body <- function(resp) {
-    httr2::resp_body_json(resp)[["detail"]]
+  httr2::resp_body_json(resp)[["detail"]]
 }
