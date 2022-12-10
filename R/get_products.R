@@ -18,12 +18,8 @@ get_products <- function(is_variable = NULL,
   if (!missing(is_prepay)) {
     check_logical(is_prepay)
   }
-<<<<<<< HEAD
-  check_logical(is_business, "is_business")
-=======
   check_logical(is_business)
->>>>>>> Improve `check_logical`
-  check_datetime_format(available_at, "available_at")
+  check_datetime_format(available_at)
 
   path <- "/v1/products/"
 
