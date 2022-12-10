@@ -1,11 +1,3 @@
-#' Main Octopus API
-#'
-#' @param path the API endpoint
-#' @param query optional list of
-#' @inheritParams set_api_key
-#' @param use_api_key Should the request use the api_key for authentication
-#'
-#' @return An Octopus API object
 octopus_api <- function(path, query = NULL, api_key = NULL, use_api_key = FALSE) {
   if (use_api_key || !missing(api_key)) {
     if (missing(api_key)) api_key <- get_api_key()
