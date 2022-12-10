@@ -19,16 +19,10 @@
     <loc>https://moohan.github.io/octopusR/news/index.html</loc>
   </url>
   <url>
-    <loc>https://moohan.github.io/octopusR/reference/check_datetime_format.html</loc>
-  </url>
-  <url>
     <loc>https://moohan.github.io/octopusR/reference/get_consumption.html</loc>
   </url>
   <url>
     <loc>https://moohan.github.io/octopusR/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>https://moohan.github.io/octopusR/reference/octopus_api.html</loc>
   </url>
   <url>
     <loc>https://moohan.github.io/octopusR/reference/set_api_key.html</loc>
