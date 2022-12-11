@@ -24,7 +24,7 @@ projects.
 
 ## Installation
 
-octopusR is not yet avaliable on CRAN, so must be installed from GitHub,
+octopusR is not yet available on CRAN, so must be installed from GitHub,
 to install, you can use the `devtools` package:
 
 ``` r
@@ -37,7 +37,7 @@ devtools::install_github("moohan/octopusR")
 
 To use most function in octopusR, you will need an API key from Octopus
 Energy, you can find this on the [developer
-dahsboard](https://octopus.energy/dashboard/developer/). Once you have
+dashboard](https://octopus.energy/dashboard/developer/). Once you have
 your API key, you can use the `set_api_key()` function to interactively
 input and store the API key for the session:
 
@@ -83,5 +83,5 @@ requests are also welcome.
 
 ## License
 
-OctoR is licensed under the MIT License. See LICENSE for more
+octopusR is licensed under the MIT License. See LICENSE for more
 information.

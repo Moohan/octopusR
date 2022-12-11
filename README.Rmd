@@ -27,7 +27,7 @@ status](https://www.r-pkg.org/badges/version/a11ytables)](https://CRAN.R-project
 octopusR is an R package that provides access to the [Octopus Energy API](https://developer.octopus.energy/docs/api/). With octopusR, you can easily retrieve data from the Octopus Energy API and use it in your R projects.
 
 ## Installation
-octopusR is not yet avaliable on CRAN, so must be installed from GitHub, to install, you can use the `devtools` package:
+octopusR is not yet available on CRAN, so must be installed from GitHub, to install, you can use the `devtools` package:
 
 ```r
 # Install devtools if needed
@@ -36,7 +36,7 @@ devtools::install_github("moohan/octopusR")
 ```
 
 ## Usage
-To use most function in octopusR, you will need an API key from Octopus Energy, you can find this on the [developer dahsboard](https://octopus.energy/dashboard/developer/). Once you have your API key, you can use the `set_api_key()` function to interactively input and store the API key for the session:
+To use most function in octopusR, you will need an API key from Octopus Energy, you can find this on the [developer dashboard](https://octopus.energy/dashboard/developer/). Once you have your API key, you can use the `set_api_key()` function to interactively input and store the API key for the session:
 
 ```r
 library(octopusR)
