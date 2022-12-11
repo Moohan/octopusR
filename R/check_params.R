@@ -12,11 +12,15 @@ check_datetime_format <- function(arg_date, arg = rlang::caller_arg(arg_date), c
 }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> Improve `check_logical`
 check_logical <- function(arg_lgl, arg = rlang::caller_arg(arg_lgl), call = rlang::caller_env()) {
   if (class(arg_lgl) != "logical") {
     cli::cli_abort("{.arg {arg}} must be {.cls logical}, not {.cls {class(param_lgl)}}.",
       call = call
     )
+<<<<<<< HEAD
   }
 =======
 check_logical <- function(param_lgl, param_name) {
@@ -26,4 +30,7 @@ check_logical <- function(param_lgl, param_name) {
 
   return(param_lgl)
 >>>>>>> Implement products API endpoint
+=======
+  }
+>>>>>>> Improve `check_logical`
 }

@@ -18,6 +18,7 @@ get_products <- function(is_variable = NULL,
   if (!missing(is_prepay)) {
     check_logical(is_prepay)
   }
+
   check_logical(is_business)
   check_datetime_format(available_at)
 
