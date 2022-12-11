@@ -26,10 +26,13 @@ get_products(
 
 \item{is_business}{(boolean, default: FALSE) Show only business products.}
 
-\item{available_at}{Show products available for new agreements on the given datetime.
-Defaults to current datetime, effectively showing products that are currently available.}
+\item{available_at}{Show products available for new agreements on the given
+datetime.
+Defaults to current datetime, effectively showing products that are
+currently available.}
 
-\item{authenticate}{(boolean, default: FALSE) Use an \code{api_key} to authenticate. Only useful for organisations.}
+\item{authenticate}{(boolean, default: FALSE) Use an \code{api_key} to
+authenticate. Only useful for organisations.}
 
 \item{api_key}{Your API key. If you are an Octopus Energy customer,
 you can generate an API key from your

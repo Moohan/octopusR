@@ -9,9 +9,12 @@
 #' @param is_tracker (boolean, optional) Show only tracker products.
 #' @param is_prepay (boolean, optional) Show only pre-pay products.
 #' @param is_business (boolean, default: FALSE) Show only business products.
-#' @param available_at Show products available for new agreements on the given datetime.
-#' Defaults to current datetime, effectively showing products that are currently available.
-#' @param authenticate (boolean, default: FALSE) Use an `api_key` to authenticate. Only useful for organisations.
+#' @param available_at Show products available for new agreements on the given
+#' datetime.
+#' Defaults to current datetime, effectively showing products that are
+#' currently available.
+#' @param authenticate (boolean, default: FALSE) Use an `api_key` to
+#' authenticate. Only useful for organisations.
 #' @inheritParams set_api_key
 #'
 #' @return a [tibble][tibble::tibble-package]

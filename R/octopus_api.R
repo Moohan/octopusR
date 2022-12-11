@@ -1,6 +1,11 @@
-octopus_api <- function(path, query = NULL, api_key = NULL, use_api_key = FALSE) {
+octopus_api <- function(path,
+                        query = NULL,
+                        api_key = NULL,
+                        use_api_key = FALSE) {
   if (use_api_key || !missing(api_key)) {
-    if (missing(api_key)) api_key <- get_api_key()
+    if (missing(api_key)) {
+      api_key <- get_api_key()
+    }
 
     base_url <- glue::glue("https://{api_key}@api.octopus.energy/")
   } else {
@@ -13,7 +18,7 @@ octopus_api <- function(path, query = NULL, api_key = NULL, use_api_key = FALSE)
     httr2::req_url_query(!!!query)
 
   resp <- req |>
-    httr2::req_throttle(5 / 1) |>
+    httr2::req_throttle(5L) |>
     httr2::req_error(body = octopus_error_body) |>
     httr2::req_perform()
 
