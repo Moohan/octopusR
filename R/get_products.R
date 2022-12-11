@@ -7,18 +7,22 @@ get_products <- function(is_variable = NULL,
                          authenticate = FALSE,
                          api_key = NULL) {
   if (!missing(is_variable)) {
-    check_logical(is_variable, "is_variable")
+    check_logical(is_variable)
   }
   if (!missing(is_green)) {
-    check_logical(is_green, "is_green")
+    check_logical(is_green)
   }
   if (!missing(is_tracker)) {
-    check_logical(is_tracker, "is_tracker")
+    check_logical(is_tracker)
   }
   if (!missing(is_prepay)) {
-    check_logical(is_prepay, "is_prepay")
+    check_logical(is_prepay)
   }
+<<<<<<< HEAD
   check_logical(is_business, "is_business")
+=======
+  check_logical(is_business)
+>>>>>>> Improve `check_logical`
   check_datetime_format(available_at, "available_at")
 
   path <- "/v1/products/"
@@ -32,7 +36,7 @@ get_products <- function(is_variable = NULL,
     available_at = available_at
   )
 
-  check_logical(authenticate, "authenticate")
+  check_logical(authenticate)
 
   if (authenticate) {
     if (missing(api_key)) {

@@ -10,10 +10,10 @@ check_datetime_format <- function(date, param_name) {
   return(date)
 }
 
-check_logical <- function(param_lgl, param_name) {
-  if (class(param_lgl) != "logical") {
-    cli::cli_abort("{.arg {param_name}} must be {.cls logical}, not {.cls {class(param_lgl)}}.")
+check_logical <- function(arg_lgl, arg = rlang::caller_arg(arg_lgl), call = rlang::caller_env()) {
+  if (class(arg_lgl) != "logical") {
+    cli::cli_abort("{.arg {arg}} must be {.cls logical}, not {.cls {class(param_lgl)}}.",
+      call = call
+    )
   }
-
-  return(param_lgl)
 }
