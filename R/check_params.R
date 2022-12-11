@@ -1,7 +1,7 @@
 check_datetime_format <- function(arg_date, arg = rlang::caller_arg(arg_date), call = rlang::caller_env()) {
   if (!inherits(arg_date, "character") && !inherits(arg_date, "Date")) {
     cli::cli_abort("{.arg {arg}} must be {.cls character} or {.cls Date}, not {.cls {class(arg_date)}}.",
-                   call = call
+      call = call
     )
   }
 
