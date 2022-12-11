@@ -63,7 +63,7 @@ get_consumption <-
     }
 
     if (!missing(period_to)) {
-      period_to <- check_datetime_format(period_to, "period_to")
+      check_datetime_format(period_to)
 
       if (missing(period_from)) {
         cli::cli_abort(
@@ -79,7 +79,7 @@ get_consumption <-
         "v" = "Specify a date range with {.arg period_to} and {.arg period_from}."
       ))
     } else {
-      period_from <- check_datetime_format(period_from, "period_from")
+      check_datetime_format(period_from)
       page_size <- 25000L
     }
 
