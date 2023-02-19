@@ -25,11 +25,11 @@ jobs:
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
           extra-packages: any::rmarkdown, local::.
-      
+
       - name: Render README.Rmd
         run:  Rscript -e 'rmarkdown::render("README.Rmd")'
 
-      - name: Commit and create a Pull Request
+      - name: Commit and create a PR
         uses: peter-evans/create-pull-request@v4
         with:
           add-paths: README.md
