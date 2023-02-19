@@ -94,10 +94,21 @@
 <p>You can use the other functions in the package to interact with the API. For example, you can use the <code><a href="reference/get_consumption.html">get_consumption()</a></code> function to retrieve data about your energy usage:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Get data about your energy usage</span></span>
-<span><span class="va">energy_usage</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/get_consumption.html">get_consumption</a></span><span class="op">(</span>meter_type <span class="op">=</span> <span class="st">"electricity"</span><span class="op">)</span></span>
+<span><span class="va">energy_usage</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/get_consumption.html">get_consumption</a></span><span class="op">(</span>meter_type <span class="op">=</span> <span class="st">"elec"</span><span class="op">)</span></span>
+<span><span class="co">#&gt; ℹ Returning 100 rows only as a date range wasn't provided.</span></span>
+<span><span class="co">#&gt; ✔ Specify a date range with `period_to` and `period_from`.</span></span>
 <span></span>
 <span><span class="co"># View the data</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">energy_usage</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">energy_usage</span><span class="op">)</span></span>
+<span><span class="co">#&gt; # A tibble: 6 × 3</span></span>
+<span><span class="co">#&gt;   consumption interval_start      interval_end       </span></span>
+<span><span class="co">#&gt;         &lt;dbl&gt; &lt;dttm&gt;              &lt;dttm&gt;             </span></span>
+<span><span class="co">#&gt; 1       0.096 2023-01-15 23:30:00 2023-01-16 00:00:00</span></span>
+<span><span class="co">#&gt; 2       0.097 2023-01-15 23:00:00 2023-01-15 23:30:00</span></span>
+<span><span class="co">#&gt; 3       0.097 2023-01-15 22:30:00 2023-01-15 23:00:00</span></span>
+<span><span class="co">#&gt; 4       0.097 2023-01-15 22:00:00 2023-01-15 22:30:00</span></span>
+<span><span class="co">#&gt; 5       0.098 2023-01-15 21:30:00 2023-01-15 22:00:00</span></span>
+<span><span class="co">#&gt; 6       0.098 2023-01-15 21:00:00 2023-01-15 21:30:00</span></span></code></pre></div>
 <p>For more information and examples, see the <a href="https://moohan.github.io/octopusR/">package documentation</a> and the <a href="https://developer.octopus.energy/docs/api/" class="external-link">Octopus Energy API documentation</a>.</p>
 </div>
 <div class="section level2">
