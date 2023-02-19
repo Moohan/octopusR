@@ -12,3 +12,4 @@
 ^octopusR\.Rcheck$
 ^octopusR.*\.tar\.gz$
 ^octopusR.*\.tgz$
+^cran-comments\.md$
