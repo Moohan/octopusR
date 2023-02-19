@@ -60,10 +60,21 @@ data about your energy usage:
 
 ``` r
 # Get data about your energy usage
-energy_usage <- get_consumption(meter_type = "electricity")
+energy_usage <- get_consumption(meter_type = "elec")
+#> ℹ Returning 100 rows only as a date range wasn't provided.
+#> ✔ Specify a date range with `period_to` and `period_from`.
 
 # View the data
 head(energy_usage)
+#> # A tibble: 6 × 3
+#>   consumption interval_start      interval_end       
+#>         <dbl> <dttm>              <dttm>             
+#> 1       0.096 2023-01-15 23:30:00 2023-01-16 00:00:00
+#> 2       0.097 2023-01-15 23:00:00 2023-01-15 23:30:00
+#> 3       0.097 2023-01-15 22:30:00 2023-01-15 23:00:00
+#> 4       0.097 2023-01-15 22:00:00 2023-01-15 22:30:00
+#> 5       0.098 2023-01-15 21:30:00 2023-01-15 22:00:00
+#> 6       0.098 2023-01-15 21:00:00 2023-01-15 21:30:00
 ```
 
 For more information and examples, see the [package
