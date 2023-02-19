@@ -1,3 +1,5 @@
+skip_if_offline(host = "api.octopus.energy")
+
 test_that("Octopus API fails when not authenticated", {
   expect_error(
     octopus_api(path = "v1/accounts/"),

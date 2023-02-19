@@ -1,3 +1,5 @@
+skip_if_offline(host = "api.octopus.energy")
+
 test_that("Can return consumption data sample", {
   expect_message(
     {

@@ -1,3 +1,5 @@
+skip_if_offline(host = "api.octopus.energy")
+
 test_that("Get products returns data", {
   expect_s3_class(
     get_products(),

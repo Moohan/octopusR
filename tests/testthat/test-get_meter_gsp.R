@@ -1,3 +1,5 @@
+skip_if_offline(host = "api.octopus.energy")
+
 test_that("Can get a meter GSP", {
   test_meter <- testing_meter("electricity")
   expected_gsp <- httr2::secret_decrypt(
