@@ -19,7 +19,7 @@ knitr::opts_chunk$set(
 [![CRAN
 status](https://www.r-pkg.org/badges/version/a11ytables)](https://CRAN.R-project.org/package=octopusR)
 [![R-CMD-check](https://github.com/Moohan/octopusR/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/Moohan/octopusR/actions/workflows/R-CMD-check.yaml)
-[![Codecov test coverage](https://codecov.io/gh/Moohan/octopusR/branch/master/graph/badge.svg)](https://codecov.io/gh/Moohan/octopusR?branch=master)
+[![Codecov test coverage](https://codecov.io/gh/Moohan/octopusR/branch/main/graph/badge.svg)](https://app.codecov.io/gh/Moohan/octopusR?branch=main)
 <!-- badges: end -->
 
 octopusR is an R package that provides access to the [Octopus Energy API](https://developer.octopus.energy/docs/api/). With octopusR, you can easily retrieve data from the Octopus Energy API and use it in your R projects.

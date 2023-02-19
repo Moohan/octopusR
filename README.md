@@ -9,7 +9,7 @@
 status](https://www.r-pkg.org/badges/version/a11ytables)](https://CRAN.R-project.org/package=octopusR)
 [![R-CMD-check](https://github.com/Moohan/octopusR/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/Moohan/octopusR/actions/workflows/R-CMD-check.yaml)
 [![Codecov test
-coverage](https://codecov.io/gh/Moohan/octopusR/branch/master/graph/badge.svg)](https://codecov.io/gh/Moohan/octopusR?branch=master)
+coverage](https://codecov.io/gh/Moohan/octopusR/branch/main/graph/badge.svg)](https://app.codecov.io/gh/Moohan/octopusR?branch=main)
 <!-- badges: end -->
 
 octopusR is an R package that provides access to the [Octopus Energy
