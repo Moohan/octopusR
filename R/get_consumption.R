@@ -134,5 +134,12 @@ get_consumption <-
 
     cli::cli_progress_done()
 
+
+    iso_8601_format <- "%Y-%m-%dT%H:%M:%SZ"
+    consumption_data$interval_start <- strptime(consumption_data$interval_start,
+                                                iso_8601_format)
+    consumption_data$interval_end <- strptime(consumption_data$interval_end,
+                                                iso_8601_format)
+
     return(consumption_data)
   }
