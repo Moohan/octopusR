@@ -98,7 +98,7 @@ testing_meter <- function(meter_type = c("electricity", "gas")) {
       list(
         type = "gas",
         mpan_mprn = "",
-        serial_number = "",
+        serial_number = ""
       ),
       class = "octopus_meter-point"
     )
