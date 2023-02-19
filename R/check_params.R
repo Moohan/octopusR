@@ -1,6 +1,11 @@
-check_datetime_format <- function(arg_date,
-                                  arg = rlang::caller_arg(arg_date),
-                                  call = rlang::caller_env()) {
+#' Check a datetime argument is in a suitable format
+#'
+#' @param arg_date The argument to check
+#'
+#' @return NULL
+check_datetime_format <- function(arg_date) {
+  arg <- rlang::caller_arg(arg_date)
+  call <- rlang::caller_env()
   if (!inherits(arg_date, "character") &&
     !inherits(arg_date, "Date")) {
     cli::cli_abort(
@@ -22,9 +27,14 @@ check_datetime_format <- function(arg_date,
   }
 }
 
-check_logical <- function(arg_lgl,
-                          arg = rlang::caller_arg(arg_lgl),
-                          call = rlang::caller_env()) {
+#' Check a logical argument is in a suitable format
+#'
+#' @param arg_lgl The argument to check
+#'
+#' @return NULL
+check_logical <- function(arg_lgl) {
+  arg <- rlang::caller_arg(arg_lgl)
+  call <- rlang::caller_env()
   if (!inherits(arg_lgl, "logical")) {
     cli::cli_abort("{.arg {arg}} must be {.cls logical}, not {.cls {class(arg_lgl)}}.",
       call = call
