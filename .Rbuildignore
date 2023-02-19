@@ -13,3 +13,4 @@
 ^octopusR.*\.tar\.gz$
 ^octopusR.*\.tgz$
 ^cran-comments\.md$
+^CRAN-SUBMISSION$
