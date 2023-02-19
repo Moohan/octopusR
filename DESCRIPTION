@@ -1,5 +1,5 @@
 Package: octopusR
-Title: Package for interacting with the Octopus Energy API
+Title: Interact with the Octopus Energy API
 Version: 1.0.0
 Authors@R: 
     person("James", "McMahon", , "jamesmcmahon0@gmail.com", role = c("aut", "cre"),
