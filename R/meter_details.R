@@ -38,6 +38,12 @@ set_meter_details <- function(meter_type = c("electricity", "gas"),
 
 get_meter_details <-
   function(meter_type = c("electricity", "gas")) {
+    meter_type <- match.arg(meter_type)
+
+    if (is_testing()) {
+      return(testing_meter(meter_type))
+    }
+
     if (meter_type == "electricity") {
       mpan_mprn <- Sys.getenv("OCTOPUSR_MPAN")
       serial_number <- Sys.getenv("OCTOPUSR_ELEC_SERIAL_NUM")
@@ -61,13 +67,9 @@ get_meter_details <-
       return(meter)
     }
 
-    if (is_testing()) {
-      return(testing_meter(meter_type))
-    } else {
       cli::cli_abort(
         "Meter details were missing or incomplete, please supply with {.arg mpan_mprn} and {.arg serial_number} arguments or with {.help [{.fun set_meter_details}](octopusR::set_meter_details)}"
       )
-    }
   }
 
 testing_meter <- function(meter_type = c("electricity", "gas")) {
