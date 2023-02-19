@@ -14,6 +14,7 @@ Imports:
     cli,
     glue,
     httr2,
+    rlang,
     tibble
 Suggests: 
     covr,
