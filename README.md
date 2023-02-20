@@ -84,8 +84,18 @@ Energy API documentation](https://developer.octopus.energy/docs/api/).
 ## Contributing
 
 If you have suggestions for improving octopusR, or if you have found a
-bug, please open an issue on GitHub. Contributions in the form of pull
-requests are also welcome.
+bug, please [open an issue](https://github.com/Moohan/octopusR/issues).
+Contributions in the form of pull requests are also welcome. See the
+[guide to
+contributing](https://moohan.github.io/octopusR/CONTRIBUTING.html) for
+more details.
+
+### Code of Conduct
+
+Please note that the octopusR project is released with a [Contributor
+Code of
+Conduct](https://moohan.github.io/octopusR/CODE_OF_CONDUCT.html). By
+contributing to this project, you agree to abide by its terms.
 
 ## License
 
