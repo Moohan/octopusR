@@ -12,6 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      OCTOPUSR_SECRET_KEY: ${{ secrets.OCTOPUSR_SECRET_KEY }}
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
