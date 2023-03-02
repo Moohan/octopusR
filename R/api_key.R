@@ -1,7 +1,7 @@
 #' Set the Octopus API key
 #'
 #' @description You can find your API key on the
-#' [octopus energy developer dashboard](https://octopus.energy/dashboard/developer/)
+#' [Octopus Energy developer dashboard](https://octopus.energy/dashboard/developer/)
 #'
 #' @param api_key Your API key. If you are an Octopus Energy customer,
 #' you can generate an API key from your

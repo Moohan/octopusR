@@ -1,7 +1,7 @@
 #' Set the details for your gas/electricity meter
 #'
 #' @description You can find your meter details on the
-#' [octopus energy developer dashboard](https://octopus.energy/dashboard/developer/)
+#' [Octopus Energy developer dashboard](https://octopus.energy/dashboard/developer/)
 #'
 #' @param meter_type Type of meter-point, electricity or gas
 #' @param mpan_mprn The electricity meter-point's MPAN or gas meter-point’s

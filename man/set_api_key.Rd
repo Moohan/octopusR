@@ -13,5 +13,5 @@ you can generate an API key from your
 }
 \description{
 You can find your API key on the
-\href{https://octopus.energy/dashboard/developer/}{octopus energy developer dashboard}
+\href{https://octopus.energy/dashboard/developer/}{Octopus Energy developer dashboard}
 }

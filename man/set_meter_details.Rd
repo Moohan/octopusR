@@ -20,5 +20,5 @@ MPRN.}
 }
 \description{
 You can find your meter details on the
-\href{https://octopus.energy/dashboard/developer/}{octopus energy developer dashboard}
+\href{https://octopus.energy/dashboard/developer/}{Octopus Energy developer dashboard}
 }
