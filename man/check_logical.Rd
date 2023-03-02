@@ -10,5 +10,7 @@ check_logical(arg_lgl)
 \item{arg_lgl}{The argument to check}
 }
 \description{
-Check a logical argument is in a suitable format
+Check if a given argument is of a logical. If not it will give
+an informative error message.
 }
+\keyword{internal}

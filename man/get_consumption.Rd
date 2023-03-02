@@ -24,8 +24,8 @@ MPRN.}
 \item{serial_number}{The meter's serial number.}
 
 \item{api_key}{Your API key. If you are an Octopus Energy customer,
-you can generate an API key from your
-\href{https://octopus.energy/dashboard/developer/}{online dashboard}.}
+you can generate an API key on the
+\href{https://octopus.energy/dashboard/developer/}{developer dashboard}.}
 
 \item{period_from}{Show consumption from the given datetime (inclusive).
 This parameter can be provided on its own.}

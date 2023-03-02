@@ -1,12 +1,21 @@
 #' Set the details for your gas/electricity meter
 #'
-#' @description You can find your meter details on the
-#' [Octopus Energy developer dashboard](https://octopus.energy/dashboard/developer/)
+#' @description Set the details for your gas/electricity meter. These will be
+#' stored as environment variables. You should add:
+#'  * `OCTOPUSR_MPAN = <electric MPAN>`
+#'  * `OCTOPUSR_MPRN = <gas MPRN>`
+#'  * `OCTOPUSR_ELEC_SERIAL_NUM = <electric serial number>`
+#'  * `OCTOPUSR_GAS_SERIAL_NUM = <gas serial number>`
+#' to your `.Renviron` otherwise you will have to call this function every
+#' session. You can find your meter details (MPAN/MPRN and serial number(s)) on
+#' the [developer dashboard](https://octopus.energy/dashboard/developer/).
 #'
 #' @param meter_type Type of meter-point, electricity or gas
 #' @param mpan_mprn The electricity meter-point's MPAN or gas meter-point’s
 #' MPRN.
 #' @param serial_number The meter's serial number.
+#'
+#' @return No return value, called for side effects.
 #'
 #' @export
 set_meter_details <- function(meter_type = c("electricity", "gas"),

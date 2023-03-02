@@ -8,10 +8,14 @@ set_api_key(api_key = NULL)
 }
 \arguments{
 \item{api_key}{Your API key. If you are an Octopus Energy customer,
-you can generate an API key from your
-\href{https://octopus.energy/dashboard/developer/}{online dashboard}.}
+you can generate an API key on the
+\href{https://octopus.energy/dashboard/developer/}{developer dashboard}.}
+}
+\value{
+No return value, called for side effects.
 }
 \description{
-You can find your API key on the
-\href{https://octopus.energy/dashboard/developer/}{Octopus Energy developer dashboard}
+Set the Octopus API key to use. This will be stored as an
+environment variable. You should add \verb{OCTOPUSR_API_KEY = <api_key>} to your
+\code{.Renviron} otherwise you will have to call this function every session.
 }

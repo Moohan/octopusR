@@ -1,11 +1,14 @@
 #' Set the Octopus API key
 #'
-#' @description You can find your API key on the
-#' [Octopus Energy developer dashboard](https://octopus.energy/dashboard/developer/)
+#' @description Set the Octopus API key to use. This will be stored as an
+#' environment variable. You should add `OCTOPUSR_API_KEY = <api_key>` to your
+#' `.Renviron` otherwise you will have to call this function every session.
 #'
 #' @param api_key Your API key. If you are an Octopus Energy customer,
-#' you can generate an API key from your
-#' [online dashboard](https://octopus.energy/dashboard/developer/).
+#' you can generate an API key on the
+#' [developer dashboard](https://octopus.energy/dashboard/developer/).
+#'
+#' @return No return value, called for side effects.
 #'
 #' @export
 set_api_key <- function(api_key = NULL) {

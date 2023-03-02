@@ -1,6 +1,11 @@
 #' Check a datetime argument is in a suitable format
 #'
+#' @description Check if a given argument is of a proper ISO 8601 format e.g.
+#'  `2023-03-02T21:26:10Z`. If not it will give an informative error message.
+#'
 #' @param arg_date The argument to check
+#'
+#' @keywords internal
 #'
 #' @return NULL
 check_datetime_format <- function(arg_date) {
@@ -29,7 +34,12 @@ check_datetime_format <- function(arg_date) {
 
 #' Check a logical argument is in a suitable format
 #'
+#' @description Check if a given argument is of a logical. If not it will give
+#' an informative error message.
+#'
 #' @param arg_lgl The argument to check
+#'
+#' @keywords internal
 #'
 #' @return NULL
 check_logical <- function(arg_lgl) {

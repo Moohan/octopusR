@@ -18,7 +18,19 @@ MPRN.}
 
 \item{serial_number}{The meter's serial number.}
 }
+\value{
+No return value, called for side effects.
+}
 \description{
-You can find your meter details on the
-\href{https://octopus.energy/dashboard/developer/}{Octopus Energy developer dashboard}
+Set the details for your gas/electricity meter. These will be
+stored as environment variables. You should add:
+\itemize{
+\item \verb{OCTOPUSR_MPAN = <electric MPAN>}
+\item \verb{OCTOPUSR_MPRN = <gas MPRN>}
+\item \verb{OCTOPUSR_ELEC_SERIAL_NUM = <electric serial number>}
+\item \verb{OCTOPUSR_GAS_SERIAL_NUM = <gas serial number>}
+to your \code{.Renviron} otherwise you will have to call this function every
+session. You can find your meter details (MPAN/MPRN and serial number(s)) on
+the \href{https://octopus.energy/dashboard/developer/}{developer dashboard}.
+}
 }

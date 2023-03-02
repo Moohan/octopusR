@@ -35,8 +35,8 @@ currently available.}
 authenticate. Only useful for organisations.}
 
 \item{api_key}{Your API key. If you are an Octopus Energy customer,
-you can generate an API key from your
-\href{https://octopus.energy/dashboard/developer/}{online dashboard}.}
+you can generate an API key on the
+\href{https://octopus.energy/dashboard/developer/}{developer dashboard}.}
 }
 \value{
 a \link[tibble:tibble-package]{tibble}
