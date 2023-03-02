@@ -7,7 +7,7 @@ Authors@R:
 Description: This package is a simple wrapper for the 'Octopus Energy' API
     <https://developer.octopus.energy/docs/api/>. It handles
     authentication, by storing a provided API key and meter details.
-    Implemented endpoints include 'products' for viewing tarrif details
+    Implemented endpoints include 'products' for viewing tariff details
     and 'consumption' for viewing meter consumption data.
 License: MIT + file LICENSE
 URL: https://github.com/Moohan/octopusR,
