@@ -19,24 +19,24 @@ projects.
 
 ## Installation
 
-octopusR is not yet available on CRAN, so must be installed from GitHub,
-to install, you can use the `devtools` package:
+octopusR can be installed from CRAN.
+
+``` r
+install.packages("octopusR")
+```
+
+If you would like the development version, it can be installed from
+GitHub, using the `devtools` package:
 
 ``` r
 # Install devtools if needed
 if (!require("devtools")) install.packages("devtools")
 devtools::install_github("moohan/octopusR")
-```
 
 ## Usage
+To use most function in octopusR, you will need an API key from Octopus Energy, you can find this on the [developer dashboard](https://octopus.energy/dashboard/developer/). Once you have your API key, you can use the `set_api_key()` function to interactively input and store the API key for the session:
 
-To use most function in octopusR, you will need an API key from Octopus
-Energy, you can find this on the [developer
-dashboard](https://octopus.energy/dashboard/developer/). Once you have
-your API key, you can use the `set_api_key()` function to interactively
-input and store the API key for the session:
-
-``` r
+```r
 library(octopusR)
 
 # Set your API key
