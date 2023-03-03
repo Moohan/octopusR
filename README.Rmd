@@ -63,6 +63,8 @@ You can use the other functions in the package to interact with the API. For exa
 ```{r setup, include=FALSE}
 library(octopusR)
 
+set_api_key(api_key = octopusR:::testing_key())
+
 set_meter_details(
   meter_type = "electricity",
   mpan_mprn = octopusR:::testing_meter("electricity")[["mpan_mprn"]],
