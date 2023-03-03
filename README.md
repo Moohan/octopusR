@@ -15,7 +15,7 @@ coverage](https://codecov.io/gh/Moohan/octopusR/branch/main/graph/badge.svg)](ht
 octopusR is an R package that provides access to the [Octopus Energy
 API](https://developer.octopus.energy/docs/api/). With octopusR, you can
 easily retrieve data from the Octopus Energy API and use it in your R
-projects.
+projects, or Shiny dashboards.
 
 ## Installation
 
@@ -34,7 +34,7 @@ if (!require("devtools")) install.packages("devtools")
 devtools::install_github("moohan/octopusR")
 
 ## Usage
-To use most function in octopusR, you will need an API key from Octopus Energy, you can find this on the [developer dashboard](https://octopus.energy/dashboard/developer/). Once you have your API key, you can use the `set_api_key()` function to interactively input and store the API key for the session:
+To use most functions in octopusR, you will need an API key from Octopus Energy, you can find this on the [developer dashboard](https://octopus.energy/dashboard/developer/). Once you have your API key, you can use `set_api_key()` to interactively input and store the API key for the session:
 
 ```r
 library(octopusR)
@@ -44,7 +44,7 @@ set_api_key()
 ```
 
 Once you have authenticated with the API, you may also want to set your
-meter-point details.
+electric and/or gas meter details.
 
 ``` r
 # Set details for your electricity meter
