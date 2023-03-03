@@ -105,8 +105,8 @@ authenticate. Only useful for organisations.</p></dd>
 
 <dt>api_key</dt>
 <dd><p>Your API key. If you are an Octopus Energy customer,
-you can generate an API key from your
-<a href="https://octopus.energy/dashboard/developer/" class="external-link">online dashboard</a>.</p></dd>
+you can generate an API key on the
+<a href="https://octopus.energy/dashboard/developer/" class="external-link">developer dashboard</a>.</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -121,21 +121,22 @@ you can generate an API key from your
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">get_products</span><span class="op">(</span>is_green <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 12 × 16</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 13 × 16</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    code  direc…¹ full_…² displ…³ descr…⁴ is_va…⁵ is_gr…⁶ is_tr…⁷ is_pr…⁸ is_bu…⁹</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>   <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> AFFE… EXPORT  Affect… Affect… This i… FALSE   TRUE    FALSE   FALSE   FALSE  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> AGIL… IMPORT  Agile … Agile … With A… TRUE    TRUE    FALSE   FALSE   FALSE  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> AGIL… IMPORT  Agile … Agile … With A… TRUE    TRUE    FALSE   FALSE   FALSE  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> AGIL… EXPORT  Agile … Agile … Outgoi… TRUE    TRUE    FALSE   FALSE   FALSE  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> COOP… EXPORT  Co-op … Co-op … This i… FALSE   TRUE    FALSE   FALSE   FALSE  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> GO-G… IMPORT  Octopu… Octopu… Octopu… TRUE    TRUE    FALSE   FALSE   FALSE  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> LP-S… EXPORT  my lon… my lon… This i… FALSE   TRUE    FALSE   FALSE   FALSE  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> M-AN… EXPORT  M&amp;S Sm… M&amp;S Sm… This i… FALSE   TRUE    FALSE   FALSE   FALSE  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> OUTG… EXPORT  Outgoi… Outgoi… Outgoi… FALSE   TRUE    FALSE   FALSE   FALSE  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> AGIL… EXPORT  Agile … Agile … Outgoi… TRUE    TRUE    FALSE   FALSE   FALSE  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> COOP… EXPORT  Co-op … Co-op … This i… FALSE   TRUE    FALSE   FALSE   FALSE  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> GO-G… IMPORT  Octopu… Octopu… Octopu… TRUE    TRUE    FALSE   FALSE   FALSE  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> LP-S… EXPORT  my lon… my lon… This i… FALSE   TRUE    FALSE   FALSE   FALSE  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> M-AN… EXPORT  M&amp;S Sm… M&amp;S Sm… This i… FALSE   TRUE    FALSE   FALSE   FALSE  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> OUTG… EXPORT  Outgoi… Outgoi… Outgoi… FALSE   TRUE    FALSE   FALSE   FALSE  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">11</span> OUTG… EXPORT  Octopu… Octopu… Outgoi… FALSE   TRUE    FALSE   FALSE   FALSE  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">11</span> OUTG… EXPORT  Outgoi… Outgoi… Outgoi… FALSE   TRUE    FALSE   FALSE   FALSE  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">12</span> OUTG… EXPORT  Octopu… Octopu… Outgoi… FALSE   TRUE    FALSE   FALSE   FALSE  </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">13</span> OUTG… EXPORT  Octopu… Octopu… Outgoi… FALSE   TRUE    FALSE   FALSE   FALSE  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># … with 6 more variables: is_restricted &lt;lgl&gt;, term &lt;int&gt;,</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   available_from &lt;chr&gt;, available_to &lt;lgl&gt;, links &lt;list&gt;, brand &lt;chr&gt;, and</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   abbreviated variable names ¹​direction, ²​full_name, ³​display_name,</span></span>
