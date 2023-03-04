@@ -73,26 +73,27 @@
 </h1></div>
 <!-- badges: start -->
 
-<p>octopusR is an R package that provides access to the <a href="https://developer.octopus.energy/docs/api/" class="external-link">Octopus Energy API</a>. With octopusR, you can easily retrieve data from the Octopus Energy API and use it in your R projects.</p>
+<p>octopusR is an R package that provides access to the <a href="https://developer.octopus.energy/docs/api/" class="external-link">Octopus Energy API</a>. With octopusR, you can easily retrieve data from the Octopus Energy API and use it in your R projects, or Shiny dashboards.</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
-<p>octopusR is not yet available on CRAN, so must be installed from GitHub, to install, you can use the <code>devtools</code> package:</p>
+<p>octopusR can be installed from CRAN.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Install devtools if needed</span></span>
-<span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="st"><a href="https://devtools.r-lib.org/" class="external-link">"devtools"</a></span><span class="op">)</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span></span>
-<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"moohan/octopusR"</span><span class="op">)</span></span></code></pre></div>
-</div>
-<div class="section level2">
-<h2 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a>
-</h2>
-<p>To use most function in octopusR, you will need an API key from Octopus Energy, you can find this on the <a href="https://octopus.energy/dashboard/developer/" class="external-link">developer dashboard</a>. Once you have your API key, you can use the <code><a href="reference/set_api_key.html">set_api_key()</a></code> function to interactively input and store the API key for the session:</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/Moohan/octopusR" class="external-link">octopusR</a></span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Set your API key</span></span>
-<span><span class="fu"><a href="reference/set_api_key.html">set_api_key</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p>Once you have authenticated with the API, you may also want to set your meter-point details.</p>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"octopusR"</span><span class="op">)</span></span></code></pre></div>
+<p>If you would like the development version, it can be installed from GitHub, using the <code>devtools</code> package:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Install devtools if needed</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">require</span>(<span class="st">"devtools"</span>)) <span class="fu">install.packages</span>(<span class="st">"devtools"</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>devtools<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">"moohan/octopusR"</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="do">## Usage</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>To use most functions <span class="cf">in</span> octopusR, you will need an API key from Octopus Energy, you can find this on the [developer dashboard](https<span class="sc">:</span><span class="er">//</span>octopus.energy<span class="sc">/</span>dashboard<span class="sc">/</span>developer<span class="sc">/</span>). Once you have your API key, you can use <span class="st">`</span><span class="at">set_api_key()</span><span class="st">`</span> to interactively input and store the API key <span class="cf">for</span> the session<span class="sc">:</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="st">```</span><span class="at">r</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="at">library(octopusR)</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="at"># Set your API key</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="at">set_api_key()</span></span></code></pre></div>
+<p>Once you have authenticated with the API, you may also want to set your electric and/or gas meter details.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Set details for your electricity meter</span></span>
 <span><span class="fu"><a href="reference/set_meter_details.html">set_meter_details</a></span><span class="op">(</span>meter_type <span class="op">=</span> <span class="st">"electricity"</span><span class="op">)</span></span>
