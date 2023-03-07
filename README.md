@@ -6,7 +6,7 @@
 <!-- badges: start -->
 
 [![CRAN
-status](https://www.r-pkg.org/badges/version/a11ytables)](https://CRAN.R-project.org/package=octopusR)
+status](https://www.r-pkg.org/badges/version/octopusR)](https://CRAN.R-project.org/package=octopusR)
 [![R-CMD-check](https://github.com/Moohan/octopusR/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/Moohan/octopusR/actions/workflows/R-CMD-check.yaml)
 [![Codecov test
 coverage](https://codecov.io/gh/Moohan/octopusR/branch/main/graph/badge.svg)](https://app.codecov.io/gh/Moohan/octopusR?branch=main)
