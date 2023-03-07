@@ -32,11 +32,17 @@ GitHub, using the `devtools` package:
 # Install devtools if needed
 if (!require("devtools")) install.packages("devtools")
 devtools::install_github("moohan/octopusR")
+```
 
 ## Usage
-To use most functions in octopusR, you will need an API key from Octopus Energy, you can find this on the [developer dashboard](https://octopus.energy/dashboard/developer/). Once you have your API key, you can use `set_api_key()` to interactively input and store the API key for the session:
 
-```r
+To use most functions in octopusR, you will need an API key from Octopus
+Energy, you can find this on the [developer
+dashboard](https://octopus.energy/dashboard/developer/). Once you have
+your API key, you can use `set_api_key()` to interactively input and
+store the API key for the session:
+
+``` r
 library(octopusR)
 
 # Set your API key
