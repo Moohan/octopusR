@@ -62,7 +62,7 @@ jobs:
 
       - name: Commit and create a PR if on main
         if: ${{ github.ref == 'refs/heads/main' }}
-        uses: peter-evans/create-pull-request@v4
+        uses: peter-evans/create-pull-request@v5
         with:
           commit-message: "Style code"
           branch: style_main
