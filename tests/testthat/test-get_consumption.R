@@ -27,3 +27,33 @@ test_that("errors properly with incorrect params", {
     "To use `period_to` you must also provide the `period_from` parameter to create a range"
   )
 })
+
+test_that("Returned data is consistent", {
+  expect_snapshot(
+    get_consumption(
+      meter_type = "electricity",
+      group_by = "week",
+      period_from = "2022-01-01",
+      period_to = "2022-01-31"
+    )
+  )
+  expect_snapshot(
+    get_consumption(
+      meter_type = "electricity",
+      group_by = "week",
+      period_from = "2022-01-01",
+      period_to = "2022-01-31",
+      tz = "UTC"
+    )
+  )
+  expect_snapshot(
+    get_consumption(
+      meter_type = "electricity",
+      group_by = "week",
+      period_from = "2022-01-01",
+      period_to = "2022-01-31",
+      tz = "UTC",
+      order_by = "period"
+    )
+  )
+})
