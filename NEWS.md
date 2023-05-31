@@ -1,11 +1,11 @@
-# octopusR (development version)
+# octopusR NEWS
 
-# octopusR 1.0.0
+## Unreleased (2023-05-31)
 
-# octopusR 0.2.0
+Full set of changes:
+[`v1.0.0...2c63fc3`](git@github.com:Moohan/octopusR/compare/v1.0.0...2c63fc3)
 
-# octopusR 0.1.0
+## v1.0.0 (2023-03-07)
 
-# octopusR 0.0.0.9000
-
-* Added a `NEWS.md` file to track changes to the package.
+Full set of changes:
+[`be45be6...v1.0.0`](git@github.com:Moohan/octopusR/compare/be45be6...v1.0.0)
