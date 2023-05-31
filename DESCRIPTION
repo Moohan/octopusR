@@ -22,6 +22,7 @@ Imports:
     tibble
 Suggests: 
     covr,
+    lubridate,
     spelling,
     testthat
 Config/testthat/edition: 3
