@@ -1,4 +1,4 @@
-# octopusR (development version)
+# octopusR 1.0.1
 
 * Fixed a bug where date-times with a time zone offset would not parse (#19)
 
