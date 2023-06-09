@@ -11,6 +11,7 @@ get_consumption(
   api_key = get_api_key(),
   period_from = NULL,
   period_to = NULL,
+  tz = NULL,
   order_by = c("-period", "period"),
   group_by = c("hour", "day", "week", "month", "quarter")
 )
@@ -34,6 +35,9 @@ This parameter can be provided on its own.}
 This parameter also requires providing the \code{period_from} parameter
 to create a range.}
 
+\item{tz}{a character string that specifies which time zone to parse the date with. The string
+must be a time zone that is recognized by the user's OS.}
+
 \item{order_by}{Ordering of results returned. Default is that results are
 returned in reverse order from latest available figure.
 Valid values:
@@ -43,7 +47,7 @@ Valid values:
 }}
 
 \item{group_by}{Aggregates consumption over a specified time period.
-A day is considered to start and end at midnight in the server's timezone.
+A day is considered to start and end at midnight in the server's time zone.
 The default is that consumption is returned in half-hour periods.
 Accepted values are:
 \itemize{
@@ -66,5 +70,11 @@ Unit of measurement:
 \item Electricity meters: kWh
 \item SMETS1 Secure gas meters: kWh
 \item SMETS2 gas meters: m^3
+}
+\subsection{Parsing dates}{
+
+To return dates properly parsed \link[lubridate:lubridate-package]{lubridate} is
+required. Use the \code{tz} parameter to specify a time zone e.g. \code{tz = "UTC"},
+the default (\code{tz = NULL}) will return the dates unparsed, as characters.
 }
 }
