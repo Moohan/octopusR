@@ -4,9 +4,7 @@
 
 # octopusR 1.0.0
 
-# octopusR 0.2.0
-
-# octopusR 0.1.0
+* First release of OctopusR to CRAN
 
 # octopusR 0.0.0.9000
 
