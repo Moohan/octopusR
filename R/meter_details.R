@@ -56,7 +56,6 @@ get_meter_details <-
     if (meter_type == "electricity") {
       mpan_mprn <- Sys.getenv("OCTOPUSR_MPAN")
       serial_number <- Sys.getenv("OCTOPUSR_ELEC_SERIAL_NUM")
-      meter_gsp <- get_meter_gsp(mpan = mpan_mprn)
     } else if (meter_type == "gas") {
       mpan_mprn <- Sys.getenv("OCTOPUSR_MPRN")
       serial_number <- Sys.getenv("OCTOPUSR_GAS_SERIAL_NUM")
@@ -68,7 +67,11 @@ get_meter_details <-
           type = meter_type,
           mpan_mprn = mpan_mprn,
           serial_number = serial_number,
-          gsp = ifelse(meter_type == "electricity", meter_gsp, NA)
+          gsp = ifelse(
+            meter_type == "electricity",
+            get_meter_gsp(mpan = mpan_mprn),
+            NA
+          )
         ),
         class = "octopus_meter-point"
       )
@@ -77,7 +80,7 @@ get_meter_details <-
     }
 
     cli::cli_abort(
-      "Meter details were missing or incomplete, please supply with {.arg mpan_mprn} and {.arg serial_number} arguments or with {.help [{.fun set_meter_details}](octopusR::set_meter_details)}",
+      "Meter details were missing or incomplete, please supply with {.arg mpan_mprn} and {.arg serial_number} arguments or with {.help [{.fun set_meter_details}](octopusR::set_meter_details)}.",
       call = rlang::caller_env()
     )
   }

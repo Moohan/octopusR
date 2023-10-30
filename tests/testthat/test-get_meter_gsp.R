@@ -14,6 +14,9 @@ test_that("Can get a meter GSP", {
 })
 
 test_that("Fails with bad mprn", {
-  expect_error(get_meter_gsp(mpan = NA), "HTTP 404")
+  expect_error(
+    get_meter_gsp(mpan = NA),
+    "Meter details were missing or incomplete"
+  )
   expect_error(get_meter_gsp(mpan = "123"), "HTTP 404")
 })
