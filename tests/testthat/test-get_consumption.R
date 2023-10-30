@@ -48,6 +48,8 @@ test_that("errors properly with incorrect params", {
   )
 })
 
+skip_if_not_installed(pkg = "lubridate", minimum_version = "0.2.1")
+
 test_that("Returned electricity data is consistent", {
   expect_snapshot(
     get_consumption(

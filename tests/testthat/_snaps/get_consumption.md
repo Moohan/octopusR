@@ -46,7 +46,7 @@
       5      91.2   2022-01-24 00:00:00 2022-01-31 00:00:00
       6       0.147 2022-01-31 00:00:00 2022-01-31 00:30:00
 
----
+# Returned gas data is consistent
 
     Code
       get_consumption(meter_type = "gas", group_by = "week", period_from = "2023-08-01",

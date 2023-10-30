@@ -149,10 +149,11 @@ get_consumption <- function(
     if (rlang::is_interactive()) {
       rlang::check_installed(
         pkg = "lubridate",
-        reason = "to parse dates, use `tz = NULL` to return characters."
+        reason = "to parse dates, use `tz = NULL` to return characters.",
+        version = "0.2.1"
       )
     } else {
-      if (!rlang::is_installed("lubridate")) {
+      if (!rlang::is_installed(pkg = "lubridate", version = "0.2.1")) {
         cli::cli_abort("{.pkg lubridate} must be installed to parse dates,
                        use `tz = NULL` to return characters.")
       }
