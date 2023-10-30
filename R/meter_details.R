@@ -106,11 +106,20 @@ testing_meter <- function(meter_type = c("electricity", "gas")) {
       class = "octopus_meter-point"
     )
   } else if (meter_type == "gas") {
+    mprn <- httr2::secret_decrypt(
+      "z-BpI17a6UVNWT8ByPzue_XI5j2zU547vi0",
+      "OCTOPUSR_SECRET_KEY"
+    )
+    serial_number <- httr2::secret_decrypt(
+      "d06raLRtC5JWyQkh64mZOtWFDOUCQlojLAyfMUk-",
+      "OCTOPUSR_SECRET_KEY"
+    )
+
     structure(
       list(
         type = "gas",
-        mpan_mprn = "",
-        serial_number = ""
+        mpan_mprn = mprn,
+        serial_number = serial_number
       ),
       class = "octopus_meter-point"
     )
