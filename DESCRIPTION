@@ -24,8 +24,10 @@ Suggests:
     covr,
     lubridate,
     spelling,
-    testthat
+    testthat (>= 3.0.0)
 Config/testthat/edition: 3
+Config/testthat/parallel: true
+Config/testthat/start-first: get_consumption
 Encoding: UTF-8
 Language: en-GB
 LazyData: true
