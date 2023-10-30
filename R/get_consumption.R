@@ -54,6 +54,9 @@ get_consumption <- function(
   } else {
     meter_type <- match.arg(meter_type)
   }
+  force(mpan_mprn)
+  force(serial_number)
+  force(api_key)
   if (!missing(period_to) && missing(period_from)) {
     cli::cli_abort(
       "To use {.arg period_to} you must also provide the {.arg period_from} parameter to create a range."
