@@ -9,12 +9,11 @@
 #'
 #' @return NULL
 check_datetime_format <- function(arg_date) {
-  arg <- rlang::caller_arg(arg_date)
   call <- rlang::caller_env()
-  if (!inherits(arg_date, "character") &&
-    !inherits(arg_date, "Date")) {
+  if (!inherits(arg_date, "character") && !inherits(arg_date, "Date")) {
     cli::cli_abort(
-      "{.arg {arg}} must be {.cls character} or {.cls Date}, not {.cls {class(arg_date)}}.",
+      "{.arg {rlang::caller_arg(arg_date)}} must be {.cls character} or
+      {.cls Date}, not {.cls {class(arg_date)}}.",
       call = call
     )
   }
@@ -24,7 +23,8 @@ check_datetime_format <- function(arg_date) {
   if (!grepl(iso_8601_pattern, arg_date, perl = TRUE)) {
     cli::cli_abort(
       c(
-        "{.arg {arg}} must be in [ISO_8601](https://en.wikipedia.org/wiki/ISO_8601) format.",
+        "{.arg {rlang::caller_arg(arg_date)}} must be in
+        [ISO_8601](https://en.wikipedia.org/wiki/ISO_8601) format.",
         ">" = "For example {.val {Sys.Date()}} or {.val {Sys.time()}}."
       ),
       call = call
@@ -43,10 +43,11 @@ check_datetime_format <- function(arg_date) {
 #'
 #' @return NULL
 check_logical <- function(arg_lgl) {
-  arg <- rlang::caller_arg(arg_lgl)
   call <- rlang::caller_env()
   if (!inherits(arg_lgl, "logical")) {
-    cli::cli_abort("{.arg {arg}} must be {.cls logical}, not {.cls {class(arg_lgl)}}.",
+    cli::cli_abort(
+      "{.arg {rlang::caller_arg(arg_lgl)}} must be {.cls logical},
+    not {.cls {class(arg_lgl)}}.",
       call = call
     )
   }

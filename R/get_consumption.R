@@ -59,7 +59,8 @@ get_consumption <- function(
   force(api_key)
   if (!missing(period_to) && missing(period_from)) {
     cli::cli_abort(
-      "To use {.arg period_to} you must also provide the {.arg period_from} parameter to create a range."
+      "To use {.arg period_to} you must also provide the {.arg period_from}
+      parameter to create a range."
     )
   }
   if (missing(order_by)) {
@@ -78,7 +79,8 @@ get_consumption <- function(
 
     if (missing(period_from)) {
       cli::cli_abort(
-        "You must also specify {.arg period_to} when specifying {.arg period_from}."
+        "You must also specify {.arg period_to} when specifying
+        {.arg period_from}."
       )
     }
   }
