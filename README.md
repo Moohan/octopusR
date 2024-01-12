@@ -13,13 +13,13 @@ coverage](https://codecov.io/gh/Moohan/octopusR/branch/main/graph/badge.svg)](ht
 <!-- badges: end -->
 
 octopusR is an R package that provides access to the [Octopus Energy
-API](https://developer.octopus.energy/docs/api/). With octopusR, you can
+REST API](https://developer.octopus.energy/rest). With octopusR, you can
 easily retrieve data from the Octopus Energy API and use it in your R
 projects, or Shiny dashboards.
 
 If you find this package useful, why not [sponsor me on
-GitHub](https://github.com/sponsors/Moohan) or [sign up for an Octopus
-Energy account with my referral code
+GitHub](https://github.com/sponsors/Moohan) or sign up for an Octopus
+Energy account with [my referral code
 (young-snake-740)](https://share.octopus.energy/young-snake-740)!
 
 ## Installation

@@ -22,9 +22,9 @@ status](https://www.r-pkg.org/badges/version/octopusR)](https://CRAN.R-project.o
 [![Codecov test coverage](https://codecov.io/gh/Moohan/octopusR/branch/main/graph/badge.svg)](https://app.codecov.io/gh/Moohan/octopusR?branch=main)
 <!-- badges: end -->
 
-octopusR is an R package that provides access to the [Octopus Energy API](https://developer.octopus.energy/docs/api/). With octopusR, you can easily retrieve data from the Octopus Energy API and use it in your R projects, or Shiny dashboards.
+octopusR is an R package that provides access to the [Octopus Energy REST API](https://developer.octopus.energy/rest). With octopusR, you can easily retrieve data from the Octopus Energy API and use it in your R projects, or Shiny dashboards.
 
-If you find this package useful, why not [sponsor me on GitHub](https://github.com/sponsors/Moohan) or [sign up for an Octopus Energy account with my referral code (young-snake-740)](https://share.octopus.energy/young-snake-740)!
+If you find this package useful, why not [sponsor me on GitHub](https://github.com/sponsors/Moohan) or sign up for an Octopus Energy account with [my referral code (young-snake-740)](https://share.octopus.energy/young-snake-740)!
 
 ## Installation
 octopusR can be installed from CRAN.
@@ -35,7 +35,7 @@ install.packages("octopusR")
 
 If you would like the development version, it can be installed from GitHub, using the `devtools` package:
 
-``` r
+```r
 # Install devtools if needed
 if (!require("devtools")) install.packages("devtools")
 devtools::install_github("moohan/octopusR")

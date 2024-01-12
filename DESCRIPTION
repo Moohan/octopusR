@@ -4,8 +4,8 @@ Version: 1.0.1.9000
 Authors@R: 
     person("James", "McMahon", , "jamesmcmahon0@gmail.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-5380-2029"))
-Description: A simple wrapper for the 'Octopus Energy' API
-    <https://developer.octopus.energy/docs/api/>. It handles
+Description: A simple wrapper for the 'Octopus Energy' REST API
+    <https://developer.octopus.energy/rest/>. It handles
     authentication, by storing a provided API key and meter details.
     Implemented endpoints include 'products' for viewing tariff details
     and 'consumption' for viewing meter consumption data.
