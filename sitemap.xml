@@ -1,51 +1,19 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://moohan.github.io/octopusR/404.html</loc>
-  </url>
-  <url>
-    <loc>https://moohan.github.io/octopusR/CODE_OF_CONDUCT.html</loc>
-  </url>
-  <url>
-    <loc>https://moohan.github.io/octopusR/CONTRIBUTING.html</loc>
-  </url>
-  <url>
-    <loc>https://moohan.github.io/octopusR/LICENSE-text.html</loc>
-  </url>
-  <url>
-    <loc>https://moohan.github.io/octopusR/LICENSE.html</loc>
-  </url>
-  <url>
-    <loc>https://moohan.github.io/octopusR/authors.html</loc>
-  </url>
-  <url>
-    <loc>https://moohan.github.io/octopusR/index.html</loc>
-  </url>
-  <url>
-    <loc>https://moohan.github.io/octopusR/news/index.html</loc>
-  </url>
-  <url>
-    <loc>https://moohan.github.io/octopusR/reference/check_datetime_format.html</loc>
-  </url>
-  <url>
-    <loc>https://moohan.github.io/octopusR/reference/check_logical.html</loc>
-  </url>
-  <url>
-    <loc>https://moohan.github.io/octopusR/reference/get_consumption.html</loc>
-  </url>
-  <url>
-    <loc>https://moohan.github.io/octopusR/reference/get_meter_gsp.html</loc>
-  </url>
-  <url>
-    <loc>https://moohan.github.io/octopusR/reference/get_products.html</loc>
-  </url>
-  <url>
-    <loc>https://moohan.github.io/octopusR/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>https://moohan.github.io/octopusR/reference/set_api_key.html</loc>
-  </url>
-  <url>
-    <loc>https://moohan.github.io/octopusR/reference/set_meter_details.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>https://moohan.github.io/octopusR/404.html</loc></url>
+<url><loc>https://moohan.github.io/octopusR/CODE_OF_CONDUCT.html</loc></url>
+<url><loc>https://moohan.github.io/octopusR/CONTRIBUTING.html</loc></url>
+<url><loc>https://moohan.github.io/octopusR/LICENSE-text.html</loc></url>
+<url><loc>https://moohan.github.io/octopusR/LICENSE.html</loc></url>
+<url><loc>https://moohan.github.io/octopusR/authors.html</loc></url>
+<url><loc>https://moohan.github.io/octopusR/index.html</loc></url>
+<url><loc>https://moohan.github.io/octopusR/news/index.html</loc></url>
+<url><loc>https://moohan.github.io/octopusR/reference/check_datetime_format.html</loc></url>
+<url><loc>https://moohan.github.io/octopusR/reference/check_logical.html</loc></url>
+<url><loc>https://moohan.github.io/octopusR/reference/get_consumption.html</loc></url>
+<url><loc>https://moohan.github.io/octopusR/reference/get_meter_gsp.html</loc></url>
+<url><loc>https://moohan.github.io/octopusR/reference/get_products.html</loc></url>
+<url><loc>https://moohan.github.io/octopusR/reference/index.html</loc></url>
+<url><loc>https://moohan.github.io/octopusR/reference/set_api_key.html</loc></url>
+<url><loc>https://moohan.github.io/octopusR/reference/set_meter_details.html</loc></url>
 </urlset>
+
