@@ -17,7 +17,7 @@ octopus_api <- function(path,
     httr2::req_url_path_append(path) |>
     httr2::req_url_query(!!!query) |>
     httr2::req_throttle(5L) |>
-    httr2::req_cache(tempdir()) |>
+    httr2::req_cache(tools::R_user_dir("octopusR", "cache")) |>
     httr2::req_progress("down")
 
   resp <- req |>
