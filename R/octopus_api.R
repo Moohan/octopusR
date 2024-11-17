@@ -15,10 +15,12 @@ octopus_api <- function(path,
   req <- httr2::request(base_url) |>
     httr2::req_user_agent("octopusR (https://github.com/Moohan/octopusR)") |>
     httr2::req_url_path_append(path) |>
-    httr2::req_url_query(!!!query)
+    httr2::req_url_query(!!!query) |>
+    httr2::req_throttle(5L) |>
+    httr2::req_cache(tempdir()) |>
+    httr2::req_progress("down")
 
   resp <- req |>
-    httr2::req_throttle(5L) |>
     httr2::req_error(body = octopus_error_body) |>
     httr2::req_perform()
 
