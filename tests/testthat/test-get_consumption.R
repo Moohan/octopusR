@@ -52,60 +52,72 @@ skip_if_not_installed(pkg = "lubridate", minimum_version = "0.2.1")
 
 test_that("Returned electricity data is consistent", {
   expect_snapshot(
-    get_consumption(
-      meter_type = "electricity",
-      group_by = "week",
-      period_from = "2022-01-01",
-      period_to = "2022-01-31"
+    suppressMessages(
+      get_consumption(
+        meter_type = "electricity",
+        group_by = "week",
+        period_from = "2022-01-01",
+        period_to = "2022-01-31"
+      )
     )
   )
   expect_snapshot(
-    get_consumption(
-      meter_type = "electricity",
-      group_by = "week",
-      period_from = "2022-01-01",
-      period_to = "2022-01-31",
-      tz = "UTC"
+    suppressMessages(
+      get_consumption(
+        meter_type = "electricity",
+        group_by = "week",
+        period_from = "2022-01-01",
+        period_to = "2022-01-31",
+        tz = "UTC"
+      )
     )
   )
   expect_snapshot(
-    get_consumption(
-      meter_type = "electricity",
-      group_by = "week",
-      period_from = "2022-01-01",
-      period_to = "2022-01-31",
-      tz = "UTC",
-      order_by = "period"
+    suppressMessages(
+      get_consumption(
+        meter_type = "electricity",
+        group_by = "week",
+        period_from = "2022-01-01",
+        period_to = "2022-01-31",
+        tz = "UTC",
+        order_by = "period"
+      )
     )
   )
 })
 
 test_that("Returned gas data is consistent", {
   expect_snapshot(
-    get_consumption(
-      meter_type = "gas",
-      group_by = "week",
-      period_from = "2023-08-01",
-      period_to = "2023-08-31"
+    suppressMessages(
+      get_consumption(
+        meter_type = "gas",
+        group_by = "week",
+        period_from = "2023-08-01",
+        period_to = "2023-08-31"
+      )
     )
   )
   expect_snapshot(
-    get_consumption(
-      meter_type = "gas",
-      group_by = "week",
-      period_from = "2023-08-01",
-      period_to = "2023-08-31",
-      tz = "UTC"
+    suppressMessages(
+      get_consumption(
+        meter_type = "gas",
+        group_by = "week",
+        period_from = "2023-08-01",
+        period_to = "2023-08-31",
+        tz = "UTC"
+      )
     )
   )
   expect_snapshot(
-    get_consumption(
-      meter_type = "gas",
-      group_by = "week",
-      period_from = "2023-08-01",
-      period_to = "2023-08-31",
-      tz = "UTC",
-      order_by = "period"
+    suppressMessages(
+      get_consumption(
+        meter_type = "gas",
+        group_by = "week",
+        period_from = "2023-08-01",
+        period_to = "2023-08-31",
+        tz = "UTC",
+        order_by = "period"
+      )
     )
   )
 })
