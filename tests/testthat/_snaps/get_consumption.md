@@ -1,8 +1,8 @@
 # Returned electricity data is consistent
 
     Code
-      get_consumption(meter_type = "electricity", group_by = "week", period_from = "2022-01-01",
-        period_to = "2022-01-31")
+      suppressMessages(get_consumption(meter_type = "electricity", group_by = "week",
+        period_from = "2022-01-01", period_to = "2022-01-31"))
     Output
       # A tibble: 6 x 3
         consumption interval_start       interval_end        
@@ -17,8 +17,8 @@
 ---
 
     Code
-      get_consumption(meter_type = "electricity", group_by = "week", period_from = "2022-01-01",
-        period_to = "2022-01-31", tz = "UTC")
+      suppressMessages(get_consumption(meter_type = "electricity", group_by = "week",
+        period_from = "2022-01-01", period_to = "2022-01-31", tz = "UTC"))
     Output
       # A tibble: 6 x 3
         consumption interval_start      interval_end       
@@ -33,8 +33,8 @@
 ---
 
     Code
-      get_consumption(meter_type = "electricity", group_by = "week", period_from = "2022-01-01",
-        period_to = "2022-01-31", tz = "UTC", order_by = "period")
+      suppressMessages(get_consumption(meter_type = "electricity", group_by = "week",
+        period_from = "2022-01-01", period_to = "2022-01-31", tz = "UTC", order_by = "period"))
     Output
       # A tibble: 6 x 3
         consumption interval_start      interval_end       
@@ -49,8 +49,8 @@
 # Returned gas data is consistent
 
     Code
-      get_consumption(meter_type = "gas", group_by = "week", period_from = "2023-08-01",
-        period_to = "2023-08-31")
+      suppressMessages(get_consumption(meter_type = "gas", group_by = "week",
+        period_from = "2023-08-01", period_to = "2023-08-31"))
     Output
       # A tibble: 5 x 3
         consumption interval_start            interval_end             
@@ -64,8 +64,8 @@
 ---
 
     Code
-      get_consumption(meter_type = "gas", group_by = "week", period_from = "2023-08-01",
-        period_to = "2023-08-31", tz = "UTC")
+      suppressMessages(get_consumption(meter_type = "gas", group_by = "week",
+        period_from = "2023-08-01", period_to = "2023-08-31", tz = "UTC"))
     Output
       # A tibble: 5 x 3
         consumption interval_start      interval_end       
@@ -79,8 +79,8 @@
 ---
 
     Code
-      get_consumption(meter_type = "gas", group_by = "week", period_from = "2023-08-01",
-        period_to = "2023-08-31", tz = "UTC", order_by = "period")
+      suppressMessages(get_consumption(meter_type = "gas", group_by = "week",
+        period_from = "2023-08-01", period_to = "2023-08-31", tz = "UTC", order_by = "period"))
     Output
       # A tibble: 5 x 3
         consumption interval_start      interval_end       
