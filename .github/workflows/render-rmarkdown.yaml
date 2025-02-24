@@ -24,11 +24,11 @@ jobs:
         with:
           fetch-depth: 0
 
-      - uses: r-lib/actions/setup-pandoc@473c68190595b311a74f208fba61a8d8c0d4c247 # v2.11.1
+      - uses: r-lib/actions/setup-pandoc@14a7e741c1cb130261263aa1593718ba42cf443b # v2.11.2
 
-      - uses: r-lib/actions/setup-r@473c68190595b311a74f208fba61a8d8c0d4c247 # v2.11.1
+      - uses: r-lib/actions/setup-r@14a7e741c1cb130261263aa1593718ba42cf443b # v2.11.2
 
-      - uses: r-lib/actions/setup-r-dependencies@473c68190595b311a74f208fba61a8d8c0d4c247 # v2.11.1
+      - uses: r-lib/actions/setup-r-dependencies@14a7e741c1cb130261263aa1593718ba42cf443b # v2.11.2
         with:
           extra-packages: any::rmarkdown, local::.
 
