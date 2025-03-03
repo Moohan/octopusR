@@ -5,14 +5,17 @@
 
 <!-- badges: start -->
 
+[![Project Status: Active – The project has reached a stable, usable
+state and is being actively
+developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 [![CRAN
 status](https://www.r-pkg.org/badges/version/octopusR)](https://CRAN.R-project.org/package=octopusR)
 [![R-CMD-check](https://github.com/Moohan/octopusR/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/Moohan/octopusR/actions/workflows/R-CMD-check.yaml)
 [![Codecov test
 coverage](https://codecov.io/gh/Moohan/octopusR/branch/main/graph/badge.svg)](https://app.codecov.io/gh/Moohan/octopusR?branch=main)
+[![pkgcheck](https://github.com/Moohan/octopusR/workflows/pkgcheck/badge.svg)](https://github.com/Moohan/octopusR/actions?query=workflow%3Apkgcheck)
 [![OpenSSF
 Scorecard](https://api.scorecard.dev/projects/github.com/Moohan/octopusR/badge)](https://scorecard.dev/viewer/?uri=github.com/Moohan/octopusR)
-[![pkgcheck](https://github.com/Moohan/octopusR/workflows/pkgcheck/badge.svg)](https://github.com/Moohan/octopusR/actions?query=workflow%3Apkgcheck)
 <!-- badges: end -->
 
 octopusR is an R package that provides access to the [Octopus Energy
@@ -80,15 +83,7 @@ energy_usage <- get_consumption(meter_type = "elec")
 
 # View the data
 head(energy_usage)
-#> # A tibble: 6 × 3
-#>   consumption interval_start       interval_end        
-#>         <dbl> <chr>                <chr>               
-#> 1       0.096 2023-01-15T23:30:00Z 2023-01-16T00:00:00Z
-#> 2       0.097 2023-01-15T23:00:00Z 2023-01-15T23:30:00Z
-#> 3       0.097 2023-01-15T22:30:00Z 2023-01-15T23:00:00Z
-#> 4       0.097 2023-01-15T22:00:00Z 2023-01-15T22:30:00Z
-#> 5       0.098 2023-01-15T21:30:00Z 2023-01-15T22:00:00Z
-#> 6       0.098 2023-01-15T21:00:00Z 2023-01-15T21:30:00Z
+#> # A tibble: 0 × 0
 ```
 
 For more information and examples, see the [package
