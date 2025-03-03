@@ -4,15 +4,13 @@
 # octopusR
 
 <!-- badges: start -->
-
+[![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 [![CRAN
 status](https://www.r-pkg.org/badges/version/octopusR)](https://CRAN.R-project.org/package=octopusR)
 [![R-CMD-check](https://github.com/Moohan/octopusR/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/Moohan/octopusR/actions/workflows/R-CMD-check.yaml)
-[![Codecov test
-coverage](https://codecov.io/gh/Moohan/octopusR/branch/main/graph/badge.svg)](https://app.codecov.io/gh/Moohan/octopusR?branch=main)
-[![OpenSSF
-Scorecard](https://api.scorecard.dev/projects/github.com/Moohan/octopusR/badge)](https://scorecard.dev/viewer/?uri=github.com/Moohan/octopusR)
+[![Codecov test coverage](https://codecov.io/gh/Moohan/octopusR/branch/main/graph/badge.svg)](https://app.codecov.io/gh/Moohan/octopusR?branch=main)
 [![pkgcheck](https://github.com/Moohan/octopusR/workflows/pkgcheck/badge.svg)](https://github.com/Moohan/octopusR/actions?query=workflow%3Apkgcheck)
+[![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/Moohan/octopusR/badge)](https://scorecard.dev/viewer/?uri=github.com/Moohan/octopusR)
 <!-- badges: end -->
 
 octopusR is an R package that provides access to the [Octopus Energy
