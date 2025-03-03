@@ -12,6 +12,7 @@ status](https://www.r-pkg.org/badges/version/octopusR)](https://CRAN.R-project.o
 coverage](https://codecov.io/gh/Moohan/octopusR/branch/main/graph/badge.svg)](https://app.codecov.io/gh/Moohan/octopusR?branch=main)
 [![OpenSSF
 Scorecard](https://api.scorecard.dev/projects/github.com/Moohan/octopusR/badge)](https://scorecard.dev/viewer/?uri=github.com/Moohan/octopusR)
+[![pkgcheck](https://github.com/Moohan/octopusR/workflows/pkgcheck/badge.svg)](https://github.com/Moohan/octopusR/actions?query=workflow%3Apkgcheck)
 <!-- badges: end -->
 
 octopusR is an R package that provides access to the [Octopus Energy
