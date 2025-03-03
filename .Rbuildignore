@@ -16,3 +16,4 @@
 ^CRAN-SUBMISSION$
 ^revdep$
 ^\.pre-commit-config\.yaml$
+^codemeta\.json$
