@@ -28,7 +28,7 @@ projects, or Shiny dashboards.
 If you find this package useful, why not [sponsor me on
 GitHub](https://github.com/sponsors/Moohan) or sign up for an Octopus
 Energy account with [my referral code
-(young-snake-740)](https://share.octopus.energy/young-snake-740)!
+(jolly-bloom-201)](https://share.octopus.energy/jolly-bloom-201)!
 
 ## Installation
 
@@ -39,12 +39,12 @@ install.packages("octopusR")
 ```
 
 If you would like the development version, it can be installed from
-GitHub, using the `devtools` package:
+GitHub, using the `{remotes}` package:
 
 ``` r
-# Install devtools if needed
-if (!require("devtools")) install.packages("devtools")
-devtools::install_github("moohan/octopusR")
+# Install remotes if needed
+if (!require("remotes")) install.packages("remotes")
+remotes::install_github("moohan/octopusR")
 ```
 
 ## Usage
