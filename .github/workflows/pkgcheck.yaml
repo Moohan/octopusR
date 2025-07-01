@@ -27,4 +27,4 @@ jobs:
         with:
           egress-policy: audit
 
-      - uses: ropensci-review-tools/pkgcheck-action@9ca76756d845be306d88996cc80db5df0bea6f5a # main
+      - uses: ropensci-review-tools/pkgcheck-action@bebfefd73e09b8dbc77ef35d49b43b83b7198775 # main
