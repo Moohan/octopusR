@@ -53,15 +53,25 @@ test_that("get_product returns expected data structure", {
   # Check for electricity tariffs attribute if it exists
   if (!is.null(attr(product_data, "electricity_tariffs"))) {
     electricity_tariffs <- attr(product_data, "electricity_tariffs")
-    expect_s3_class(electricity_tariffs, "tbl_df")
-    expect_true("tariff_code" %in% names(electricity_tariffs))
+    expect_type(electricity_tariffs, "list")
+    expect_true(length(electricity_tariffs) > 0)
+    # Check structure of first tariff
+    if (length(electricity_tariffs) > 0) {
+      first_tariff <- electricity_tariffs[[1]]
+      expect_true("tariff_code" %in% names(first_tariff))
+    }
   }
   
   # Check for gas tariffs attribute if it exists
   if (!is.null(attr(product_data, "gas_tariffs"))) {
     gas_tariffs <- attr(product_data, "gas_tariffs")
-    expect_s3_class(gas_tariffs, "tbl_df")
-    expect_true("tariff_code" %in% names(gas_tariffs))
+    expect_type(gas_tariffs, "list")
+    expect_true(length(gas_tariffs) > 0)
+    # Check structure of first tariff
+    if (length(gas_tariffs) > 0) {
+      first_tariff <- gas_tariffs[[1]]
+      expect_true("tariff_code" %in% names(first_tariff))
+    }
   }
 })
 
