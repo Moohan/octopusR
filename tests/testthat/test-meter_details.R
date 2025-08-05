@@ -1,3 +1,5 @@
+skip_if_offline(host = "api.octopus.energy")
+
 test_that("set_meter_details works with direction parameter", {
   # Test setting import meter details
   expect_no_error(
@@ -58,7 +60,7 @@ test_that("set_meter_details errors properly with invalid direction for gas", {
       serial_number = "GAS123",
       direction = "import"
     ),
-    "The `direction` parameter is only valid for electricity meters"
+    "direction.*only valid for electricity"
   )
 })
 
@@ -98,7 +100,7 @@ test_that("get_meter_details works with direction parameter", {
 test_that("get_meter_details errors properly with invalid direction for gas", {
   expect_error(
     get_meter_details("gas", direction = "import"),
-    "The `direction` parameter is only valid for electricity meters"
+    "direction.*only valid for electricity"
   )
 })
 
