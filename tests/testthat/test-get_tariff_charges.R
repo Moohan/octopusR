@@ -123,7 +123,7 @@ test_that("Returned tariff data is consistent", {
 
 test_that("get_agile_prices returns data", {
   agile_data <- get_agile_prices(region = "H")
-  
+
   expect_s3_class(agile_data, "tbl")
   expect_true("value_exc_vat" %in% names(agile_data))
   expect_true("value_inc_vat" %in% names(agile_data))
