@@ -26,12 +26,12 @@ set_meter_details <- function(meter_type = c("electricity", "gas"),
                               serial_number = NULL,
                               direction = NULL) {
   meter_type <- match.arg(meter_type)
-  
+
   # Validate direction parameter for electricity meters
   if (!is.null(direction) && meter_type != "electricity") {
     stop("The 'direction' parameter is only valid for electricity meters.")
   }
-  
+
   if (!is.null(direction)) {
     direction <- match.arg(direction, c("import", "export"))
   }
@@ -74,12 +74,12 @@ set_meter_details <- function(meter_type = c("electricity", "gas"),
 get_meter_details <-
   function(meter_type = c("electricity", "gas"), direction = NULL) {
     meter_type <- match.arg(meter_type)
-    
+
     # Validate direction parameter
     if (!is.null(direction) && meter_type != "electricity") {
       stop("The 'direction' parameter is only valid for electricity meters.")
     }
-    
+
     if (!is.null(direction)) {
       direction <- match.arg(direction, c("import", "export"))
     }
@@ -186,30 +186,29 @@ testing_meter <- function(meter_type = c("electricity", "gas")) {
 #' This is useful for users with solar panels or other export generation.
 #'
 #' @param import_mpan The import meter MPAN
-#' @param import_serial The import meter serial number  
+#' @param import_serial The import meter serial number
 #' @param export_mpan The export meter MPAN
 #' @param export_serial The export meter serial number
 #' @param api_key API key for authentication
 #' @param period_from Show consumption from the given datetime (inclusive)
-#' @param period_to Show consumption to the given datetime (exclusive) 
+#' @param period_to Show consumption to the given datetime (exclusive)
 #' @param tz Time zone for date parsing (requires lubridate)
 #' @param order_by Ordering of results returned
 #' @param group_by Aggregates consumption over a specified time period
 #'
-#' @return a [tibble][tibble::tibble-package] with import_consumption, 
+#' @return a [tibble][tibble::tibble-package] with import_consumption,
 #' export_consumption, and net_consumption columns
 #' @export
 combine_consumption <- function(import_mpan = NULL,
-                               import_serial = NULL,
-                               export_mpan = NULL,
-                               export_serial = NULL,
-                               api_key = get_api_key(),
-                               period_from = NULL,
-                               period_to = NULL,
-                               tz = NULL,
-                               order_by = c("-period", "period"),
-                               group_by = c("hour", "day", "week", "month", "quarter")) {
-                               
+                                import_serial = NULL,
+                                export_mpan = NULL,
+                                export_serial = NULL,
+                                api_key = get_api_key(),
+                                period_from = NULL,
+                                period_to = NULL,
+                                tz = NULL,
+                                order_by = c("-period", "period"),
+                                group_by = c("hour", "day", "week", "month", "quarter")) {
   # Get import consumption data
   import_data <- NULL
   if (!is.null(import_mpan) && !is.null(import_serial)) {
@@ -226,20 +225,23 @@ combine_consumption <- function(import_mpan = NULL,
     )
   } else {
     # Try to get from environment variables
-    import_data <- tryCatch({
-      get_consumption(
-        meter_type = "electricity",
-        direction = "import",
-        api_key = api_key,
-        period_from = period_from,
-        period_to = period_to,
-        tz = tz,
-        order_by = order_by,
-        group_by = group_by
-      )
-    }, error = function(e) NULL)
+    import_data <- tryCatch(
+      {
+        get_consumption(
+          meter_type = "electricity",
+          direction = "import",
+          api_key = api_key,
+          period_from = period_from,
+          period_to = period_to,
+          tz = tz,
+          order_by = order_by,
+          group_by = group_by
+        )
+      },
+      error = function(e) NULL
+    )
   }
-  
+
   # Get export consumption data
   export_data <- NULL
   if (!is.null(export_mpan) && !is.null(export_serial)) {
@@ -256,25 +258,28 @@ combine_consumption <- function(import_mpan = NULL,
     )
   } else {
     # Try to get from environment variables
-    export_data <- tryCatch({
-      get_consumption(
-        meter_type = "electricity",
-        direction = "export",
-        api_key = api_key,
-        period_from = period_from,
-        period_to = period_to,
-        tz = tz,
-        order_by = order_by,
-        group_by = group_by
-      )
-    }, error = function(e) NULL)
+    export_data <- tryCatch(
+      {
+        get_consumption(
+          meter_type = "electricity",
+          direction = "export",
+          api_key = api_key,
+          period_from = period_from,
+          period_to = period_to,
+          tz = tz,
+          order_by = order_by,
+          group_by = group_by
+        )
+      },
+      error = function(e) NULL
+    )
   }
-  
+
   # Combine the data
   if (is.null(import_data) && is.null(export_data)) {
     stop("No import or export consumption data could be retrieved.")
   }
-  
+
   if (is.null(import_data)) {
     # Only export data available
     result <- export_data
@@ -291,25 +296,28 @@ combine_consumption <- function(import_mpan = NULL,
     result$net_consumption <- result$import_consumption
   } else {
     # Both import and export data available - merge on time intervals
-    result <- merge(import_data, export_data, 
-                   by = c("interval_start", "interval_end"), 
-                   all = TRUE, 
-                   suffixes = c("_import", "_export"))
-    
+    result <- merge(import_data, export_data,
+      by = c("interval_start", "interval_end"),
+      all = TRUE,
+      suffixes = c("_import", "_export")
+    )
+
     # Rename consumption columns
     result$import_consumption <- ifelse(is.na(result$consumption_import), 0, result$consumption_import)
     result$export_consumption <- ifelse(is.na(result$consumption_export), 0, result$consumption_export)
     result$consumption_import <- NULL
     result$consumption_export <- NULL
-    
+
     # Calculate net consumption (import - export)
     result$net_consumption <- result$import_consumption - result$export_consumption
   }
-  
+
   # Reorder columns for better readability
-  col_order <- c("interval_start", "interval_end", "import_consumption", 
-                 "export_consumption", "net_consumption")
+  col_order <- c(
+    "interval_start", "interval_end", "import_consumption",
+    "export_consumption", "net_consumption"
+  )
   result <- result[col_order]
-  
+
   return(result)
 }

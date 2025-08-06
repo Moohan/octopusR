@@ -61,16 +61,16 @@ get_consumption <- function(
   } else {
     meter_type <- match.arg(meter_type)
   }
-  
+
   # Validate direction parameter
   if (!is.null(direction) && meter_type != "electricity") {
     stop("The 'direction' parameter is only valid for electricity meters.")
   }
-  
+
   if (!is.null(direction)) {
     direction <- match.arg(direction, c("import", "export"))
   }
-  
+
   # Get meter details if not provided
   if (is.null(mpan_mprn) || is.null(serial_number)) {
     meter_details <- get_meter_details(meter_type, direction)
@@ -81,7 +81,7 @@ get_consumption <- function(
       serial_number <- meter_details[["serial_number"]]
     }
   }
-  
+
   force(mpan_mprn)
   force(serial_number)
   force(api_key)
