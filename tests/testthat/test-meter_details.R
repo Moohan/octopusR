@@ -10,10 +10,10 @@ test_that("set_meter_details works with direction parameter", {
       direction = "import"
     )
   )
-  
+
   expect_equal(Sys.getenv("OCTOPUSR_MPAN_IMPORT"), "123456789012")
   expect_equal(Sys.getenv("OCTOPUSR_ELEC_SERIAL_NUM_IMPORT"), "ABC123")
-  
+
   # Test setting export meter details
   expect_no_error(
     set_meter_details(
@@ -23,10 +23,10 @@ test_that("set_meter_details works with direction parameter", {
       direction = "export"
     )
   )
-  
+
   expect_equal(Sys.getenv("OCTOPUSR_MPAN_EXPORT"), "987654321098")
   expect_equal(Sys.getenv("OCTOPUSR_ELEC_SERIAL_NUM_EXPORT"), "XYZ789")
-  
+
   # Clean up
   Sys.unsetenv("OCTOPUSR_MPAN_IMPORT")
   Sys.unsetenv("OCTOPUSR_ELEC_SERIAL_NUM_IMPORT")
@@ -43,10 +43,10 @@ test_that("set_meter_details maintains legacy behavior without direction", {
       serial_number = "DEF456"
     )
   )
-  
+
   expect_equal(Sys.getenv("OCTOPUSR_MPAN"), "111222333444")
   expect_equal(Sys.getenv("OCTOPUSR_ELEC_SERIAL_NUM"), "DEF456")
-  
+
   # Clean up
   Sys.unsetenv("OCTOPUSR_MPAN")
   Sys.unsetenv("OCTOPUSR_ELEC_SERIAL_NUM")
@@ -70,7 +70,7 @@ test_that("get_meter_details works with direction parameter", {
   Sys.setenv("OCTOPUSR_ELEC_SERIAL_NUM_IMPORT" = "ABC123")
   Sys.setenv("OCTOPUSR_MPAN_EXPORT" = "987654321098")
   Sys.setenv("OCTOPUSR_ELEC_SERIAL_NUM_EXPORT" = "XYZ789")
-  
+
   # Mock the GSP function to avoid API calls in tests
   with_mocked_bindings(
     get_meter_gsp = function(mpan) "A",
@@ -81,7 +81,7 @@ test_that("get_meter_details works with direction parameter", {
       expect_equal(import_meter$mpan_mprn, "123456789012")
       expect_equal(import_meter$serial_number, "ABC123")
       expect_equal(import_meter$direction, "import")
-      
+
       # Test getting export meter details
       export_meter <- get_meter_details("electricity", direction = "export")
       expect_equal(export_meter$mpan_mprn, "987654321098")
@@ -89,7 +89,7 @@ test_that("get_meter_details works with direction parameter", {
       expect_equal(export_meter$direction, "export")
     }
   )
-  
+
   # Clean up
   Sys.unsetenv("OCTOPUSR_MPAN_IMPORT")
   Sys.unsetenv("OCTOPUSR_ELEC_SERIAL_NUM_IMPORT")
@@ -108,8 +108,8 @@ test_that("get_meter_details falls back to legacy behavior without direction", {
   # Set up legacy test data
   Sys.setenv("OCTOPUSR_MPAN" = "111222333444")
   Sys.setenv("OCTOPUSR_ELEC_SERIAL_NUM" = "DEF456")
-  
-  # Mock the GSP function to avoid API calls in tests  
+
+  # Mock the GSP function to avoid API calls in tests
   with_mocked_bindings(
     get_meter_gsp = function(mpan) "A",
     is_testing = function() FALSE,
@@ -121,7 +121,7 @@ test_that("get_meter_details falls back to legacy behavior without direction", {
       expect_null(meter$direction)
     }
   )
-  
+
   # Clean up
   Sys.unsetenv("OCTOPUSR_MPAN")
   Sys.unsetenv("OCTOPUSR_ELEC_SERIAL_NUM")
