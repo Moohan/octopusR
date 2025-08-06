@@ -16,7 +16,7 @@
 #' @param product_code The product code for the tariff.
 #' @param tariff_code The tariff code.
 #' @param fuel_type Type of fuel, either "electricity" or "gas".
-#' @param rate_type Type of rate to retrieve. For electricity: "standard-unit-rates", 
+#' @param rate_type Type of rate to retrieve. For electricity: "standard-unit-rates",
 #' "day-unit-rates", "night-unit-rates". For gas: "standard-unit-rates".
 #' @param period_from Show charges from the given datetime (inclusive).
 #' This parameter can be provided on its own.
@@ -40,15 +40,14 @@ get_tariff_charges <- function(
     period_to = NULL,
     tz = NULL,
     order_by = c("-period", "period")) {
-  
   if (missing(product_code)) {
     cli::cli_abort("You must specify a {.arg product_code}")
   }
-  
+
   if (missing(tariff_code)) {
     cli::cli_abort("You must specify a {.arg tariff_code}")
   }
-  
+
   if (missing(fuel_type)) {
     cli::cli_abort(
       "You must specify {.val electricity} or {.val gas} for {.arg fuel_type}"
@@ -56,32 +55,32 @@ get_tariff_charges <- function(
   } else {
     fuel_type <- match.arg(fuel_type)
   }
-  
+
   # Set default rate_type based on fuel_type
   if (is.null(rate_type)) {
     rate_type <- "standard-unit-rates"
   }
-  
+
   # Validate rate_type
   if (fuel_type == "electricity") {
     valid_rates <- c("standard-unit-rates", "day-unit-rates", "night-unit-rates")
   } else {
     valid_rates <- c("standard-unit-rates")
   }
-  
+
   if (!rate_type %in% valid_rates) {
     cli::cli_abort(
       "For {.val {fuel_type}}, {.arg rate_type} must be one of: {.val {valid_rates}}"
     )
   }
-  
+
   if (!missing(period_to) && missing(period_from)) {
     cli::cli_abort(
       "To use {.arg period_to} you must also provide the {.arg period_from}
       parameter to create a range."
     )
   }
-  
+
   if (missing(order_by)) {
     order_by <- NULL
   } else {
@@ -192,7 +191,7 @@ get_tariff_charges <- function(
 #' @inheritParams get_tariff_charges
 #' @param region The GSP region code (e.g. "H" for Southern England).
 #' If not provided, it will attempt to use saved meter details.
-#' @param fuel_type Type of fuel, either "electricity" or "gas". 
+#' @param fuel_type Type of fuel, either "electricity" or "gas".
 #' Note: Agile is typically only available for electricity.
 #' @param days_ahead Number of days ahead to fetch prices for (default: 2).
 #'
@@ -203,42 +202,45 @@ get_agile_prices <- function(
     fuel_type = c("electricity", "gas"),
     days_ahead = 2,
     tz = "UTC") {
-  
   if (missing(fuel_type)) {
     fuel_type <- "electricity"
   } else {
     fuel_type <- match.arg(fuel_type)
   }
-  
+
   if (fuel_type != "electricity") {
     cli::cli_warn("Agile tariffs are typically only available for electricity")
   }
-  
+
   if (is.null(region)) {
     # Try to get region from meter details
-    tryCatch({
-      region <- get_meter_gsp(fuel_type)[["group_id"]]
-    }, error = function(e) {
-      cli::cli_abort(
-        c("You must specify a {.arg region} or set meter details first",
-          "i" = "Use {.fun set_meter_details} to set your meter details")
-      )
-    })
+    tryCatch(
+      {
+        region <- get_meter_gsp(fuel_type)[["group_id"]]
+      },
+      error = function(e) {
+        cli::cli_abort(
+          c("You must specify a {.arg region} or set meter details first",
+            "i" = "Use {.fun set_meter_details} to set your meter details"
+          )
+        )
+      }
+    )
   }
-  
+
   # Construct Agile product and tariff codes
   product_code <- "AGILE-FLEX-22-11-25"
-  
+
   if (fuel_type == "electricity") {
     tariff_code <- paste0("E-1R-AGILE-FLEX-22-11-25-", region)
   } else {
     tariff_code <- paste0("G-1R-AGILE-FLEX-22-11-25-", region)
   }
-  
+
   # Calculate date range
   period_from <- Sys.Date()
   period_to <- Sys.Date() + days_ahead
-  
+
   get_tariff_charges(
     product_code = product_code,
     tariff_code = tariff_code,
