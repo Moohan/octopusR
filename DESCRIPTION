@@ -2,7 +2,7 @@ Package: octopusR
 Title: Interact with the 'Octopus Energy' API
 Version: 1.0.1.9000
 Authors@R: 
-    person("James", "Hayes", , "jamesmcmahon0@gmail.com", role = c("aut", "cre"),
+    person("James", "Hayes", email = "jamesmcmahon0@gmail.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-5380-2029"))
 Description: A simple wrapper for the 'Octopus Energy' REST API
     <https://developer.octopus.energy/rest/>. It handles authentication,
