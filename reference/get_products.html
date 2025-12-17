@@ -107,24 +107,19 @@ you can generate an API key on the
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">get_products</span><span class="op">(</span>is_green <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 15 × 16</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 10 × 16</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    code        direction full_name display_name description is_variable is_green</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>     <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>        <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>       <span style="color: #949494; font-style: italic;">&lt;lgl&gt;</span>   </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 1</span> AGILE-24-1… IMPORT    Agile Oc… Agile Octop… With Agile… TRUE        TRUE    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> AGILE-BB-2… IMPORT    Agile Oc… Agile Octop… With Agile… TRUE        TRUE    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> AGILE-OUTG… EXPORT    Agile Ou… Agile Outgo… Outgoing O… TRUE        TRUE    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> AGILE-OUTG… EXPORT    Agile Ou… Agile Outgo… Outgoing O… TRUE        TRUE    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> COOP-SEG-E… EXPORT    Co-op Sm… Co-op Smart… This is ou… FALSE       TRUE    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> COOP-SEG-F… EXPORT    Co-op Sm… Co-op Smart… This is ou… FALSE       TRUE    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> CP-12M-25-… IMPORT    Co-op Co… Co-op Commu… This fixed… FALSE       TRUE    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> LP-SEG-EO-… EXPORT    my londo… my london s… This is ou… FALSE       TRUE    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> LP-SEG-FIX… EXPORT    my londo… my london s… This is ou… FALSE       TRUE    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> OUTGOING-S… EXPORT    Octopus … Octopus Out… Outgoing S… FALSE       TRUE    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">11</span> OUTGOING-S… EXPORT    Octopus … Octopus Out… Outgoing S… FALSE       TRUE    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">12</span> OUTGOING-S… EXPORT    Octopus … Octopus Out… Outgoing S… FALSE       TRUE    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">13</span> OUTGOING-S… EXPORT    Octopus … Octopus Out… Outgoing S… FALSE       TRUE    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">14</span> OUTGOING-V… EXPORT    Outgoing… Outgoing Oc… Outgoing O… TRUE        TRUE    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">15</span> OUTGOING-V… EXPORT    Outgoing… Outgoing Oc… Outgoing O… TRUE        TRUE    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 2</span> AGILE-OUTG… EXPORT    Agile Ou… Agile Outgo… Outgoing O… TRUE        TRUE    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 3</span> COOP-SEG-E… EXPORT    Co-op Sm… Co-op Smart… This is ou… FALSE       TRUE    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 4</span> COOP-SEG-F… EXPORT    Co-op Sm… Co-op Smart… This is ou… FALSE       TRUE    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 5</span> CP-12M-25-… IMPORT    Co-op Co… Co-op Commu… This fixed… FALSE       TRUE    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 6</span> LP-SEG-EO-… EXPORT    my londo… my london s… This is ou… FALSE       TRUE    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 7</span> LP-SEG-FIX… EXPORT    my londo… my london s… This is ou… FALSE       TRUE    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 8</span> OUTGOING-S… EXPORT    Octopus … Octopus Out… Outgoing S… FALSE       TRUE    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;"> 9</span> OUTGOING-S… EXPORT    Octopus … Octopus Out… Outgoing S… FALSE       TRUE    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #BCBCBC;">10</span> OUTGOING-V… EXPORT    Outgoing… Outgoing Oc… Outgoing O… TRUE        TRUE    </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># ℹ 9 more variables: is_tracker &lt;lgl&gt;, is_prepay &lt;lgl&gt;, is_business &lt;lgl&gt;,</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   is_restricted &lt;lgl&gt;, term &lt;int&gt;, available_from &lt;chr&gt;, available_to &lt;lgl&gt;,</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   links &lt;list&gt;, brand &lt;chr&gt;</span></span>
@@ -139,7 +134,7 @@ you can generate an API key on the
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.3.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
 </div>
 
     </footer></div>
