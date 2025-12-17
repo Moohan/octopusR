@@ -120,7 +120,9 @@ get_consumption <- function(
     query = query
   )
 
-  consumption_data <- resp[["content"]][["results"]]
+  # Using a list to collect data frames and then calling rbind once is much
+  # more efficient than repeatedly calling rbind to grow a data frame in a loop.
+  consumption_data_list <- list(resp[["content"]][["results"]])
 
   page <- 1L
   total_rows <- resp[["content"]][["count"]]
@@ -137,15 +139,14 @@ get_consumption <- function(
       query = append(query, list("page" = page))
     )
 
-    consumption_data <- rbind(
-      consumption_data,
-      resp[["content"]][["results"]]
-    )
+    consumption_data_list[[page]] <- resp[["content"]][["results"]]
 
     cli::cli_progress_update()
   }
 
   cli::cli_progress_done()
+
+  consumption_data <- do.call(rbind, consumption_data_list)
 
   if (!is.null(tz)) {
     if (rlang::is_interactive()) {
