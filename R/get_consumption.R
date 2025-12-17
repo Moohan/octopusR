@@ -128,7 +128,7 @@ get_consumption <- function(
 
   cli::cli_progress_bar("Getting consumption data", total = total_pages)
 
-  while (page_size == 2500L && !is.null(resp[["content"]][["next"]])) {
+  while (!is.null(resp[["content"]][["next"]])) {
     page <- page + 1L
 
     resp <- octopus_api(
