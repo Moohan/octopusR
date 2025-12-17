@@ -38,15 +38,16 @@
 #' @return a [tibble][tibble::tibble-package] of the requested consumption data.
 #' @export
 get_consumption <- function(
-    meter_type = c("electricity", "gas"),
-    mpan_mprn = get_meter_details(meter_type)[["mpan_mprn"]],
-    serial_number = get_meter_details(meter_type)[["serial_number"]],
-    api_key = get_api_key(),
-    period_from = NULL,
-    period_to = NULL,
-    tz = NULL,
-    order_by = c("-period", "period"),
-    group_by = c("hour", "day", "week", "month", "quarter")) {
+  meter_type = c("electricity", "gas"),
+  mpan_mprn = get_meter_details(meter_type)[["mpan_mprn"]],
+  serial_number = get_meter_details(meter_type)[["serial_number"]],
+  api_key = get_api_key(),
+  period_from = NULL,
+  period_to = NULL,
+  tz = NULL,
+  order_by = c("-period", "period"),
+  group_by = c("hour", "day", "week", "month", "quarter")
+) {
   if (missing(meter_type)) {
     cli::cli_abort(
       "You must specify {.val electricity} or {.val gas} for {.arg meter_type}"
