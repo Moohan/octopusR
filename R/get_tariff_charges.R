@@ -32,14 +32,15 @@
 #' @return a [tibble][tibble::tibble-package] of the requested tariff charge data.
 #' @export
 get_tariff_charges <- function(
-    product_code,
-    tariff_code,
-    fuel_type = c("electricity", "gas"),
-    rate_type = NULL,
-    period_from = NULL,
-    period_to = NULL,
-    tz = NULL,
-    order_by = c("-period", "period")) {
+  product_code,
+  tariff_code,
+  fuel_type = c("electricity", "gas"),
+  rate_type = NULL,
+  period_from = NULL,
+  period_to = NULL,
+  tz = NULL,
+  order_by = c("-period", "period")
+) {
   if (missing(product_code)) {
     cli::cli_abort("You must specify a {.arg product_code}")
   }
@@ -198,10 +199,11 @@ get_tariff_charges <- function(
 #' @return a [tibble][tibble::tibble-package] of Agile tariff charge data.
 #' @export
 get_agile_prices <- function(
-    region = NULL,
-    fuel_type = c("electricity", "gas"),
-    days_ahead = 2,
-    tz = "UTC") {
+  region = NULL,
+  fuel_type = c("electricity", "gas"),
+  days_ahead = 2,
+  tz = "UTC"
+) {
   if (missing(fuel_type)) {
     fuel_type <- "electricity"
   } else {
