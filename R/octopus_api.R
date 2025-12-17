@@ -39,5 +39,10 @@ octopus_api <- function(path,
 }
 
 octopus_error_body <- function(resp) {
-  httr2::resp_body_json(resp)[["detail"]]
+  body <- httr2::resp_body_json(resp, simplifyVector = TRUE)
+  if ("detail" %in% names(body)) {
+    body[["detail"]]
+  } else {
+    NULL
+  }
 }
