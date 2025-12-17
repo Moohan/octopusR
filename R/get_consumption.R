@@ -38,15 +38,16 @@
 #' @return a [tibble][tibble::tibble-package] of the requested consumption data.
 #' @export
 get_consumption <- function(
-    meter_type = c("electricity", "gas"),
-    mpan_mprn = get_meter_details(meter_type)[["mpan_mprn"]],
-    serial_number = get_meter_details(meter_type)[["serial_number"]],
-    api_key = get_api_key(),
-    period_from = NULL,
-    period_to = NULL,
-    tz = NULL,
-    order_by = c("-period", "period"),
-    group_by = c("hour", "day", "week", "month", "quarter")) {
+  meter_type = c("electricity", "gas"),
+  mpan_mprn = get_meter_details(meter_type)[["mpan_mprn"]],
+  serial_number = get_meter_details(meter_type)[["serial_number"]],
+  api_key = get_api_key(),
+  period_from = NULL,
+  period_to = NULL,
+  tz = NULL,
+  order_by = c("-period", "period"),
+  group_by = c("hour", "day", "week", "month", "quarter")
+) {
   if (missing(meter_type)) {
     cli::cli_abort(
       "You must specify {.val electricity} or {.val gas} for {.arg meter_type}"
@@ -120,7 +121,9 @@ get_consumption <- function(
     query = query
   )
 
-  consumption_data <- resp[["content"]][["results"]]
+  # Using a list to collect data frames and then calling rbind once is much
+  # more efficient than repeatedly calling rbind to grow a data frame in a loop.
+  consumption_data_list <- list(resp[["content"]][["results"]])
 
   page <- 1L
   total_rows <- resp[["content"]][["count"]]
@@ -137,15 +140,14 @@ get_consumption <- function(
       query = append(query, list("page" = page))
     )
 
-    consumption_data <- rbind(
-      consumption_data,
-      resp[["content"]][["results"]]
-    )
+    consumption_data_list[[page]] <- resp[["content"]][["results"]]
 
     cli::cli_progress_update()
   }
 
   cli::cli_progress_done()
+
+  consumption_data <- do.call(rbind, consumption_data_list)
 
   if (!is.null(tz)) {
     if (rlang::is_interactive()) {
