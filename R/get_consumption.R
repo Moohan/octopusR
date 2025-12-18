@@ -147,7 +147,16 @@ get_consumption <- function(
 
   cli::cli_progress_done()
 
-  consumption_data <- do.call(rbind, consumption_data_list)
+  # Bolt R ⚡: Conditionally use data.table::rbindlist for performance.
+  # For a large number of pages, data.table::rbindlist is significantly
+  # faster at binding list elements than the base `do.call(rbind, ...)`
+  # equivalent. We check if the package is installed and fall back gracefully
+  # if it is not.
+  if (rlang::is_installed("data.table")) {
+    consumption_data <- data.table::rbindlist(consumption_data_list)
+  } else {
+    consumption_data <- do.call(rbind, consumption_data_list)
+  }
 
   if (!is.null(tz)) {
     if (rlang::is_interactive()) {
