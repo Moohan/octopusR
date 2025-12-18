@@ -22,6 +22,7 @@ Imports:
     tibble
 Suggests: 
     covr,
+    data.table,
     lubridate (>= 0.2.1),
     spelling,
     testthat (>= 3.0.0)
