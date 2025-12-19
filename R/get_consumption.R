@@ -134,10 +134,15 @@ get_consumption <- function(
   while (!is.null(resp[["content"]][["next"]])) {
     page <- page + 1L
 
+    # Bolt R ⚡: Efficiently update the page parameter.
+    # Directly assigning `query$page` avoids creating a new list via `append()`,
+    # reducing memory allocations inside this hot loop.
+    query$page <- page
+
     resp <- octopus_api(
       path = path,
       api_key = api_key,
-      query = append(query, list("page" = page))
+      query = query
     )
 
     consumption_data_list[[page]] <- resp[["content"]][["results"]]
