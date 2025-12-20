@@ -121,28 +121,28 @@ get_consumption <- function(
     query = query
   )
 
-  # Using a list to collect data frames and then calling rbind once is much
-  # more efficient than repeatedly calling rbind to grow a data frame in a loop.
-  consumption_data_list <- list(resp[["content"]][["results"]])
-
   page <- 1L
   total_rows <- resp[["content"]][["count"]]
   total_pages <- ceiling(total_rows / page_size)
 
+  # Bolt R ⚡: Pre-allocate the list to avoid growing it in the loop.
+  # This is more memory efficient as it avoids repeated re-allocation.
+  consumption_data_list <- vector("list", total_pages)
+  consumption_data_list[[1L]] <- resp[["content"]][["results"]]
+
   cli::cli_progress_bar("Getting consumption data", total = total_pages)
+  cli::cli_progress_update() # For the first page
 
-  while (!is.null(resp[["content"]][["next"]])) {
-    page <- page + 1L
-
-    resp <- octopus_api(
-      path = path,
-      api_key = api_key,
-      query = append(query, list("page" = page))
-    )
-
-    consumption_data_list[[page]] <- resp[["content"]][["results"]]
-
-    cli::cli_progress_update()
+  if (total_pages > 1) {
+    for (page in 2:total_pages) {
+      resp <- octopus_api(
+        path = path,
+        api_key = api_key,
+        query = append(query, list("page" = page))
+      )
+      consumption_data_list[[page]] <- resp[["content"]][["results"]]
+      cli::cli_progress_update()
+    }
   }
 
   cli::cli_progress_done()
