@@ -127,21 +127,13 @@ get_consumption <- function(
   page <- 1L
   total_rows <- resp[["content"]][["count"]]
   total_pages <- ceiling(total_rows / page_size)
-
   if (total_pages == 0) {
     return(tibble::tibble())
   }
-
-  # Bolt R ⚡: Pre-allocate the list to avoid growing it in the loop.
-  # This is more memory efficient as it avoids repeated re-allocation.
   consumption_data_list <- vector("list", total_pages)
   consumption_data_list[[1L]] <- resp[["content"]][["results"]]
 
   if (total_pages > 1) {
-    # Bolt R ⚡: Concurrently fetch all remaining pages.
-    # This avoids a sequential loop, significantly speeding up data retrieval
-    # for queries that span multiple pages. `httr2` handles the parallel
-    # requests gracefully.
     reqs <- lapply(2:total_pages, function(page) {
       octopus_api(
         path = path,
@@ -153,7 +145,7 @@ get_consumption <- function(
 
     resps <- httr2::req_perform_parallel(reqs, on_error = "continue")
 
-    # ⚡: Extract results from parallel responses and combine with the first page.
+    # Extract results from parallel responses and combine with the first page.
     results_from_parallel <- lapply(resps, function(r) {
       if (inherits(r, "httr2_response")) {
         httr2::resp_body_json(r, simplifyVector = TRUE)[["results"]]
@@ -161,16 +153,8 @@ get_consumption <- function(
         NULL
       }
     })
-
-    # Combine all results, starting from page 2
     consumption_data_list[2:total_pages] <- results_from_parallel
   }
-
-  # Bolt R ⚡: Conditionally use data.table::rbindlist for performance.
-  # For a large number of pages, data.table::rbindlist is significantly
-  # faster at binding list elements than the base `do.call(rbind, ...)`
-  # equivalent. We check if the package is installed and fall back gracefully
-  # if it is not.
   if (rlang::is_installed("data.table")) {
     consumption_data <- data.table::rbindlist(consumption_data_list)
   } else {
