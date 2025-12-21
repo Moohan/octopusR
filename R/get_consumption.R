@@ -46,7 +46,8 @@ get_consumption <- function(
   period_to = NULL,
   tz = NULL,
   order_by = c("-period", "period"),
-  group_by = c("hour", "day", "week", "month", "quarter")
+  group_by = c("hour", "day", "week", "month", "quarter"),
+  page_size = NULL
 ) {
   if (missing(meter_type)) {
     cli::cli_abort(
@@ -86,15 +87,17 @@ get_consumption <- function(
     }
   }
 
-  if (missing(period_from)) {
-    page_size <- 100L
-    cli::cli_inform(c(
-      "i" = "Returning 100 rows only as a date range wasn't provided.",
-      "v" = "Specify a date range with {.arg period_to} and {.arg period_from}."
-    ))
-  } else {
-    check_datetime_format(period_from)
-    page_size <- 25000L
+  if (is.null(page_size)) {
+    if (missing(period_from)) {
+      page_size <- 100L
+      cli::cli_inform(c(
+        "i" = "Returning 100 rows only as a date range wasn't provided.",
+        "v" = "Specify a date range with {.arg period_to} and {.arg period_from}."
+      ))
+    } else {
+      check_datetime_format(period_from)
+      page_size <- 25000L
+    }
   }
 
   path <- glue::glue(
@@ -125,27 +128,43 @@ get_consumption <- function(
   total_rows <- resp[["content"]][["count"]]
   total_pages <- ceiling(total_rows / page_size)
 
+  if (total_pages == 0) {
+    return(tibble::tibble())
+  }
+
   # Bolt R ⚡: Pre-allocate the list to avoid growing it in the loop.
   # This is more memory efficient as it avoids repeated re-allocation.
   consumption_data_list <- vector("list", total_pages)
   consumption_data_list[[1L]] <- resp[["content"]][["results"]]
 
-  cli::cli_progress_bar("Getting consumption data", total = total_pages)
-  cli::cli_progress_update() # For the first page
-
   if (total_pages > 1) {
-    for (page in 2:total_pages) {
-      resp <- octopus_api(
+    # Bolt R ⚡: Concurrently fetch all remaining pages.
+    # This avoids a sequential loop, significantly speeding up data retrieval
+    # for queries that span multiple pages. `httr2` handles the parallel
+    # requests gracefully.
+    reqs <- lapply(2:total_pages, function(page) {
+      octopus_api(
         path = path,
         api_key = api_key,
-        query = append(query, list("page" = page))
+        query = append(query, list(page = page)),
+        perform = FALSE
       )
-      consumption_data_list[[page]] <- resp[["content"]][["results"]]
-      cli::cli_progress_update()
-    }
-  }
+    })
 
-  cli::cli_progress_done()
+    resps <- httr2::req_perform_parallel(reqs, on_error = "continue")
+
+    # ⚡: Extract results from parallel responses and combine with the first page.
+    results_from_parallel <- lapply(resps, function(r) {
+      if (inherits(r, "httr2_response")) {
+        httr2::resp_body_json(r, simplifyVector = TRUE)[["results"]]
+      } else {
+        NULL
+      }
+    })
+
+    # Combine all results, starting from page 2
+    consumption_data_list[2:total_pages] <- results_from_parallel
+  }
 
   # Bolt R ⚡: Conditionally use data.table::rbindlist for performance.
   # For a large number of pages, data.table::rbindlist is significantly
@@ -157,6 +176,8 @@ get_consumption <- function(
   } else {
     consumption_data <- do.call(rbind, consumption_data_list)
   }
+
+  consumption_data <- tibble::as_tibble(consumption_data)
 
   if (!is.null(tz)) {
     if (rlang::is_interactive()) {
