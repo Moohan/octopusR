@@ -13,8 +13,7 @@ get_consumption(
   period_to = NULL,
   tz = NULL,
   order_by = c("-period", "period"),
-  group_by = c("hour", "day", "week", "month", "quarter"),
-  page_size = NULL
+  group_by = c("hour", "day", "week", "month", "quarter")
 )
 }
 \arguments{
