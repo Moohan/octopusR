@@ -33,9 +33,15 @@ skip_if_missing_meter <- function(meter_type = c("electricity", "gas")) {
       skip("No OCTOPUSR_MPAN in environment and no OCTOPUSR_SECRET_KEY to decrypt a testing MPAN")
     }
   } else {
-    if (identical(Sys.getenv("OCTOPUSR_MPRN"), "") && identical(Sys.getenv("OCTOPUSR_SECRET_KEY"), "")) {
-      message("Skipping gas meter tests: no OCTOPUSR_MPRN and no OCTOPUSR_SECRET_KEY available")
-      skip("No OCTOPUSR_MPRN in environment and no OCTOPUSR_SECRET_KEY to decrypt a testing MPRN")
+    # For gas tests we require either both MPRN and serial to be present in the
+    # environment, or an encrypted MPRN & encrypted GAS serial together with the
+    # secret key. This avoids attempting to decrypt a placeholder ciphertext.
+    has_env_vals <- Sys.getenv("OCTOPUSR_MPRN") != "" && Sys.getenv("OCTOPUSR_GAS_SERIAL_NUM") != ""
+    has_encrypted_vals <- (Sys.getenv("OCTOPUSR_ENCRYPTED_MPRN") != "" && Sys.getenv("OCTOPUSR_ENCRYPTED_GAS_SERIAL") != "" && Sys.getenv("OCTOPUSR_SECRET_KEY") != "")
+
+    if (!has_env_vals && !has_encrypted_vals) {
+      message("Skipping gas meter tests: no valid gas meter details available (env or encrypted)")
+      skip("No OCTOPUSR_MPRN + OCTOPUSR_GAS_SERIAL_NUM in environment and no encrypted MPRN + encrypted GAS serial with OCTOPUSR_SECRET_KEY available to decrypt testing values")
     }
   }
 }
