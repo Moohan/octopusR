@@ -1,7 +1,7 @@
 Package: octopusR
 Title: Interact with the 'Octopus Energy' API
 Version: 1.0.1.9000
-Authors@R: 
+Authors@R:
     person("James", "Hayes", email = "jamesmcmahon0@gmail.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-5380-2029"))
 Description: A simple wrapper for the 'Octopus Energy' REST API
@@ -13,14 +13,14 @@ License: MIT + file LICENSE
 URL: https://github.com/Moohan/octopusR,
     https://moohan.github.io/octopusR/
 BugReports: https://github.com/Moohan/octopusR/issues
-Imports: 
+Imports:
     askpass,
     cli,
     glue,
     httr2,
     rlang,
     tibble
-Suggests: 
+Suggests:
     covr,
     data.table,
     jsonlite,

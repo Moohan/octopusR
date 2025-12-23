@@ -92,34 +92,60 @@ testing_meter <- function(meter_type = c("electricity", "gas")) {
   meter_type <- match.arg(meter_type)
 
   if (meter_type == "electricity") {
-    mpan <- httr2::secret_decrypt(
-      "OPGJ1brZHps9UGVyAmrmmw_gaD4wxrnCCYURXiQ",
-      "OCTOPUSR_SECRET_KEY"
-    )
-    serial_number <- httr2::secret_decrypt(
-      "539iFcHHKYdThm5G3Q6MkDmDIvXj8_Xae1M",
-      "OCTOPUSR_SECRET_KEY"
-    )
-    meter_gsp <- get_meter_gsp(mpan = mpan)
+    # Try environment variables first (for local testing)
+    mpan <- Sys.getenv("OCTOPUSR_MPAN")
+    serial_number <- Sys.getenv("OCTOPUSR_ELEC_SERIAL_NUM")
+    gsp <- Sys.getenv("OCTOPUSR_GSP")
+
+    # Fall back to encrypted secrets (for GitHub CI)
+    # TODO: Update these with newly encrypted values after adding MPAN and GSP to .Renviron
+    if (identical(mpan, "")) {
+      mpan <- httr2::secret_decrypt(
+        "hqxYI9_mDnljZyScLNMF7GsFF4S91Y72-WI8zcc",
+        "OCTOPUSR_SECRET_KEY"
+      )
+    }
+    if (identical(serial_number, "")) {
+      serial_number <- httr2::secret_decrypt(
+        "GNgEXhPLz1GmGi4RYFavkNPsQkj9zzbFjhA",
+        "OCTOPUSR_SECRET_KEY"
+      )
+    }
+    if (identical(gsp, "")) {
+      gsp <- httr2::secret_decrypt(
+        "ENCRYPTED_GSP_HERE",  # Run encrypt_secrets.R to get this
+        "OCTOPUSR_SECRET_KEY"
+      )
+    }
 
     structure(
       list(
         type = "electricity",
         mpan_mprn = mpan,
         serial_number = serial_number,
-        gsp = meter_gsp
+        gsp = gsp
       ),
       class = "octopus_meter-point"
     )
   } else if (meter_type == "gas") {
-    mprn <- httr2::secret_decrypt(
-      "z-BpI17a6UVNWT8ByPzue_XI5j2zU547vi0",
-      "OCTOPUSR_SECRET_KEY"
-    )
-    serial_number <- httr2::secret_decrypt(
-      "d06raLRtC5JWyQkh64mZOtWFDOUCQlojLAyfMUk-",
-      "OCTOPUSR_SECRET_KEY"
-    )
+    # Try environment variables first (for local testing)
+    mprn <- Sys.getenv("OCTOPUSR_MPRN")
+    serial_number <- Sys.getenv("OCTOPUSR_GAS_SERIAL_NUM")
+
+    # Fall back to encrypted secrets (for GitHub CI)
+    # TODO: Update these with newly encrypted values
+    if (identical(mprn, "")) {
+      mprn <- httr2::secret_decrypt(
+        "KqF1OQinUKRRK_405T98GjZrq4eZrRoBUqsQ4-Q",
+        "OCTOPUSR_SECRET_KEY"
+      )
+    }
+    if (identical(serial_number, "")) {
+      serial_number <- httr2::secret_decrypt(
+        "ENCRYPTED_GAS_SERIAL_HERE",  # Run encrypt_secrets.R to get this
+        "OCTOPUSR_SECRET_KEY"
+      )
+    }
 
     structure(
       list(

@@ -68,7 +68,7 @@ test_that("errors properly with incorrect params", {
     "You must specify \"electricity\" or \"gas\" for `meter_type`"
   )
   expect_error(
-    get_consumption("electricity", period_to = Sys.Date()),
+    get_consumption("electricity", mpan_mprn = "test", serial_number = "test", period_to = Sys.Date()),
     "To use `period_to` you must also provide the `period_from` parameter"
   )
 })

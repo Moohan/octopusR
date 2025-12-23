@@ -40,8 +40,15 @@ is_testing <- function() {
 }
 
 testing_key <- function() {
+  # Try environment variable first (for local testing)
+  api_key <- Sys.getenv("OCTOPUSR_API_KEY")
+  if (!identical(api_key, "")) {
+    return(api_key)
+  }
+
+  # Fall back to encrypted secret (for GitHub CI)
   httr2::secret_decrypt(
-    "iaSTP6F_jm_pr7dVW2cZkRnKyfS5uRJsklKdcnK0_b7sbeaPz345Cq9IoJmCf9Ha",
+    "moSoIOaZwvxbuCFzSsBJ0z01uVnktO3uSDYdDfORLJwOWdqFGMCi8digjvrfCJwtPxjw5St42sg",
     "OCTOPUSR_SECRET_KEY"
   )
 }

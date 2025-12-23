@@ -36,6 +36,8 @@
 #' * `quarter`
 #' @param page_size The number of results to return per page. This is intended for internal testing and may be removed in a future release.
 #'
+#' @param page_size Number of results to request per page (integer). If `NULL` the API default page size is used.
+#'
 #' @return a [tibble][tibble::tibble-package] of the requested consumption data.
 #' @note For the fastest data aggregation, it is recommended to have either
 #' the `{data.table}` or `{vctrs}` packages installed.
