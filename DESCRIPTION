@@ -23,7 +23,9 @@ Imports:
 Suggests: 
     covr,
     data.table,
+    jsonlite,
     lubridate (>= 0.2.1),
+    mockery,
     spelling,
     testthat (>= 3.0.0)
 Config/testthat/edition: 3

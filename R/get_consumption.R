@@ -34,6 +34,9 @@
 #' * `week`
 #' * `month`
 #' * `quarter`
+#' @param page_size The number of results to be returned per page.
+#' The default is `100L` unless a date range is specified with both
+#' `period_from` and `period_to`, in which case it is `25000L`.
 #'
 #' @return a [tibble][tibble::tibble-package] of the requested consumption data.
 #' @export
@@ -155,10 +158,23 @@ get_consumption <- function(
     })
     consumption_data_list[2:total_pages] <- results_from_parallel
   }
+  # Bind paginated results. Use data.table::rbindlist if available, as it's
+  # the fastest option. If not, use a more performant base R alternative to
+  # do.call(rbind, ...), which is very slow for large lists of data frames.
   if (rlang::is_installed("data.table")) {
     consumption_data <- data.table::rbindlist(consumption_data_list)
   } else {
-    consumption_data <- do.call(rbind, consumption_data_list)
+    # Fallback if data.table is not available. This is faster than
+    # do.call(rbind, ...) as it avoids repeated copying by combining columns
+    # first, then creating the data frame in one step.
+    col_names <- names(consumption_data_list[[1L]])
+    cols <- lapply(col_names, function(col) {
+      unlist(lapply(consumption_data_list, `[[`, col),
+        recursive = FALSE, use.names = FALSE
+      )
+    })
+    names(cols) <- col_names
+    consumption_data <- cols
   }
 
   consumption_data <- tibble::as_tibble(consumption_data)
