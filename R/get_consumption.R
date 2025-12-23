@@ -35,7 +35,8 @@
 #' * `month`
 #' * `quarter`
 #'
-#' @param page_size Number of results to request per page (integer). If `NULL` the API default page size is used.
+#' @param page_size Number of results to request per page (integer).
+#' If `NULL` the API default page size is used.
 #'
 #' @return a [tibble][tibble::tibble-package] of the requested consumption data.
 #' @export
@@ -94,7 +95,7 @@ get_consumption <- function(
       page_size <- 100L
       cli::cli_inform(c(
         "i" = "Returning 100 rows only as a date range wasn't provided.",
-        "v" = "Specify a date range with {.arg period_to} and {.arg period_from}."
+        "v" = "Use {.arg period_from} and {.arg period_to} to set a range."
       ))
     } else {
       check_datetime_format(period_from)

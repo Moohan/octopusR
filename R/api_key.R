@@ -25,7 +25,7 @@ get_api_key <- function() {
   }
 
   if (is_testing()) {
-    return(testing_key())
+    testing_key()
   } else {
     cli::cli_abort(
       "No API key found, please supply with {.arg api_key} argument or with
@@ -48,7 +48,10 @@ testing_key <- function() {
 
   # Fall back to encrypted secret (for GitHub CI)
   httr2::secret_decrypt(
-    "moSoIOaZwvxbuCFzSsBJ0z01uVnktO3uSDYdDfORLJwOWdqFGMCi8digjvrfCJwtPxjw5St42sg",
+    paste0(
+      "moSoIOaZwvxbuCFzSsBJ0z01uVnktO3uSDYdDfORLJwOWdq",
+      "FGMCi8digjvrfCJwtPxjw5St42sg"
+    ),
     "OCTOPUSR_SECRET_KEY"
   )
 }
