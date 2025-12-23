@@ -2,7 +2,8 @@ skip_if_offline(host = "api.octopus.energy")
 
 test_that("Can get a meter GSP", {
   skip_if(
-    Sys.getenv("OCTOPUSR_MPAN") == "" && Sys.getenv("OCTOPUSR_SECRET_KEY") == "",
+    Sys.getenv("OCTOPUSR_MPAN") == "" &&
+      Sys.getenv("OCTOPUSR_SECRET_KEY") == "",
     "OCTOPUSR_MPAN environment variable or OCTOPUSR_SECRET_KEY not set"
   )
 
@@ -12,7 +13,7 @@ test_that("Can get a meter GSP", {
   expected_gsp <- Sys.getenv("OCTOPUSR_GSP")
   if (identical(expected_gsp, "")) {
     expected_gsp <- httr2::secret_decrypt(
-      "ENCRYPTED_GSP_HERE",  # Run encrypt_secrets.R to get this
+      "ENCRYPTED_GSP_HERE", # Run encrypt_secrets.R to get this
       "OCTOPUSR_SECRET_KEY"
     )
   }

@@ -184,8 +184,10 @@ get_consumption <- function(
       )
     } else {
       if (!rlang::is_installed(pkg = "lubridate", version = "0.2.1")) {
-        cli::cli_abort("{.pkg lubridate} must be installed to parse dates,
-                       use `tz = NULL` to return characters.")
+        cli::cli_abort(
+          "{.pkg lubridate} must be installed to parse dates,
+                       use `tz = NULL` to return characters."
+        )
       }
     }
     consumption_data[["interval_start"]] <- lubridate::ymd_hms(
