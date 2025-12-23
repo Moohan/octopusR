@@ -35,6 +35,8 @@
 #' * `month`
 #' * `quarter`
 #'
+#' @param page_size Number of results to request per page (integer). If `NULL` the API default page size is used.
+#'
 #' @return a [tibble][tibble::tibble-package] of the requested consumption data.
 #' @export
 get_consumption <- function(
