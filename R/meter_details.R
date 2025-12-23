@@ -113,7 +113,7 @@ testing_meter <- function(meter_type = c("electricity", "gas")) {
     }
     if (identical(gsp, "")) {
       gsp <- httr2::secret_decrypt(
-        "ENCRYPTED_GSP_HERE",  # Run encrypt_secrets.R to get this
+        "ENCRYPTED_GSP_HERE", # Run encrypt_secrets.R to get this
         "OCTOPUSR_SECRET_KEY"
       )
     }
@@ -142,7 +142,7 @@ testing_meter <- function(meter_type = c("electricity", "gas")) {
     }
     if (identical(serial_number, "")) {
       serial_number <- httr2::secret_decrypt(
-        "ENCRYPTED_GAS_SERIAL_HERE",  # Run encrypt_secrets.R to get this
+        "ENCRYPTED_GAS_SERIAL_HERE", # Run encrypt_secrets.R to get this
         "OCTOPUSR_SECRET_KEY"
       )
     }
