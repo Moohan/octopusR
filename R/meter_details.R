@@ -25,9 +25,11 @@
 #' @return No return value, called for side effects.
 #'
 #' @export
-set_meter_details <- function(meter_type = c("electricity", "gas"),
-                              mpan_mprn = NULL,
-                              serial_number = NULL) {
+set_meter_details <- function(
+  meter_type = c("electricity", "gas"),
+  mpan_mprn = NULL,
+  serial_number = NULL
+) {
   meter_type <- match.arg(meter_type)
 
   if (missing(mpan_mprn)) {
@@ -141,12 +143,23 @@ testing_meter <- function(meter_type = c("electricity", "gas")) {
     encrypted_mprn <- Sys.getenv("OCTOPUSR_ENCRYPTED_MPRN")
     encrypted_gas_serial <- Sys.getenv("OCTOPUSR_ENCRYPTED_GAS_SERIAL")
 
-    if (identical(mprn, "") && encrypted_mprn != "" && Sys.getenv("OCTOPUSR_SECRET_KEY") != "") {
+    if (
+      identical(mprn, "") &&
+        encrypted_mprn != "" &&
+        Sys.getenv("OCTOPUSR_SECRET_KEY") != ""
+    ) {
       mprn <- httr2::secret_decrypt(encrypted_mprn, "OCTOPUSR_SECRET_KEY")
     }
 
-    if (identical(serial_number, "") && encrypted_gas_serial != "" && Sys.getenv("OCTOPUSR_SECRET_KEY") != "") {
-      serial_number <- httr2::secret_decrypt(encrypted_gas_serial, "OCTOPUSR_SECRET_KEY")
+    if (
+      identical(serial_number, "") &&
+        encrypted_gas_serial != "" &&
+        Sys.getenv("OCTOPUSR_SECRET_KEY") != ""
+    ) {
+      serial_number <- httr2::secret_decrypt(
+        encrypted_gas_serial,
+        "OCTOPUSR_SECRET_KEY"
+      )
     }
 
     # If we still don't have values, leave them empty so the test helpers
