@@ -10,6 +10,13 @@
 #' session. You can find your meter details (MPAN/MPRN and serial number(s)) on
 #' the [developer dashboard](https://octopus.energy/dashboard/developer/).
 #'
+#' For CI testing, you can provide encrypted ciphertexts via the following
+#' environment variables (decrypted using `OCTOPUSR_SECRET_KEY` on CI):
+#'  * `OCTOPUSR_ENCRYPTED_MPRN` - encrypted gas MPRN
+#'  * `OCTOPUSR_ENCRYPTED_GAS_SERIAL` - encrypted gas serial number
+#' If neither the plaintext env vars nor the encrypted values are available,
+#' gas-related tests will be skipped to avoid runtime decrypt errors.
+#'
 #' @param meter_type Type of meter-point, electricity or gas
 #' @param mpan_mprn The electricity meter-point's MPAN or gas meter-point’s
 #' MPRN.
@@ -18,9 +25,11 @@
 #' @return No return value, called for side effects.
 #'
 #' @export
-set_meter_details <- function(meter_type = c("electricity", "gas"),
-                              mpan_mprn = NULL,
-                              serial_number = NULL) {
+set_meter_details <- function(
+  meter_type = c("electricity", "gas"),
+  mpan_mprn = NULL,
+  serial_number = NULL
+) {
   meter_type <- match.arg(meter_type)
 
   if (missing(mpan_mprn)) {
@@ -92,34 +101,69 @@ testing_meter <- function(meter_type = c("electricity", "gas")) {
   meter_type <- match.arg(meter_type)
 
   if (meter_type == "electricity") {
-    mpan <- httr2::secret_decrypt(
-      "OPGJ1brZHps9UGVyAmrmmw_gaD4wxrnCCYURXiQ",
-      "OCTOPUSR_SECRET_KEY"
-    )
-    serial_number <- httr2::secret_decrypt(
-      "539iFcHHKYdThm5G3Q6MkDmDIvXj8_Xae1M",
-      "OCTOPUSR_SECRET_KEY"
-    )
-    meter_gsp <- get_meter_gsp(mpan = mpan)
+    # Try environment variables first (for local testing)
+    mpan <- Sys.getenv("OCTOPUSR_MPAN")
+    serial_number <- Sys.getenv("OCTOPUSR_ELEC_SERIAL_NUM")
+    gsp <- Sys.getenv("OCTOPUSR_GSP")
+
+    # Fall back to encrypted secrets (for GitHub CI)
+    if (identical(mpan, "")) {
+      mpan <- httr2::secret_decrypt(
+        "qRXEs2Z4y5H0DbKfyJws97tH8kneASJp8iaok1M",
+        "OCTOPUSR_SECRET_KEY"
+      )
+    }
+    if (identical(serial_number, "")) {
+      serial_number <- httr2::secret_decrypt(
+        "GNgEXhPLz1GmGi4RYFavkNPsQkj9zzbFjhA",
+        "OCTOPUSR_SECRET_KEY"
+      )
+    }
+    if (identical(gsp, "")) {
+      gsp <- "_P"
+    }
 
     structure(
       list(
         type = "electricity",
         mpan_mprn = mpan,
         serial_number = serial_number,
-        gsp = meter_gsp
+        gsp = gsp
       ),
       class = "octopus_meter-point"
     )
   } else if (meter_type == "gas") {
-    mprn <- httr2::secret_decrypt(
-      "z-BpI17a6UVNWT8ByPzue_XI5j2zU547vi0",
-      "OCTOPUSR_SECRET_KEY"
-    )
-    serial_number <- httr2::secret_decrypt(
-      "d06raLRtC5JWyQkh64mZOtWFDOUCQlojLAyfMUk-",
-      "OCTOPUSR_SECRET_KEY"
-    )
+    # Try environment variables first (for local testing)
+    mprn <- Sys.getenv("OCTOPUSR_MPRN")
+    serial_number <- Sys.getenv("OCTOPUSR_GAS_SERIAL_NUM")
+
+    # Fall back to encrypted secrets (for GitHub CI).
+    # Use explicit encrypted env vars so we don't accidentally call
+    # httr2::secret_decrypt() with a placeholder string (which would error).
+    encrypted_mprn <- Sys.getenv("OCTOPUSR_ENCRYPTED_MPRN")
+    encrypted_gas_serial <- Sys.getenv("OCTOPUSR_ENCRYPTED_GAS_SERIAL")
+
+    if (
+      identical(mprn, "") &&
+        encrypted_mprn != "" &&
+        Sys.getenv("OCTOPUSR_SECRET_KEY") != ""
+    ) {
+      mprn <- httr2::secret_decrypt(encrypted_mprn, "OCTOPUSR_SECRET_KEY")
+    }
+
+    if (
+      identical(serial_number, "") &&
+        encrypted_gas_serial != "" &&
+        Sys.getenv("OCTOPUSR_SECRET_KEY") != ""
+    ) {
+      serial_number <- httr2::secret_decrypt(
+        encrypted_gas_serial,
+        "OCTOPUSR_SECRET_KEY"
+      )
+    }
+
+    # If we still don't have values, leave them empty so the test helpers
+    # can detect that meter credentials are missing and skip tests as needed.
 
     structure(
       list(

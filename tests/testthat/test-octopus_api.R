@@ -1,5 +1,5 @@
-skip_if_offline(host = "api.octopus.energy")
-
+# Skip if no API credentials are available locally or on CI
+skip_if_missing_api_creds()
 test_that("Octopus API fails when not authenticated", {
   expect_error(
     octopus_api(path = "v1/accounts/"),

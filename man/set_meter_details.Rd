@@ -33,4 +33,13 @@ to your \code{.Renviron} otherwise you will have to call this function every
 session. You can find your meter details (MPAN/MPRN and serial number(s)) on
 the \href{https://octopus.energy/dashboard/developer/}{developer dashboard}.
 }
+
+For CI testing, you can provide encrypted ciphertexts via the following
+environment variables (decrypted using \code{OCTOPUSR_SECRET_KEY} on CI):
+\itemize{
+\item \code{OCTOPUSR_ENCRYPTED_MPRN} - encrypted gas MPRN
+\item \code{OCTOPUSR_ENCRYPTED_GAS_SERIAL} - encrypted gas serial number
+If neither the plaintext env vars nor the encrypted values are available,
+gas-related tests will be skipped to avoid runtime decrypt errors.
+}
 }
