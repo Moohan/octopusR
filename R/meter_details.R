@@ -98,10 +98,9 @@ testing_meter <- function(meter_type = c("electricity", "gas")) {
     gsp <- Sys.getenv("OCTOPUSR_GSP")
 
     # Fall back to encrypted secrets (for GitHub CI)
-    # TODO: Update these with newly encrypted values after adding MPAN and GSP to .Renviron
     if (identical(mpan, "")) {
       mpan <- httr2::secret_decrypt(
-        "hqxYI9_mDnljZyScLNMF7GsFF4S91Y72-WI8zcc",
+        "qRXEs2Z4y5H0DbKfyJws97tH8kneASJp8iaok1M",
         "OCTOPUSR_SECRET_KEY"
       )
     }
@@ -112,10 +111,7 @@ testing_meter <- function(meter_type = c("electricity", "gas")) {
       )
     }
     if (identical(gsp, "")) {
-      gsp <- httr2::secret_decrypt(
-        "ENCRYPTED_GSP_HERE", # Run encrypt_secrets.R to get this
-        "OCTOPUSR_SECRET_KEY"
-      )
+      gsp <- "_P"
     }
 
     structure(
