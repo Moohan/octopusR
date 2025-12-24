@@ -60,7 +60,7 @@ Accepted values are:
 }}
 
 \item{page_size}{The number of results to be returned per page.
-The default is `100L` if no date range is provided, otherwise `25000L`.}
+The default is \code{100L} if no date range is provided, otherwise \code{25000L}.}
 }
 \value{
 a \link[tibble:tibble-package]{tibble} of the requested consumption data.
