@@ -34,6 +34,8 @@
 #' * `week`
 #' * `month`
 #' * `quarter`
+#' @param page_size The number of results to be returned per page.
+#' The default is `100L` if no date range is provided, otherwise `25000L`.
 #'
 #' @return a [tibble][tibble::tibble-package] of the requested consumption data.
 #' @export
@@ -155,8 +157,19 @@ get_consumption <- function(
     })
     consumption_data_list[2:total_pages] <- results_from_parallel
   }
+  # Filter out NULLs from any failed API requests before binding.
+  consumption_data_list <- Filter(Negate(is.null), consumption_data_list)
+
+  if (length(consumption_data_list) == 0) {
+    return(tibble::tibble())
+  }
+
+  # ⚡ Bolt: Using data.table or vctrs for faster, type-stable row binding.
+  # This is much faster for large lists of data frames than base::do.call(rbind, ...).
   if (rlang::is_installed("data.table")) {
     consumption_data <- data.table::rbindlist(consumption_data_list)
+  } else if (rlang::is_installed("vctrs")) {
+    consumption_data <- vctrs::vec_rbind(!!!consumption_data_list)
   } else {
     consumption_data <- do.call(rbind, consumption_data_list)
   }
