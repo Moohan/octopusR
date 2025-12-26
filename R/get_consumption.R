@@ -34,6 +34,7 @@
 #' * `week`
 #' * `month`
 #' * `quarter`
+#' @param page_size The number of consumption periods to be returned.
 #'
 #' @return a [tibble][tibble::tibble-package] of the requested consumption data.
 #' @export

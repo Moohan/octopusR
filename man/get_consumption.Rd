@@ -58,6 +58,8 @@ Accepted values are:
 \item \code{month}
 \item \code{quarter}
 }}
+
+\item{page_size}{The number of consumption periods to be returned.}
 }
 \value{
 a \link[tibble:tibble-package]{tibble} of the requested consumption data.
