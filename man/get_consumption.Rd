@@ -13,10 +13,13 @@ get_consumption(
   period_to = NULL,
   tz = NULL,
   order_by = c("-period", "period"),
-  group_by = c("hour", "day", "week", "month", "quarter")
+  group_by = c("hour", "day", "week", "month", "quarter"),
+  page_size = NULL
 )
 }
 \arguments{
+\item{page_size}{The number of consumption periods to be returned.}
+
 \item{meter_type}{Type of meter-point, electricity or gas}
 
 \item{mpan_mprn}{The electricity meter-point's MPAN or gas meter-point’s

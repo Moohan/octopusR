@@ -158,7 +158,36 @@ get_consumption <- function(
   if (rlang::is_installed("data.table")) {
     consumption_data <- data.table::rbindlist(consumption_data_list)
   } else {
-    consumption_data <- do.call(rbind, consumption_data_list)
+    # This is a dependency-free, high-performance way to bind rows. It works
+    # by unlisting the data for each column and then combining them into a
+    # single data frame. This is much faster than the more common
+    # `do.call(rbind, ...)` pattern because it avoids the repeated copying
+    # and type-checking overhead of `rbind`.
+    # For more details, see:
+    # https://www.r-bloggers.com/2022/01/a-fast-and-dependency-free-way-to-row-bind-many-data-frames/
+    total_rows <- sum(vapply(consumption_data_list, NROW, integer(1L)))
+    col_names <- names(consumption_data_list[[1L]])
+
+    # Pre-allocate a list to store the combined columns
+    out <- vector("list", length(col_names))
+    names(out) <- col_names
+
+    # Iterate over the columns, not the list elements
+    for (col in col_names) {
+      # Extract the column from each data frame and combine them
+      out[[col]] <- unlist(
+        lapply(consumption_data_list, `[[`, col),
+        use.names = FALSE
+      )
+    }
+
+    # Use structure() for efficiency, the row.names trick avoids creating
+    # a large integer vector.
+    consumption_data <- structure(
+      out,
+      class = "data.frame",
+      row.names = c(NA_integer_, -total_rows)
+    )
   }
 
   consumption_data <- tibble::as_tibble(consumption_data)
