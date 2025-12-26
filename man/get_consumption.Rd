@@ -18,8 +18,6 @@ get_consumption(
 )
 }
 \arguments{
-\item{page_size}{The number of consumption periods to be returned.}
-
 \item{meter_type}{Type of meter-point, electricity or gas}
 
 \item{mpan_mprn}{The electricity meter-point's MPAN or gas meter-point’s
