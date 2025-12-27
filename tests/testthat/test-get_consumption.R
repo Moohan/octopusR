@@ -77,10 +77,11 @@ test_that("Correctly handles multi-page parallel requests", {
   # This mock handles the two ways octopus_api is called in the multi-page scenario
   mock_api_multi_page <- function(path, query, ..., perform = TRUE) {
     if (perform) {
-      # The first call to get page count
+      # The first call to get page count.
+      # No date range means page_size is 100.
       create_mock_api_response(
-        count = 30,
-        results = tibble::tibble(consumption = 1:10, interval_start = "a", interval_end = "b")
+        count = 130, # > 100 to trigger a second page
+        results = tibble::tibble(consumption = 1:100, interval_start = "a", interval_end = "b")
       )
     } else {
       # The subsequent calls to build the request list
@@ -89,13 +90,13 @@ test_that("Correctly handles multi-page parallel requests", {
     }
   }
 
-  # This mock simulates the parallel execution
+  # This mock simulates the parallel execution for the second page
   mock_req_perform_parallel <- function(reqs, ...) {
     lapply(reqs, function(req) {
       # req is what mock_api_multi_page returned when perform=FALSE
-      page_num <- req$page
+      page_num <- req$page # Should be 2
       create_mock_httr2_response(
-        results = tibble::tibble(consumption = (1:10) + ((page_num - 1) * 10), interval_start = "a", interval_end = "b")
+        results = tibble::tibble(consumption = 101:130, interval_start = "a", interval_end = "b")
       )
     })
   }
@@ -104,18 +105,17 @@ test_that("Correctly handles multi-page parallel requests", {
   mockery::stub(get_consumption, "octopus_api", mock_api_multi_page)
   mockery::stub(get_consumption, "httr2::req_perform_parallel", mock_req_perform_parallel)
 
-  # Use a date range to trigger the multi-page logic
-  consumption_data <- get_consumption(
-    meter_type = "electricity",
-    period_from = "2023-01-01",
-    page_size = 10 # This needs to be smaller than the mocked count of 30
+  # Do not use a date range, so that the default page_size of 100 is used.
+  expect_message(
+    consumption_data <- get_consumption(meter_type = "electricity"),
+    "Returning 100 rows"
   )
 
+
   # Verify the result
-  expect_equal(nrow(consumption_data), 30)
+  expect_equal(nrow(consumption_data), 130)
   expect_s3_class(consumption_data, "tbl_df")
-  # Page 1 results are 1:10
-  # Page 2 results are 11:20
-  # Page 3 results are 21:30
-  expect_equal(consumption_data$consumption, 1:30)
+  # Page 1 results are 1:100
+  # Page 2 results are 101:130
+  expect_equal(consumption_data$consumption, 1:130)
 })
