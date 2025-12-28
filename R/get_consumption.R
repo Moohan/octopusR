@@ -134,7 +134,7 @@ get_consumption <- function(
   while (!is.null(resp[["content"]][["next"]])) {
     page <- page + 1L
 
-query$page <- page
+    query$page <- page
     resp <- octopus_api(
       path = path,
       api_key = api_key,
