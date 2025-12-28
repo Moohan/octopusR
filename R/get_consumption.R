@@ -36,6 +36,11 @@
 #' * `quarter`
 #'
 #' @return a [tibble][tibble::tibble-package] of the requested consumption data.
+#' @note For the most performant execution, it is recommended to have either the
+#' `data.table` or `vctrs` packages installed. This function will use
+#' `data.table::rbindlist()` or `vctrs::vec_rbind()` if available, which are
+#' significantly faster for combining multiple pages of API results than the
+#' base R fallback.
 #' @export
 get_consumption <- function(
   meter_type = c("electricity", "gas"),
@@ -46,8 +51,7 @@ get_consumption <- function(
   period_to = NULL,
   tz = NULL,
   order_by = c("-period", "period"),
-  group_by = c("hour", "day", "week", "month", "quarter"),
-  page_size = NULL
+  group_by = c("hour", "day", "week", "month", "quarter")
 ) {
   if (missing(meter_type)) {
     cli::cli_abort(
@@ -87,17 +91,15 @@ get_consumption <- function(
     }
   }
 
-  if (is.null(page_size)) {
-    if (missing(period_from)) {
-      page_size <- 100L
-      cli::cli_inform(c(
-        "i" = "Returning 100 rows only as a date range wasn't provided.",
-        "v" = "Specify a date range with {.arg period_to} and {.arg period_from}."
-      ))
-    } else {
-      check_datetime_format(period_from)
-      page_size <- 25000L
-    }
+  if (missing(period_from)) {
+    page_size <- 100L
+    cli::cli_inform(c(
+      "i" = "Returning 100 rows only as a date range wasn't provided.",
+      "v" = "Specify a date range with {.arg period_to} and {.arg period_from}."
+    ))
+  } else {
+    check_datetime_format(period_from)
+    page_size <- 25000L
   }
 
   path <- glue::glue(
@@ -155,9 +157,14 @@ get_consumption <- function(
     })
     consumption_data_list[2:total_pages] <- results_from_parallel
   }
+  # Using `data.table::rbindlist()` or `vctrs::vec_rbind()` are the most
+  # performant ways of combining the list of data frames.
   if (rlang::is_installed("data.table")) {
     consumption_data <- data.table::rbindlist(consumption_data_list)
+  } else if (rlang::is_installed("vctrs")) {
+    consumption_data <- vctrs::vec_rbind(!!!consumption_data_list)
   } else {
+    # Base R fallback if no suggested package is installed.
     consumption_data <- do.call(rbind, consumption_data_list)
   }
 

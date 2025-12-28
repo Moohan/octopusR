@@ -79,8 +79,8 @@ test_that("Correctly handles multi-page parallel requests", {
     if (perform) {
       # The first call to get page count
       create_mock_api_response(
-        count = 30,
-        results = tibble::tibble(consumption = 1:10, interval_start = "a", interval_end = "b")
+        count = 25000 * 2, # Simulate more than one page of data
+        results = tibble::tibble(consumption = 1:25000, interval_start = "a", interval_end = "b")
       )
     } else {
       # The subsequent calls to build the request list
@@ -95,7 +95,7 @@ test_that("Correctly handles multi-page parallel requests", {
       # req is what mock_api_multi_page returned when perform=FALSE
       page_num <- req$page
       create_mock_httr2_response(
-        results = tibble::tibble(consumption = (1:10) + ((page_num - 1) * 10), interval_start = "a", interval_end = "b")
+        results = tibble::tibble(consumption = (1:25000) + ((page_num - 1) * 25000), interval_start = "a", interval_end = "b")
       )
     })
   }
@@ -107,15 +107,11 @@ test_that("Correctly handles multi-page parallel requests", {
   # Use a date range to trigger the multi-page logic
   consumption_data <- get_consumption(
     meter_type = "electricity",
-    period_from = "2023-01-01",
-    page_size = 10 # This needs to be smaller than the mocked count of 30
+    period_from = "2023-01-01"
   )
 
   # Verify the result
-  expect_equal(nrow(consumption_data), 30)
+  expect_equal(nrow(consumption_data), 50000)
   expect_s3_class(consumption_data, "tbl_df")
-  # Page 1 results are 1:10
-  # Page 2 results are 11:20
-  # Page 3 results are 21:30
-  expect_equal(consumption_data$consumption, 1:30)
+  expect_equal(consumption_data$consumption, 1:50000)
 })
