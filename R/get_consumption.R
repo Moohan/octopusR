@@ -35,6 +35,9 @@
 #' * `month`
 #' * `quarter`
 #'
+#' @param page_size Number of results to request per page (integer).
+#' If `NULL` the API default page size is used.
+#'
 #' @return a [tibble][tibble::tibble-package] of the requested consumption data.
 #' @export
 get_consumption <- function(
@@ -92,7 +95,7 @@ get_consumption <- function(
       page_size <- 100L
       cli::cli_inform(c(
         "i" = "Returning 100 rows only as a date range wasn't provided.",
-        "v" = "Specify a date range with {.arg period_to} and {.arg period_from}."
+        "v" = "Use {.arg period_from} and {.arg period_to} to set a range."
       ))
     } else {
       check_datetime_format(period_from)
@@ -172,8 +175,12 @@ get_consumption <- function(
       )
     } else {
       if (!rlang::is_installed(pkg = "lubridate", version = "0.2.1")) {
-        cli::cli_abort("{.pkg lubridate} must be installed to parse dates,
-                       use `tz = NULL` to return characters.")
+        cli::cli_abort(
+          c(
+            "{.pkg lubridate} must be installed to parse dates.",
+            "i" = "Use {.code tz = NULL} to return characters."
+          )
+        )
       }
     }
     consumption_data[["interval_start"]] <- lubridate::ymd_hms(
