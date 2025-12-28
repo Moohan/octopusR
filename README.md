@@ -90,7 +90,7 @@ head(energy_usage)
 
 For more information and examples, see the [package
 documentation](https://moohan.github.io/octopusR/) and the [Octopus
-Energy API documentation](https://developer.octopus.energy/docs/api/).
+Energy API documentation](https://docs.octopus.energy/rest/).
 
 ## Contributing
 

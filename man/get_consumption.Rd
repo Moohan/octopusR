@@ -78,3 +78,10 @@ required. Use the \code{tz} parameter to specify a time zone e.g. \code{tz = "UT
 the default (\code{tz = NULL}) will return the dates unparsed, as characters.
 }
 }
+\note{
+For the most performant execution, it is recommended to have either the
+\code{data.table} or \code{vctrs} packages installed. This function will use
+\code{data.table::rbindlist()} or \code{vctrs::vec_rbind()} if available, which are
+significantly faster for combining multiple pages of API results than the
+base R fallback.
+}
