@@ -74,48 +74,43 @@ test_that("errors properly with incorrect params", {
 })
 
 test_that("Correctly handles multi-page parallel requests", {
-  # This mock handles the two ways octopus_api is called in the multi-page scenario
   mock_api_multi_page <- function(path, query, ..., perform = TRUE) {
+    # When `period_from` is missing, the internal `page_size` is 100.
+    page_size <- 100L
     if (perform) {
       # The first call to get page count
       create_mock_api_response(
-        count = 30,
-        results = tibble::tibble(consumption = 1:10, interval_start = "a", interval_end = "b")
+        count = 150, # Total results > page_size to trigger pagination
+        results = tibble::tibble(consumption = 1:page_size, interval_start = "a", interval_end = "b")
       )
     } else {
-      # The subsequent calls to build the request list
-      # Return a simple list that we can identify later
+      # The subsequent calls to build the request list for parallel processing
       list(page = query$page)
     }
   }
 
-  # This mock simulates the parallel execution
   mock_req_perform_parallel <- function(reqs, ...) {
+    page_size <- 100L
     lapply(reqs, function(req) {
-      # req is what mock_api_multi_page returned when perform=FALSE
+      # This mock will only be called for page 2 in this test.
       page_num <- req$page
       create_mock_httr2_response(
-        results = tibble::tibble(consumption = (1:10) + ((page_num - 1) * 10), interval_start = "a", interval_end = "b")
+        results = tibble::tibble(consumption = (page_size + 1):150, interval_start = "a", interval_end = "b")
       )
     })
   }
 
-  # Stub the two external functions
   mockery::stub(get_consumption, "octopus_api", mock_api_multi_page)
   mockery::stub(get_consumption, "httr2::req_perform_parallel", mock_req_perform_parallel)
 
-  # Use a date range to trigger the multi-page logic
-  consumption_data <- get_consumption(
-    meter_type = "electricity",
-    period_from = "2023-01-01",
-    page_size = 10 # This needs to be smaller than the mocked count of 30
+  # Call without date range to trigger multi-page logic with default page_size=100.
+  # A message is expected because no date range is provided.
+  expect_message(
+    consumption_data <- get_consumption(meter_type = "electricity"),
+    "Returning 100 rows only"
   )
 
-  # Verify the result
-  expect_equal(nrow(consumption_data), 30)
+  expect_equal(nrow(consumption_data), 150)
   expect_s3_class(consumption_data, "tbl_df")
-  # Page 1 results are 1:10
-  # Page 2 results are 11:20
-  # Page 3 results are 21:30
-  expect_equal(consumption_data$consumption, 1:30)
+  expect_equal(consumption_data$consumption, 1:150)
 })
