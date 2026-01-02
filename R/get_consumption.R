@@ -46,8 +46,7 @@ get_consumption <- function(
   period_to = NULL,
   tz = NULL,
   order_by = c("-period", "period"),
-  group_by = c("hour", "day", "week", "month", "quarter"),
-  page_size = NULL
+  group_by = c("hour", "day", "week", "month", "quarter")
 ) {
   if (missing(meter_type)) {
     cli::cli_abort(
@@ -87,17 +86,15 @@ get_consumption <- function(
     }
   }
 
-  if (is.null(page_size)) {
-    if (missing(period_from)) {
-      page_size <- 100L
-      cli::cli_inform(c(
-        "i" = "Returning 100 rows only as a date range wasn't provided.",
-        "v" = "Specify a date range with {.arg period_to} and {.arg period_from}."
-      ))
-    } else {
-      check_datetime_format(period_from)
-      page_size <- 25000L
-    }
+  if (missing(period_from)) {
+    page_size <- 100L
+    cli::cli_inform(c(
+      "i" = "Returning 100 rows only as a date range wasn't provided.",
+      "v" = "Specify a date range with {.arg period_to} and {.arg period_from}."
+    ))
+  } else {
+    check_datetime_format(period_from)
+    page_size <- 25000L
   }
 
   path <- glue::glue(
@@ -155,8 +152,12 @@ get_consumption <- function(
     })
     consumption_data_list[2:total_pages] <- results_from_parallel
   }
+  # Based on the advice from tidyverse/dplyr#5959
+  # Also see the benchmark results in the PR description
   if (rlang::is_installed("data.table")) {
     consumption_data <- data.table::rbindlist(consumption_data_list)
+  } else if (rlang::is_installed("vctrs")) {
+    consumption_data <- vctrs::vec_rbind(!!!consumption_data_list)
   } else {
     consumption_data <- do.call(rbind, consumption_data_list)
   }

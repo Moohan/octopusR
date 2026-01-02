@@ -76,11 +76,16 @@ test_that("errors properly with incorrect params", {
 test_that("Correctly handles multi-page parallel requests", {
   # This mock handles the two ways octopus_api is called in the multi-page scenario
   mock_api_multi_page <- function(path, query, ..., perform = TRUE) {
+    # The default page size when a date range is provided is 25000.
+    # To test the multi-page logic, we mock a total count greater than that.
+    page_size <- 25000L
+    total_records <- page_size + 10 # e.g., 25010
+
     if (perform) {
       # The first call to get page count
       create_mock_api_response(
-        count = 30,
-        results = tibble::tibble(consumption = 1:10, interval_start = "a", interval_end = "b")
+        count = total_records,
+        results = tibble::tibble(consumption = 1:page_size, interval_start = "a", interval_end = "b")
       )
     } else {
       # The subsequent calls to build the request list
@@ -91,11 +96,12 @@ test_that("Correctly handles multi-page parallel requests", {
 
   # This mock simulates the parallel execution
   mock_req_perform_parallel <- function(reqs, ...) {
+    page_size <- 25000L
     lapply(reqs, function(req) {
       # req is what mock_api_multi_page returned when perform=FALSE
       page_num <- req$page
       create_mock_httr2_response(
-        results = tibble::tibble(consumption = (1:10) + ((page_num - 1) * 10), interval_start = "a", interval_end = "b")
+        results = tibble::tibble(consumption = (1:10) + page_size, interval_start = "a", interval_end = "b")
       )
     })
   }
@@ -107,15 +113,11 @@ test_that("Correctly handles multi-page parallel requests", {
   # Use a date range to trigger the multi-page logic
   consumption_data <- get_consumption(
     meter_type = "electricity",
-    period_from = "2023-01-01",
-    page_size = 10 # This needs to be smaller than the mocked count of 30
+    period_from = "2023-01-01"
   )
 
   # Verify the result
-  expect_equal(nrow(consumption_data), 30)
+  expect_equal(nrow(consumption_data), 25010)
   expect_s3_class(consumption_data, "tbl_df")
-  # Page 1 results are 1:10
-  # Page 2 results are 11:20
-  # Page 3 results are 21:30
-  expect_equal(consumption_data$consumption, 1:30)
+  expect_equal(consumption_data$consumption, 1:25010)
 })
