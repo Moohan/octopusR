@@ -34,6 +34,9 @@
 #' * `week`
 #' * `month`
 #' * `quarter`
+#' @param page_size The number of consumption values to be returned in each
+#' page of results. The default is 100 when a date range isn't provided,
+#' and 25,000 when a date range is provided. The maximum value is 25,000.
 #'
 #' @return a [tibble][tibble::tibble-package] of the requested consumption data.
 #' @export
@@ -155,8 +158,12 @@ get_consumption <- function(
     })
     consumption_data_list[2:total_pages] <- results_from_parallel
   }
+  # Using data.table::rbindlist() or vctrs::vec_rbind() are considerably
+  # faster and more memory efficient than the base alternative.
   if (rlang::is_installed("data.table")) {
     consumption_data <- data.table::rbindlist(consumption_data_list)
+  } else if (rlang::is_installed("vctrs")) {
+    consumption_data <- vctrs::vec_rbind(!!!consumption_data_list)
   } else {
     consumption_data <- do.call(rbind, consumption_data_list)
   }
