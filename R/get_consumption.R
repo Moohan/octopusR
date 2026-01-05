@@ -155,8 +155,12 @@ get_consumption <- function(
     })
     consumption_data_list[2:total_pages] <- results_from_parallel
   }
+
+  # vec_rbind() is significantly faster than `do.call(rbind, ...)`
   if (rlang::is_installed("data.table")) {
     consumption_data <- data.table::rbindlist(consumption_data_list)
+  } else if (rlang::is_installed("vctrs")) {
+    consumption_data <- vctrs::vec_rbind(!!!consumption_data_list)
   } else {
     consumption_data <- do.call(rbind, consumption_data_list)
   }
