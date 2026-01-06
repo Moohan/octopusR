@@ -13,7 +13,8 @@ get_consumption(
   period_to = NULL,
   tz = NULL,
   order_by = c("-period", "period"),
-  group_by = c("hour", "day", "week", "month", "quarter")
+  group_by = c("hour", "day", "week", "month", "quarter"),
+  page_size = NULL
 )
 }
 \arguments{
@@ -57,6 +58,10 @@ Accepted values are:
 \item \code{month}
 \item \code{quarter}
 }}
+
+\item{page_size}{The number of results to be returned per page.
+The default is \code{100} if \code{period_from} and \code{period_to} are not specified,
+otherwise it is \code{25000}.}
 }
 \value{
 a \link[tibble:tibble-package]{tibble} of the requested consumption data.

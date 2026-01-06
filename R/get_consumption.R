@@ -34,6 +34,9 @@
 #' * `week`
 #' * `month`
 #' * `quarter`
+#' @param page_size The number of results to be returned per page.
+#' The default is `100` if `period_from` and `period_to` are not specified,
+#' otherwise it is `25000`.
 #'
 #' @return a [tibble][tibble::tibble-package] of the requested consumption data.
 #' @export
@@ -157,6 +160,8 @@ get_consumption <- function(
   }
   if (rlang::is_installed("data.table")) {
     consumption_data <- data.table::rbindlist(consumption_data_list)
+  } else if (rlang::is_installed("vctrs")) {
+    consumption_data <- vctrs::vec_rbind(!!!consumption_data_list)
   } else {
     consumption_data <- do.call(rbind, consumption_data_list)
   }
