@@ -34,6 +34,7 @@
 #' * `week`
 #' * `month`
 #' * `quarter`
+#' @param page_size The number of results to return per page. This is intended for internal testing and may be removed in a future release.
 #'
 #' @return a [tibble][tibble::tibble-package] of the requested consumption data.
 #' @export
@@ -155,8 +156,12 @@ get_consumption <- function(
     })
     consumption_data_list[2:total_pages] <- results_from_parallel
   }
+  # Using data.table::rbindlist() or vctrs::vec_rbind() provides a significant
+  # performance boost over the base R alternative of do.call(rbind, ...).
   if (rlang::is_installed("data.table")) {
     consumption_data <- data.table::rbindlist(consumption_data_list)
+  } else if (rlang::is_installed("vctrs")) {
+    consumption_data <- vctrs::vec_rbind(!!!consumption_data_list)
   } else {
     consumption_data <- do.call(rbind, consumption_data_list)
   }
