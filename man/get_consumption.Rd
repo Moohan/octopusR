@@ -81,3 +81,7 @@ required. Use the \code{tz} parameter to specify a time zone e.g. \code{tz = "UT
 the default (\code{tz = NULL}) will return the dates unparsed, as characters.
 }
 }
+\note{
+For the fastest data aggregation, it is recommended to have either
+the \code{{data.table}} or \code{{vctrs}} packages installed.
+}
