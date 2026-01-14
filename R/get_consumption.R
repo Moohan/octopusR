@@ -37,6 +37,8 @@
 #' @param page_size The number of results to return per page. This is intended for internal testing and may be removed in a future release.
 #'
 #' @return a [tibble][tibble::tibble-package] of the requested consumption data.
+#' @note For the fastest data aggregation, it is recommended to have either
+#' the `{data.table}` or `{vctrs}` packages installed.
 #' @export
 get_consumption <- function(
   meter_type = c("electricity", "gas"),
