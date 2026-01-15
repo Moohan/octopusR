@@ -108,3 +108,8 @@ get_consumption(
 
 a [tibble](https://tibble.tidyverse.org/reference/tibble-package.html)
 of the requested consumption data.
+
+## Note
+
+For the fastest data aggregation, it is recommended to have either the
+`{data.table}` or `{vctrs}` packages installed.
