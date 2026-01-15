@@ -31,7 +31,8 @@ get_consumption(
   period_to = NULL,
   tz = NULL,
   order_by = c("-period", "period"),
-  group_by = c("hour", "day", "week", "month", "quarter")
+  group_by = c("hour", "day", "week", "month", "quarter"),
+  page_size = NULL
 )
 ```
 
@@ -97,6 +98,11 @@ get_consumption(
   - `month`
 
   - `quarter`
+
+- page_size:
+
+  The number of results to return per page. This is intended for
+  internal testing and may be removed in a future release.
 
 ## Value
 
