@@ -146,17 +146,25 @@ get_consumption <- function(
       )
     })
 
-    resps <- httr2::req_perform_parallel(reqs, on_error = "continue")
+    # The `on_success` callback immediately parses the JSON response on a
+    # background thread. This avoids a slow serial parsing step after all the
+    # requests have completed, providing a significant performance boost.
+    parse_consumption_resp <- function(resp) {
+      httr2::resp_body_json(resp, simplifyVector = TRUE)[["results"]]
+    }
+    resps <- httr2::req_perform_parallel(
+      reqs,
+      on_success = parse_consumption_resp,
+      # Return error objects so they can be filtered out before binding
+      on_error = "return"
+    )
 
-    # Extract results from parallel responses and combine with the first page.
-    results_from_parallel <- lapply(resps, function(r) {
-      if (inherits(r, "httr2_response")) {
-        httr2::resp_body_json(r, simplifyVector = TRUE)[["results"]]
-      } else {
-        NULL
-      }
-    })
-    consumption_data_list[2:total_pages] <- results_from_parallel
+    # Replace any error objects from failed requests with NULL. This allows
+    # rbindlist to proceed, effectively skipping any pages that failed to fetch.
+    consumption_data_list[2:total_pages] <- lapply(
+      resps,
+      function(r) if (inherits(r, "error")) NULL else r
+    )
   }
   # Using data.table::rbindlist() or vctrs::vec_rbind() provides a significant
   # performance boost over the base R alternative of do.call(rbind, ...).

@@ -89,20 +89,39 @@ test_that("Correctly handles multi-page parallel requests", {
     }
   }
 
-  # This mock simulates the parallel execution
-  mock_req_perform_parallel <- function(reqs, ...) {
+  # The mock now simulates the behavior of the on_success callback.
+  # It directly returns the parsed data for successful requests
+  # and an error object for a failed one.
+  mock_req_perform_parallel <- function(reqs, on_success, ...) {
     lapply(reqs, function(req) {
-      # req is what mock_api_multi_page returned when perform=FALSE
       page_num <- req$page
-      create_mock_httr2_response(
-        results = tibble::tibble(consumption = (1:10) + ((page_num - 1) * 10), interval_start = "a", interval_end = "b")
-      )
+      # Simulate a failure on page 3
+      if (page_num == 3) {
+        structure(
+          list(message = "API request failed for page 3"),
+          class = c("simpleError", "error", "condition")
+        )
+      } else {
+        # For successful pages, create a response and then apply the callback
+        response <- create_mock_httr2_response(
+          results = tibble::tibble(
+            consumption = (1:10) + ((page_num - 1) * 10),
+            interval_start = "a",
+            interval_end = "b"
+          )
+        )
+        on_success(response)
+      }
     })
   }
 
   # Stub the two external functions
   mockery::stub(get_consumption, "octopus_api", mock_api_multi_page)
-  mockery::stub(get_consumption, "httr2::req_perform_parallel", mock_req_perform_parallel)
+  mockery::stub(
+    get_consumption,
+    "httr2::req_perform_parallel",
+    mock_req_perform_parallel
+  )
 
   # Use a date range to trigger the multi-page logic
   consumption_data <- get_consumption(
@@ -111,11 +130,9 @@ test_that("Correctly handles multi-page parallel requests", {
     page_size = 10 # This needs to be smaller than the mocked count of 30
   )
 
-  # Verify the result
-  expect_equal(nrow(consumption_data), 30)
+  # Verify the result - should have 20 rows, as page 3 is skipped
+  expect_equal(nrow(consumption_data), 20)
   expect_s3_class(consumption_data, "tbl_df")
-  # Page 1 results are 1:10
-  # Page 2 results are 11:20
-  # Page 3 results are 21:30
-  expect_equal(consumption_data$consumption, 1:30)
+  # Page 1 results are 1:10, Page 2 results are 11:20
+  expect_equal(consumption_data$consumption, 1:20)
 })
