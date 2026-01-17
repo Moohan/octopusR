@@ -148,15 +148,14 @@ get_consumption <- function(
 
     resps <- httr2::req_perform_parallel(reqs, on_error = "continue")
 
-    # Extract results from parallel responses and combine with the first page.
-    results_from_parallel <- lapply(resps, function(r) {
+    # Directly populate the final list, avoiding an intermediate object.
+    consumption_data_list[2:total_pages] <- lapply(resps, function(r) {
       if (inherits(r, "httr2_response")) {
         httr2::resp_body_json(r, simplifyVector = TRUE)[["results"]]
       } else {
         NULL
       }
     })
-    consumption_data_list[2:total_pages] <- results_from_parallel
   }
   # Filter out NULL elements from any failed API calls before binding. This
   # prevents `do.call(rbind, ...)` from failing.
