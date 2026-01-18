@@ -83,5 +83,5 @@ the default (\code{tz = NULL}) will return the dates unparsed, as characters.
 }
 \note{
 For the fastest data aggregation, it is recommended to have either
-the \code{{data.table}} or \code{{vctrs}} packages installed.
+the \code{{data.table}}, \code{{vctrs}}, or \code{{dplyr}} packages installed.
 }
