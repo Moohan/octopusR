@@ -158,6 +158,10 @@ get_consumption <- function(
     })
     consumption_data_list[2:total_pages] <- results_from_parallel
   }
+  # Filter out NULL elements from any failed API calls before binding. This
+  # prevents `do.call(rbind, ...)` from failing.
+  consumption_data_list <- Filter(Negate(is.null), consumption_data_list)
+
   # Using data.table::rbindlist() or vctrs::vec_rbind() provides a significant
   # performance boost over the base R alternative of do.call(rbind, ...).
   if (rlang::is_installed("data.table")) {
