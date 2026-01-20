@@ -34,6 +34,8 @@
 #' * `week`
 #' * `month`
 #' * `quarter`
+#' @param direction For electricity meters, specify "import", "export", or NULL (default).
+#' When NULL, uses the legacy single MPAN storage.
 #' @param page_size The number of results to return per page. This is intended for internal testing and may be removed in a future release.
 #'
 #' @return a [tibble][tibble::tibble-package] of the requested consumption data.
@@ -42,15 +44,16 @@
 #' @export
 get_consumption <- function(
   meter_type = c("electricity", "gas"),
-  mpan_mprn = get_meter_details(meter_type)[["mpan_mprn"]],
-  serial_number = get_meter_details(meter_type)[["serial_number"]],
+  mpan_mprn = NULL,
+  serial_number = NULL,
+  direction = NULL,
   api_key = get_api_key(),
   period_from = NULL,
   period_to = NULL,
   tz = NULL,
   order_by = c("-period", "period"),
-  group_by = c("hour", "day", "week", "month", "quarter"),
-  page_size = NULL
+  page_size = NULL,
+  group_by = c("hour", "day", "week", "month", "quarter")
 ) {
   if (missing(meter_type)) {
     cli::cli_abort(
@@ -59,6 +62,27 @@ get_consumption <- function(
   } else {
     meter_type <- match.arg(meter_type)
   }
+
+  # Validate direction parameter
+  if (!is.null(direction) && meter_type != "electricity") {
+    stop("The 'direction' parameter is only valid for electricity meters.")
+  }
+
+  if (!is.null(direction)) {
+    direction <- match.arg(direction, c("import", "export"))
+  }
+
+  # Get meter details if not provided
+  if (is.null(mpan_mprn) || is.null(serial_number)) {
+    meter_details <- get_meter_details(meter_type, direction)
+    if (is.null(mpan_mprn)) {
+      mpan_mprn <- meter_details[["mpan_mprn"]]
+    }
+    if (is.null(serial_number)) {
+      serial_number <- meter_details[["serial_number"]]
+    }
+  }
+
   force(mpan_mprn)
   force(serial_number)
   force(api_key)
