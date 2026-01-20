@@ -1,8 +1,10 @@
-octopus_api <- function(path,
-                        query = NULL,
-                        api_key = NULL,
-                        use_api_key = FALSE,
-                        perform = TRUE) {
+octopus_api <- function(
+  path,
+  query = NULL,
+  api_key = NULL,
+  use_api_key = FALSE,
+  perform = TRUE
+) {
   if (use_api_key || !missing(api_key)) {
     if (missing(api_key)) {
       api_key <- get_api_key()

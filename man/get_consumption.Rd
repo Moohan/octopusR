@@ -59,7 +59,8 @@ Accepted values are:
 \item \code{quarter}
 }}
 
-\item{page_size}{The number of results to return per page. This is intended for internal testing and may be removed in a future release.}
+\item{page_size}{Number of results to request per page (integer).
+If \code{NULL} the API default page size is used.}
 }
 \value{
 a \link[tibble:tibble-package]{tibble} of the requested consumption data.
