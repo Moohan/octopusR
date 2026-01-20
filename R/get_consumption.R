@@ -160,6 +160,9 @@ get_consumption <- function(
   }
   # Using data.table::rbindlist() or vctrs::vec_rbind() provides a significant
   # performance boost over the base R alternative of do.call(rbind, ...).
+  # Filter out NULL elements from failed API calls before binding.
+  consumption_data_list <- Filter(Negate(is.null), consumption_data_list)
+
   if (rlang::is_installed("data.table")) {
     consumption_data <- data.table::rbindlist(consumption_data_list)
   } else if (rlang::is_installed("vctrs")) {
