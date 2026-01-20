@@ -43,17 +43,18 @@
 #' the `{data.table}` or `{vctrs}` packages installed.
 #' @export
 get_consumption <- function(
-    meter_type = c("electricity", "gas"),
-    mpan_mprn = NULL,
-    serial_number = NULL,
-    direction = NULL,
-    api_key = get_api_key(),
-    period_from = NULL,
-    period_to = NULL,
-    tz = NULL,
-    order_by = c("-period", "period"),
+  meter_type = c("electricity", "gas"),
+  mpan_mprn = NULL,
+  serial_number = NULL,
+  direction = NULL,
+  api_key = get_api_key(),
+  period_from = NULL,
+  period_to = NULL,
+  tz = NULL,
+  order_by = c("-period", "period"),
   page_size = NULL,
-    group_by = c("hour", "day", "week", "month", "quarter")) {
+  group_by = c("hour", "day", "week", "month", "quarter")
+) {
   if (missing(meter_type)) {
     cli::cli_abort(
       "You must specify {.val electricity} or {.val gas} for {.arg meter_type}"
