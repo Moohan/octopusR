@@ -80,9 +80,33 @@
 <span><span class="fu"><a href="reference/set_meter_details.html">set_meter_details</a></span><span class="op">(</span>meter_type <span class="op">=</span> <span class="st">"electricity"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Set details for your gas meter</span></span>
-<span><span class="fu"><a href="reference/set_meter_details.html">set_meter_details</a></span><span class="op">(</span>meter_type <span class="op">=</span> <span class="st">"gas"</span><span class="op">)</span></span></code></pre></div>
-<p>You can use the other functions in the package to interact with the API. For example, you can use the <code><a href="reference/get_consumption.html">get_consumption()</a></code> function to retrieve data about your energy usage:</p>
+<span><span class="fu"><a href="reference/set_meter_details.html">set_meter_details</a></span><span class="op">(</span>meter_type <span class="op">=</span> <span class="st">"gas"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># For users with solar panels or export generation:</span></span>
+<span><span class="co"># Set separate import and export electricity meters</span></span>
+<span><span class="fu"><a href="reference/set_meter_details.html">set_meter_details</a></span><span class="op">(</span>meter_type <span class="op">=</span> <span class="st">"electricity"</span>, direction <span class="op">=</span> <span class="st">"import"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/set_meter_details.html">set_meter_details</a></span><span class="op">(</span>meter_type <span class="op">=</span> <span class="st">"electricity"</span>, direction <span class="op">=</span> <span class="st">"export"</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="import-and-export-meters">Import and Export Meters<a class="anchor" aria-label="anchor" href="#import-and-export-meters"></a>
+</h2>
+<p>octopusR supports distinguishing between import and export meters for users with solar panels or other generation sources:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Get import consumption (energy from grid)</span></span>
+<span><span class="va">import_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/get_consumption.html">get_consumption</a></span><span class="op">(</span>meter_type <span class="op">=</span> <span class="st">"electricity"</span>, direction <span class="op">=</span> <span class="st">"import"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Get export consumption (energy to grid) </span></span>
+<span><span class="va">export_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/get_consumption.html">get_consumption</a></span><span class="op">(</span>meter_type <span class="op">=</span> <span class="st">"electricity"</span>, direction <span class="op">=</span> <span class="st">"export"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Combine import and export data with net consumption</span></span>
+<span><span class="va">combined_data</span> <span class="op">&lt;-</span> <span class="fu">combine_consumption</span><span class="op">(</span></span>
+<span>  period_from <span class="op">=</span> <span class="st">"2023-01-01"</span>,</span>
+<span>  period_to <span class="op">=</span> <span class="st">"2023-01-31"</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<p>The <code>combine_consumption()</code> function provides columns for: - <code>import_consumption</code>: Energy imported from the grid - <code>export_consumption</code>: Energy exported to the grid<br>
+- <code>net_consumption</code>: Net energy consumption (import - export)</p>
+<p>You can use the other functions in the package to interact with the API. For example, you can use the <code><a href="reference/get_consumption.html">get_consumption()</a></code> function to retrieve data about your energy usage:</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Get data about your energy usage</span></span>
 <span><span class="va">energy_usage</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/get_consumption.html">get_consumption</a></span><span class="op">(</span>meter_type <span class="op">=</span> <span class="st">"elec"</span><span class="op">)</span></span>
 <span><span class="co">#&gt; ℹ Returning 100 rows only as a date range wasn't provided.</span></span>
