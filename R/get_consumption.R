@@ -40,7 +40,7 @@
 #'
 #' @return a [tibble][tibble::tibble-package] of the requested consumption data.
 #' @note For the fastest data aggregation, it is recommended to have either
-#' the `{data.table}` or `{vctrs}` packages installed.
+#' the `{data.table}`, `{vctrs}`, or `{dplyr}` packages installed.
 #' @export
 get_consumption <- function(
   meter_type = c("electricity", "gas"),
@@ -185,15 +185,7 @@ get_consumption <- function(
   # prevents `do.call(rbind, ...)` from failing.
   consumption_data_list <- Filter(Negate(is.null), consumption_data_list)
 
-  # Using data.table::rbindlist() or vctrs::vec_rbind() provides a significant
-  # performance boost over the base R alternative of do.call(rbind, ...).
-  if (rlang::is_installed("data.table")) {
-    consumption_data <- data.table::rbindlist(consumption_data_list)
-  } else if (rlang::is_installed("vctrs")) {
-    consumption_data <- vctrs::vec_rbind(!!!consumption_data_list)
-  } else {
-    consumption_data <- do.call(rbind, consumption_data_list)
-  }
+  consumption_data <- combine_consumption_data(consumption_data_list)
 
   consumption_data <- tibble::as_tibble(consumption_data)
 

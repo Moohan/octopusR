@@ -23,6 +23,7 @@ Imports:
 Suggests: 
     covr,
     data.table,
+    dplyr,
     jsonlite,
     lubridate (>= 0.2.1),
     mockery,
