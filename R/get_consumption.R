@@ -157,10 +157,14 @@ get_consumption <- function(
   if (total_pages == 0) {
     return(tibble::tibble())
   }
-  consumption_data_list <- vector("list", total_pages)
-  consumption_data_list[[1L]] <- resp[["content"]][["results"]]
+  # If only one page of results, we can avoid the overhead of the multi-page
+  # aggregation pipeline (list allocation, parallel processing, rbind).
+  if (total_pages == 1) {
+    consumption_data <- resp[["content"]][["results"]]
+  } else {
+    consumption_data_list <- vector("list", total_pages)
+    consumption_data_list[[1L]] <- resp[["content"]][["results"]]
 
-  if (total_pages > 1) {
     reqs <- lapply(2:total_pages, function(page) {
       octopus_api(
         path = path,
@@ -180,19 +184,20 @@ get_consumption <- function(
         NULL
       }
     })
-  }
-  # Filter out NULL elements from any failed API calls before binding. This
-  # prevents `do.call(rbind, ...)` from failing.
-  consumption_data_list <- Filter(Negate(is.null), consumption_data_list)
 
-  # Using data.table::rbindlist() or vctrs::vec_rbind() provides a significant
-  # performance boost over the base R alternative of do.call(rbind, ...).
-  if (rlang::is_installed("data.table")) {
-    consumption_data <- data.table::rbindlist(consumption_data_list)
-  } else if (rlang::is_installed("vctrs")) {
-    consumption_data <- vctrs::vec_rbind(!!!consumption_data_list)
-  } else {
-    consumption_data <- do.call(rbind, consumption_data_list)
+    # Filter out NULL elements from any failed API calls before binding. This
+    # prevents `do.call(rbind, ...)` from failing.
+    consumption_data_list <- Filter(Negate(is.null), consumption_data_list)
+
+    # Using data.table::rbindlist() or vctrs::vec_rbind() provides a significant
+    # performance boost over the base R alternative of do.call(rbind, ...).
+    if (rlang::is_installed("data.table")) {
+      consumption_data <- data.table::rbindlist(consumption_data_list)
+    } else if (rlang::is_installed("vctrs")) {
+      consumption_data <- vctrs::vec_rbind(!!!consumption_data_list)
+    } else {
+      consumption_data <- do.call(rbind, consumption_data_list)
+    }
   }
 
   consumption_data <- tibble::as_tibble(consumption_data)
