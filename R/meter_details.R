@@ -178,4 +178,3 @@ testing_meter <- function(meter_type = c("electricity", "gas")) {
     )
   }
 }
-
