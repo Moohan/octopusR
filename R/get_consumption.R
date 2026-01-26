@@ -170,14 +170,28 @@ get_consumption <- function(
       )
     })
 
-    resps <- httr2::req_perform_parallel(reqs, on_error = "continue")
+    # This callback function is run in parallel on each successful response.
+    # It mirrors the parsing logic from the main `octopus_api` function
+    # to ensure the data structure is identical for all pages.
+    on_success_callback <- function(resp) {
+      parsed <- httr2::resp_body_json(resp, simplifyVector = TRUE)
+      parsed[["results"]] <- tibble::as_tibble(parsed[["results"]])
+      return(parsed[["results"]])
+    }
 
-    # Directly populate the final list, avoiding an intermediate object.
-    consumption_data_list[2:total_pages] <- lapply(resps, function(r) {
-      if (inherits(r, "httr2_response")) {
-        httr2::resp_body_json(r, simplifyVector = TRUE)[["results"]]
-      } else {
+    results <- httr2::req_perform_parallel(
+      reqs,
+      on_success = on_success_callback,
+      on_error = "return" # Return errors instead of stopping
+    )
+
+    # The results list now contains a mix of tibbles (from success) and
+    # error objects. We replace errors with NULL to be filtered out later.
+    consumption_data_list[2:total_pages] <- lapply(results, function(r) {
+      if (inherits(r, "error")) {
         NULL
+      } else {
+        r
       }
     })
   }
