@@ -89,15 +89,29 @@ test_that("Correctly handles multi-page parallel requests", {
     }
   }
 
-  # This mock simulates the parallel execution
+  # This mock simulates the parallel execution, including a failure
   mock_req_perform_parallel <- function(reqs, ...) {
-    lapply(reqs, function(req) {
-      # req is what mock_api_multi_page returned when perform=FALSE
+    resps <- lapply(reqs, function(req) {
       page_num <- req$page
-      create_mock_httr2_response(
-        results = tibble::tibble(consumption = (1:10) + ((page_num - 1) * 10), interval_start = "a", interval_end = "b")
-      )
+      # Simulate a failure for page 3
+      if (page_num == 3) {
+        httr2::response(
+          status_code = 500,
+          headers = list(`Content-Type` = "application/json"),
+          body = charToRaw(jsonlite::toJSON(list(results = NULL), auto_unbox = TRUE))
+        )
+      } else {
+        create_mock_httr2_response(
+          results = tibble::tibble(
+            consumption = (1:10) + ((page_num - 1) * 10),
+            interval_start = "a",
+            interval_end = "b"
+          )
+        )
+      }
     })
+    # The actual function returns a list of responses, which is then processed
+    return(resps)
   }
 
   # Stub the two external functions
@@ -111,11 +125,9 @@ test_that("Correctly handles multi-page parallel requests", {
     page_size = 10 # This needs to be smaller than the mocked count of 30
   )
 
-  # Verify the result
-  expect_equal(nrow(consumption_data), 30)
+  # Verify the result - expecting 20 rows because page 3 failed
+  expect_equal(nrow(consumption_data), 20)
   expect_s3_class(consumption_data, "tbl_df")
-  # Page 1 results are 1:10
-  # Page 2 results are 11:20
-  # Page 3 results are 21:30
-  expect_equal(consumption_data$consumption, 1:30)
+  # Page 1 results are 1:10, Page 2 results are 11:20
+  expect_equal(consumption_data$consumption, 1:20)
 })

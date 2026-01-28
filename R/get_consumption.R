@@ -172,18 +172,16 @@ get_consumption <- function(
 
     resps <- httr2::req_perform_parallel(reqs, on_error = "continue")
 
-    # Directly populate the final list, avoiding an intermediate object.
-    consumption_data_list[2:total_pages] <- lapply(resps, function(r) {
-      if (inherits(r, "httr2_response")) {
-        httr2::resp_body_json(r, simplifyVector = TRUE)[["results"]]
-      } else {
-        NULL
-      }
+    # Process successful responses, discarding errors. This is more direct
+    # than creating a list with NULLs and then filtering them out.
+    successful_resps <- httr2::resps_successes(resps)
+    successful_results <- lapply(successful_resps, function(r) {
+      httr2::resp_body_json(r, simplifyVector = TRUE)[["results"]]
     })
+
+    # Combine the first page of results with the rest of the successful results.
+    consumption_data_list <- c(list(consumption_data_list[[1L]]), successful_results)
   }
-  # Filter out NULL elements from any failed API calls before binding. This
-  # prevents `do.call(rbind, ...)` from failing.
-  consumption_data_list <- Filter(Negate(is.null), consumption_data_list)
 
   # Using data.table::rbindlist() or vctrs::vec_rbind() provides a significant
   # performance boost over the base R alternative of do.call(rbind, ...).
