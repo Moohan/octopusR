@@ -6,15 +6,16 @@
 \usage{
 get_consumption(
   meter_type = c("electricity", "gas"),
-  mpan_mprn = get_meter_details(meter_type)[["mpan_mprn"]],
-  serial_number = get_meter_details(meter_type)[["serial_number"]],
+  mpan_mprn = NULL,
+  serial_number = NULL,
+  direction = NULL,
   api_key = get_api_key(),
   period_from = NULL,
   period_to = NULL,
   tz = NULL,
   order_by = c("-period", "period"),
-  group_by = c("hour", "day", "week", "month", "quarter"),
-  page_size = NULL
+  page_size = NULL,
+  group_by = c("hour", "day", "week", "month", "quarter")
 )
 }
 \arguments{
@@ -24,6 +25,9 @@ get_consumption(
 MPRN.}
 
 \item{serial_number}{The meter's serial number.}
+
+\item{direction}{For electricity meters, specify "import", "export", or NULL
+(default). When NULL, uses the legacy single MPAN storage.}
 
 \item{api_key}{Your API key. If you are an Octopus Energy customer,
 you can generate an API key on the
@@ -47,6 +51,9 @@ Valid values:
 \item \code{-period}, (default), to give results ordered from most recent backwards.
 }}
 
+\item{page_size}{The number of results to return per page. This is intended
+for internal testing and may be removed in a future release.}
+
 \item{group_by}{Aggregates consumption over a specified time period.
 A day is considered to start and end at midnight in the server's time zone.
 The default is that consumption is returned in half-hour periods.
@@ -58,8 +65,6 @@ Accepted values are:
 \item \code{month}
 \item \code{quarter}
 }}
-
-\item{page_size}{The number of results to return per page. This is intended for internal testing and may be removed in a future release.}
 }
 \value{
 a \link[tibble:tibble-package]{tibble} of the requested consumption data.
