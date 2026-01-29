@@ -17,6 +17,7 @@ create_mock_httr2_response <- function(results) {
 }
 
 test_that("Can return electric consumption data sample", {
+  skip_on_cran()
   mock_api <- function(...) {
     create_mock_api_response(
       count = 100,
@@ -40,6 +41,7 @@ test_that("Can return electric consumption data sample", {
 })
 
 test_that("Can return gas consumption data sample", {
+  skip_on_cran()
   mock_api <- function(...) {
     create_mock_api_response(
       count = 100,
@@ -74,28 +76,27 @@ test_that("errors properly with incorrect params", {
 })
 
 test_that("Correctly handles multi-page parallel requests", {
+  skip_on_cran()
   # This mock handles the two ways octopus_api is called in the multi-page scenario
   mock_api_multi_page <- function(path, query, ..., perform = TRUE) {
     if (perform) {
-      # The first call to get page count
+      # The first call to get page count, now returns a single row
       create_mock_api_response(
         count = 30,
-        results = tibble::tibble(consumption = 1:10, interval_start = "a", interval_end = "b")
+        results = tibble::tibble(consumption = 1, interval_start = "a", interval_end = "b")
       )
     } else {
-      # The subsequent calls to build the request list
-      # Return a simple list that we can identify later
-      list(page = query$page)
+      # This now needs to return a request object
+      httr2::request("http://localhost/")
     }
   }
 
   # This mock simulates the parallel execution
   mock_req_perform_parallel <- function(reqs, ...) {
-    lapply(reqs, function(req) {
-      # req is what mock_api_multi_page returned when perform=FALSE
-      page_num <- req$page
+    # The number of requests will be 3 (30 total records / 10 per page)
+    lapply(1:length(reqs), function(i) {
       create_mock_httr2_response(
-        results = tibble::tibble(consumption = (1:10) + ((page_num - 1) * 10), interval_start = "a", interval_end = "b")
+        results = tibble::tibble(consumption = (1:10) + ((i - 1) * 10), interval_start = "a", interval_end = "b")
       )
     })
   }

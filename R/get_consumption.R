@@ -34,9 +34,9 @@
 #' * `week`
 #' * `month`
 #' * `quarter`
+#' @param page_size The number of results to return per page. This is intended for internal testing and may be removed in a future release.
 #' @param direction For electricity meters, specify "import", "export", or NULL (default).
 #' When NULL, uses the legacy single MPAN storage.
-#' @param page_size The number of results to return per page. This is intended for internal testing and may be removed in a future release.
 #'
 #' @return a [tibble][tibble::tibble-package] of the requested consumption data.
 #' @note For the fastest data aggregation, it is recommended to have either
@@ -145,45 +145,40 @@ get_consumption <- function(
     group_by = group_by
   )
 
+  # Make an initial call to the API to determine the total number of records
+  # available for the given period.
   resp <- octopus_api(
     path = path,
     api_key = api_key,
-    query = query
+    query = append(query, list(page_size = 1L))
   )
 
-  page <- 1L
   total_rows <- resp[["content"]][["count"]]
-  total_pages <- ceiling(total_rows / page_size)
-  if (total_pages == 0) {
+  if (total_rows == 0) {
     return(tibble::tibble())
   }
-  consumption_data_list <- vector("list", total_pages)
-  consumption_data_list[[1L]] <- resp[["content"]][["results"]]
+  total_pages <- ceiling(total_rows / page_size)
 
-  if (total_pages > 1) {
-    reqs <- lapply(2:total_pages, function(page) {
-      octopus_api(
-        path = path,
-        api_key = api_key,
-        query = append(query, list(page = page)),
-        perform = FALSE
-      )
+  # Create a list of all the requests that need to be made, then pass them
+  # to `req_perform_parallel()` to run them all at once.
+  reqs <- lapply(1:total_pages, function(page) {
+    octopus_api(
+      path = path,
+      api_key = api_key,
+      query = append(query, list(page = page)),
+      perform = FALSE
+    )
+  })
+
+  resps <- httr2::req_perform_parallel(reqs, on_error = "continue")
+
+  # Process the successful responses, extracting the consumption data from each.
+  # Failed requests will be filtered out, though `req_perform_parallel` will
+  # issue a warning.
+  consumption_data_list <-
+    lapply(httr2::resps_successes(resps), function(r) {
+      httr2::resp_body_json(r, simplifyVector = TRUE)[["results"]]
     })
-
-    resps <- httr2::req_perform_parallel(reqs, on_error = "continue")
-
-    # Directly populate the final list, avoiding an intermediate object.
-    consumption_data_list[2:total_pages] <- lapply(resps, function(r) {
-      if (inherits(r, "httr2_response")) {
-        httr2::resp_body_json(r, simplifyVector = TRUE)[["results"]]
-      } else {
-        NULL
-      }
-    })
-  }
-  # Filter out NULL elements from any failed API calls before binding. This
-  # prevents `do.call(rbind, ...)` from failing.
-  consumption_data_list <- Filter(Negate(is.null), consumption_data_list)
 
   # Using data.table::rbindlist() or vctrs::vec_rbind() provides a significant
   # performance boost over the base R alternative of do.call(rbind, ...).
