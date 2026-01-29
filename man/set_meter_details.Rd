@@ -32,8 +32,7 @@ stored as environment variables. You should add:
 \itemize{
 \item \verb{OCTOPUSR_MPAN = <electric MPAN>} (or \code{OCTOPUSR_MPAN_IMPORT}/\code{OCTOPUSR_MPAN_EXPORT})
 \item \verb{OCTOPUSR_MPRN = <gas MPRN>}
-\item \verb{OCTOPUSR_ELEC_SERIAL_NUM = <electric serial number>} (or
-\code{OCTOPUSR_ELEC_SERIAL_NUM_IMPORT}/\code{OCTOPUSR_ELEC_SERIAL_NUM_EXPORT})
+\item \verb{OCTOPUSR_ELEC_SERIAL_NUM = <electric serial number>} (or \code{OCTOPUSR_ELEC_SERIAL_NUM_IMPORT}/\code{OCTOPUSR_ELEC_SERIAL_NUM_EXPORT})
 \item \verb{OCTOPUSR_GAS_SERIAL_NUM = <gas serial number>}
 to your \code{.Renviron} otherwise you will have to call this function every
 session. You can find your meter details (MPAN/MPRN and serial number(s)) on

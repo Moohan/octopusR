@@ -8,8 +8,8 @@
 #'    `OCTOPUSR_ELEC_SERIAL_NUM_IMPORT`/`OCTOPUSR_ELEC_SERIAL_NUM_EXPORT`)
 #'  * `OCTOPUSR_GAS_SERIAL_NUM = <gas serial number>`
 #' to your `.Renviron` otherwise you will have to call this function every
-#' session. You can find your meter details (MPAN/MPRN and serial number(s)) on
-#' the [developer dashboard](https://octopus.energy/dashboard/developer/).
+#' session. You can find your meter details (MPAN/MPRN and serial number(s))
+#' on the [developer dashboard](https://octopus.energy/dashboard/developer/).
 #'
 #' @param meter_type Type of meter-point, electricity or gas
 #' @param mpan_mprn The electricity meter-point's MPAN or gas meter-point’s
