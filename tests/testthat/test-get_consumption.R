@@ -18,17 +18,33 @@ create_mock_httr2_response <- function(results) {
 
 test_that("Can return electric consumption data sample", {
   skip_on_cran()
-  mock_api <- function(...) {
-    create_mock_api_response(
-      count = 100,
-      results = tibble::tibble(
-        consumption = 1:100,
-        interval_start = "a",
-        interval_end = "b"
+  mock_api <- function(..., perform = TRUE) {
+    if (perform) {
+      create_mock_api_response(
+        count = 100,
+        results = tibble::tibble(
+          consumption = 1:100,
+          interval_start = "a",
+          interval_end = "b"
+        )
       )
-    )
+    } else {
+      httr2::request("http://localhost/")
+    }
+  }
+  mock_req_perform_parallel <- function(reqs, ...) {
+    lapply(reqs, function(req) {
+      create_mock_httr2_response(
+        results = tibble::tibble(
+          consumption = 1:100,
+          interval_start = "a",
+          interval_end = "b"
+        )
+      )
+    })
   }
   mockery::stub(get_consumption, "octopus_api", mock_api)
+  mockery::stub(get_consumption, "httr2::req_perform_parallel", mock_req_perform_parallel)
 
   expect_message(
     consumption_data <- get_consumption("electricity"),
@@ -42,17 +58,33 @@ test_that("Can return electric consumption data sample", {
 
 test_that("Can return gas consumption data sample", {
   skip_on_cran()
-  mock_api <- function(...) {
-    create_mock_api_response(
-      count = 100,
-      results = tibble::tibble(
-        consumption = 1:100,
-        interval_start = "a",
-        interval_end = "b"
+  mock_api <- function(..., perform = TRUE) {
+    if (perform) {
+      create_mock_api_response(
+        count = 100,
+        results = tibble::tibble(
+          consumption = 1:100,
+          interval_start = "a",
+          interval_end = "b"
+        )
       )
-    )
+    } else {
+      httr2::request("http://localhost/")
+    }
+  }
+  mock_req_perform_parallel <- function(reqs, ...) {
+    lapply(reqs, function(req) {
+      create_mock_httr2_response(
+        results = tibble::tibble(
+          consumption = 1:100,
+          interval_start = "a",
+          interval_end = "b"
+        )
+      )
+    })
   }
   mockery::stub(get_consumption, "octopus_api", mock_api)
+  mockery::stub(get_consumption, "httr2::req_perform_parallel", mock_req_perform_parallel)
 
   expect_message(
     consumption_data <- get_consumption("gas"),
