@@ -145,42 +145,44 @@ get_consumption <- function(
     group_by = group_by
   )
 
-  resp <- octopus_api(
+  # First, make a small, fast "probe" request to get the total number of
+  # results, then create and perform all requests in a single parallel batch.
+  # This avoids waiting for the first synchronous request to complete before
+  # starting the parallel requests.
+  probe_query <- query
+  probe_query$page_size <- 1L
+
+  probe_resp <- octopus_api(
     path = path,
     api_key = api_key,
-    query = query
+    query = probe_query
   )
 
-  page <- 1L
-  total_rows <- resp[["content"]][["count"]]
+  total_rows <- probe_resp[["content"]][["count"]]
   total_pages <- ceiling(total_rows / page_size)
+
   if (total_pages == 0) {
     return(tibble::tibble())
   }
-  consumption_data_list <- vector("list", total_pages)
-  consumption_data_list[[1L]] <- resp[["content"]][["results"]]
 
-  if (total_pages > 1) {
-    reqs <- lapply(2:total_pages, function(page) {
-      octopus_api(
-        path = path,
-        api_key = api_key,
-        query = append(query, list(page = page)),
-        perform = FALSE
-      )
-    })
+  reqs <- lapply(1:total_pages, function(page) {
+    octopus_api(
+      path = path,
+      api_key = api_key,
+      query = append(query, list(page = page)),
+      perform = FALSE
+    )
+  })
 
-    resps <- httr2::req_perform_parallel(reqs, on_error = "continue")
+  resps <- httr2::req_perform_parallel(reqs, on_error = "continue")
 
-    # Directly populate the final list, avoiding an intermediate object.
-    consumption_data_list[2:total_pages] <- lapply(resps, function(r) {
-      if (inherits(r, "httr2_response")) {
-        httr2::resp_body_json(r, simplifyVector = TRUE)[["results"]]
-      } else {
-        NULL
-      }
-    })
-  }
+  consumption_data_list <- lapply(resps, function(r) {
+    if (inherits(r, "httr2_response")) {
+      httr2::resp_body_json(r, simplifyVector = TRUE)[["results"]]
+    } else {
+      NULL
+    }
+  })
   # Filter out NULL elements from any failed API calls before binding. This
   # prevents `do.call(rbind, ...)` from failing.
   consumption_data_list <- Filter(Negate(is.null), consumption_data_list)
