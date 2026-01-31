@@ -179,6 +179,15 @@ get_consumption <- function(
       httr2::resp_body_json(r, simplifyVector = TRUE)[["results"]]
     })
 
+    # Warn the user if some pages failed to download.
+    failures <- httr2::resps_failures(resps)
+    if (length(failures) > 0) {
+      cli::cli_warn(c(
+        "x" = "{length(failures)} request{?s} failed and will be excluded from the result.",
+        "i" = "Run with `on_error = \"stop\"` to see individual errors."
+      ))
+    }
+
     # Combine the first page of results with the rest of the successful results.
     consumption_data_list <- c(list(consumption_data_list[[1L]]), successful_results)
   }

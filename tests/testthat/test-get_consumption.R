@@ -93,13 +93,16 @@ test_that("Correctly handles multi-page parallel requests", {
   mock_req_perform_parallel <- function(reqs, ...) {
     resps <- lapply(reqs, function(req) {
       page_num <- req$page
-      # Simulate a failure for page 3
+      # Simulate a failure for page 3 and an httr2_error for page 4
       if (page_num == 3) {
         httr2::response(
           status_code = 500,
           headers = list(`Content-Type` = "application/json"),
           body = charToRaw(jsonlite::toJSON(list(results = NULL), auto_unbox = TRUE))
         )
+      } else if (page_num == 4) {
+        # This simulates a different kind of failure
+        structure(list(message = "An error occurred"), class = c("httr2_error", "r_error", "error", "condition"))
       } else {
         create_mock_httr2_response(
           results = tibble::tibble(
@@ -125,7 +128,17 @@ test_that("Correctly handles multi-page parallel requests", {
     page_size = 10 # This needs to be smaller than the mocked count of 30
   )
 
-  # Verify the result - expecting 20 rows because page 3 failed
+  # Expect a warning about the failed requests
+  expect_warning(
+    consumption_data <- get_consumption(
+      meter_type = "electricity",
+      period_from = "2023-01-01",
+      page_size = 10
+    ),
+    "2 requests failed"
+  )
+
+  # Verify the result - expecting 20 rows because pages 3 and 4 failed
   expect_equal(nrow(consumption_data), 20)
   expect_s3_class(consumption_data, "tbl_df")
   # Page 1 results are 1:10, Page 2 results are 11:20
