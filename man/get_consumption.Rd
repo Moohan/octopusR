@@ -60,10 +60,11 @@ Accepted values are:
 \item \code{quarter}
 }}
 
-\item{page_size}{The number of results to return per page. This is intended for internal testing and may be removed in a future release.}
+\item{page_size}{The number of results to return per page. This is intended
+for internal testing and may be removed in a future release.}
 
-\item{direction}{For electricity meters, specify "import", "export", or NULL (default).
-When NULL, uses the legacy single MPAN storage.}
+\item{direction}{For electricity meters, specify "import", "export", or
+NULL (default). When NULL, uses the legacy single MPAN storage.}
 }
 \value{
 a \link[tibble:tibble-package]{tibble} of the requested consumption data.
