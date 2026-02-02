@@ -38,8 +38,38 @@ is_testing <- function() {
 }
 
 testing_key <- function() {
-  httr2::secret_decrypt(
-    "iaSTP6F_jm_pr7dVW2cZkRnKyfS5uRJsklKdcnK0_b7sbeaPz345Cq9IoJmCf9Ha",
-    "OCTOPUSR_SECRET_KEY"
+  key <- tryCatch(
+    httr2::secret_decrypt(
+      "iaSTP6F_jm_pr7dVW2cZkRnKyfS5uRJsklKdcnK0_b7sbeaPz345Cq9IoJmCf9Ha",
+      "OCTOPUSR_SECRET_KEY"
+    ),
+    error = function(e) "sk_test_dummy_key"
   )
+
+  .sanitize_test_string(key, "sk_test_dummy_key")
+}
+
+.sanitize_test_string <- function(x, fallback) {
+  if (!is.character(x) || length(x) != 1 || is.na(x)) {
+    fallback
+  } else {
+    # Attempt to clean up by stripping non-ASCII characters.
+    # We use iconv to ASCII with sub="" to safely remove invalid bytes
+    # that cause wide string translation errors on some systems.
+    sanitized <- tryCatch(
+      {
+        # iconv to ASCII, stripping anything else
+        s <- iconv(x, to = "ASCII", sub = "")
+        # Keep only alphanumeric
+        gsub("[^a-zA-Z0-9]", "", s)
+      },
+      error = function(e) ""
+    )
+
+    if (is.na(sanitized) || nchar(sanitized) == 0) {
+      fallback
+    } else {
+      sanitized
+    }
+  }
 }
