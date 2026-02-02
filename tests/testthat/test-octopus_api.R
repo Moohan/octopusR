@@ -6,9 +6,9 @@ test_that("Octopus API fails when not authenticated", {
     "Authentication credentials were not provided"
   )
 
-  # get_api_key() might fail if no key is set, or octopus_api might fail if it is
   expect_error(
-    octopus_api(path = "v1/accounts/", api_key = get_api_key())
+    octopus_api(path = "v1/accounts/", api_key = get_api_key()),
+    "You do not have permission to perform this action"
   )
 
   expect_error(

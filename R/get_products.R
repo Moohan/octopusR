@@ -78,5 +78,5 @@ get_products <- function(is_variable = NULL,
 
   products <- resp[["content"]][["results"]]
 
-  return(products)
+  products
 }
