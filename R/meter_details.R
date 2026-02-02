@@ -165,7 +165,7 @@ testing_meter <- function(meter_type = c("electricity", "gas"),
       mpan <- "1234567890123"
     }
     if (!is.character(serial_number) ||
-        grepl("[^[:alnum:][:space:]]", serial_number)) {
+      grepl("[^[:alnum:][:space:]]", serial_number)) {
       serial_number <- "ABC12345"
     }
 
@@ -203,7 +203,7 @@ testing_meter <- function(meter_type = c("electricity", "gas"),
       mprn <- "1234567890"
     }
     if (!is.character(serial_number) ||
-        grepl("[^[:alnum:][:space:]]", serial_number)) {
+      grepl("[^[:alnum:][:space:]]", serial_number)) {
       serial_number <- "XYZ67890"
     }
 
@@ -247,8 +247,10 @@ combine_consumption <- function(import_mpan = NULL,
                                 period_to = NULL,
                                 tz = NULL,
                                 order_by = c("-period", "period"),
-                                group_by = c("hour", "day", "week",
-                                             "month", "quarter")) {
+                                group_by = c(
+                                  "hour", "day", "week",
+                                  "month", "quarter"
+                                )) {
   # Get import consumption data
   import_data <- NULL
   if (!is.null(import_mpan) && !is.null(import_serial)) {
@@ -354,9 +356,11 @@ combine_consumption <- function(import_mpan = NULL,
 
     # Rename consumption columns
     result$import_consumption <- ifelse(is.na(result$consumption_import),
-                                        0, result$consumption_import)
+      0, result$consumption_import
+    )
     result$export_consumption <- ifelse(is.na(result$consumption_export),
-                                        0, result$consumption_export)
+      0, result$consumption_export
+    )
     result$consumption_import <- NULL
     result$consumption_export <- NULL
 
