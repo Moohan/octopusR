@@ -125,8 +125,10 @@ get_consumption <- function(
       page_size <- 100L
       cli::cli_inform(c(
         "i" = "Returning 100 rows only as a date range wasn't provided.",
-        "v" = paste0("Specify a date range with {.arg period_to} and ",
-                     "{.arg period_from}.")
+        "v" = paste0(
+          "Specify a date range with {.arg period_to} and ",
+          "{.arg period_from}."
+        )
       ))
     } else {
       check_datetime_format(period_from)

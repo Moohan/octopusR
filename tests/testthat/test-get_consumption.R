@@ -35,8 +35,10 @@ test_that("Can return electric consumption data sample", {
   )
 
   expect_s3_class(consumption_data, "tbl_df")
-  expect_named(consumption_data,
-               c("consumption", "interval_start", "interval_end"))
+  expect_named(
+    consumption_data,
+    c("consumption", "interval_start", "interval_end")
+  )
   expect_equal(nrow(consumption_data), 100L)
 })
 
@@ -59,8 +61,10 @@ test_that("Can return gas consumption data sample", {
   )
 
   expect_s3_class(consumption_data, "tbl_df")
-  expect_named(consumption_data,
-               c("consumption", "interval_start", "interval_end"))
+  expect_named(
+    consumption_data,
+    c("consumption", "interval_start", "interval_end")
+  )
   expect_equal(nrow(consumption_data), 100L)
 })
 
@@ -112,9 +116,11 @@ test_that("Correctly handles multi-page parallel requests", {
 
   # Stub the two external functions
   mockery::stub(get_consumption, "octopus_api", mock_api_multi_page)
-  mockery::stub(get_consumption,
-                "httr2::req_perform_parallel",
-                mock_req_perform_parallel)
+  mockery::stub(
+    get_consumption,
+    "httr2::req_perform_parallel",
+    mock_req_perform_parallel
+  )
 
   # Use a date range to trigger the multi-page logic
   consumption_data <- get_consumption(
