@@ -3,18 +3,22 @@ octopus_api <- function(path,
                         api_key = NULL,
                         use_api_key = FALSE,
                         perform = TRUE) {
+  base_url <- "https://api.octopus.energy/"
+
+  req <- httr2::request(base_url) |>
+    httr2::req_user_agent("octopusR (https://github.com/Moohan/octopusR)")
+
   if (use_api_key || !missing(api_key)) {
     if (missing(api_key)) {
       api_key <- get_api_key()
     }
 
-    base_url <- glue::glue("https://{api_key}@api.octopus.energy/")
-  } else {
-    base_url <- "https://api.octopus.energy/"
+    # Use basic auth header instead of putting key in URL for better robustness
+    # and to avoid malformed URL errors when keys contain special characters.
+    req <- req |> httr2::req_auth_basic(api_key, "")
   }
 
-  req <- httr2::request(base_url) |>
-    httr2::req_user_agent("octopusR (https://github.com/Moohan/octopusR)") |>
+  req <- req |>
     httr2::req_url_path_append(path) |>
     httr2::req_url_query(!!!query) |>
     httr2::req_throttle(5L) |>

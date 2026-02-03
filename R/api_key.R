@@ -44,7 +44,10 @@ testing_key <- function() {
         "iaSTP6F_jm_pr7dVW2cZkRnKyfS5uRJsklKdcnK0_b7sbeaPz345Cq9IoJmCf9Ha",
         "OCTOPUSR_SECRET_KEY"
       )
-      iconv(key, to = "ASCII", sub = "")
+      key <- iconv(key, to = "ASCII", sub = "")
+      key <- gsub("[^a-zA-Z0-9_-]", "", key)
+      if (identical(key, "")) stop("Invalid key")
+      key
     },
     error = function(e) "sk_test_dummy_key"
   )

@@ -152,7 +152,10 @@ testing_meter <- function(meter_type = c("electricity", "gas"),
           "OPGJ1brZHps9UGVyAmrmmw_gaD4wxrnCCYURXiQ",
           "OCTOPUSR_SECRET_KEY"
         )
-        iconv(val, to = "ASCII", sub = "")
+        val <- iconv(val, to = "ASCII", sub = "")
+        val <- gsub("[^a-zA-Z0-9_-]", "", val)
+        if (identical(val, "")) stop("Invalid mpan")
+        val
       },
       error = function(e) "1234567890123"
     )
@@ -162,7 +165,10 @@ testing_meter <- function(meter_type = c("electricity", "gas"),
           "539iFcHHKYdThm5G3Q6MkDmDIvXj8_Xae1M",
           "OCTOPUSR_SECRET_KEY"
         )
-        iconv(val, to = "ASCII", sub = "")
+        val <- iconv(val, to = "ASCII", sub = "")
+        val <- gsub("[^a-zA-Z0-9_-]", "", val)
+        if (identical(val, "")) stop("Invalid serial")
+        val
       },
       error = function(e) "1234567"
     )
@@ -190,7 +196,10 @@ testing_meter <- function(meter_type = c("electricity", "gas"),
           "z-BpI17a6UVNWT8ByPzue_XI5j2zU547vi0",
           "OCTOPUSR_SECRET_KEY"
         )
-        iconv(val, to = "ASCII", sub = "")
+        val <- iconv(val, to = "ASCII", sub = "")
+        val <- gsub("[^a-zA-Z0-9_-]", "", val)
+        if (identical(val, "")) stop("Invalid mprn")
+        val
       },
       error = function(e) "1234567890"
     )
@@ -200,7 +209,10 @@ testing_meter <- function(meter_type = c("electricity", "gas"),
           "d06raLRtC5JWyQkh64mZOtWFDOUCQlojLAyfMUk-",
           "OCTOPUSR_SECRET_KEY"
         )
-        iconv(val, to = "ASCII", sub = "")
+        val <- iconv(val, to = "ASCII", sub = "")
+        val <- gsub("[^a-zA-Z0-9_-]", "", val)
+        if (identical(val, "")) stop("Invalid serial")
+        val
       },
       error = function(e) "1234567"
     )
