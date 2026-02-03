@@ -72,7 +72,9 @@ set_meter_details <- function(meter_type = c("electricity", "gas"),
 }
 
 get_meter_details <-
-  function(meter_type = c("electricity", "gas"), direction = NULL) {
+  function(meter_type = c("electricity", "gas"),
+           direction = NULL,
+           include_gsp = TRUE) {
     meter_type <- match.arg(meter_type)
 
     # Validate direction parameter
@@ -85,7 +87,7 @@ get_meter_details <-
     }
 
     if (is_testing()) {
-      return(testing_meter(meter_type))
+      return(testing_meter(meter_type, include_gsp = include_gsp))
     }
 
     if (meter_type == "electricity") {
@@ -109,17 +111,18 @@ get_meter_details <-
     }
 
     if (!identical(mpan_mprn, "") && !identical(serial_number, "")) {
+      meter_gsp <- NA
+      if (include_gsp && meter_type == "electricity") {
+        meter_gsp <- get_meter_gsp(mpan = mpan_mprn)
+      }
+
       meter <- structure(
         list(
           type = meter_type,
           mpan_mprn = mpan_mprn,
           serial_number = serial_number,
           direction = direction,
-          gsp = ifelse(
-            meter_type == "electricity",
-            get_meter_gsp(mpan = mpan_mprn),
-            NA
-          )
+          gsp = meter_gsp
         ),
         class = "octopus_meter-point"
       )
@@ -135,7 +138,8 @@ get_meter_details <-
     )
   }
 
-testing_meter <- function(meter_type = c("electricity", "gas")) {
+testing_meter <- function(meter_type = c("electricity", "gas"),
+                          include_gsp = TRUE) {
   meter_type <- match.arg(meter_type)
 
   if (meter_type == "electricity") {
@@ -147,7 +151,10 @@ testing_meter <- function(meter_type = c("electricity", "gas")) {
       "539iFcHHKYdThm5G3Q6MkDmDIvXj8_Xae1M",
       "OCTOPUSR_SECRET_KEY"
     )
-    meter_gsp <- get_meter_gsp(mpan = mpan)
+    meter_gsp <- NA
+    if (include_gsp) {
+      meter_gsp <- get_meter_gsp(mpan = mpan)
+    }
 
     structure(
       list(
@@ -212,16 +219,21 @@ combine_consumption <- function(import_mpan = NULL,
   # Get import consumption data
   import_data <- NULL
   if (!is.null(import_mpan) && !is.null(import_serial)) {
-    import_data <- get_consumption(
-      meter_type = "electricity",
-      mpan_mprn = import_mpan,
-      serial_number = import_serial,
-      api_key = api_key,
-      period_from = period_from,
-      period_to = period_to,
-      tz = tz,
-      order_by = order_by,
-      group_by = group_by
+    import_data <- tryCatch(
+      {
+        get_consumption(
+          meter_type = "electricity",
+          mpan_mprn = import_mpan,
+          serial_number = import_serial,
+          api_key = api_key,
+          period_from = period_from,
+          period_to = period_to,
+          tz = tz,
+          order_by = order_by,
+          group_by = group_by
+        )
+      },
+      error = function(e) NULL
     )
   } else {
     # Try to get from environment variables
@@ -245,16 +257,21 @@ combine_consumption <- function(import_mpan = NULL,
   # Get export consumption data
   export_data <- NULL
   if (!is.null(export_mpan) && !is.null(export_serial)) {
-    export_data <- get_consumption(
-      meter_type = "electricity",
-      mpan_mprn = export_mpan,
-      serial_number = export_serial,
-      api_key = api_key,
-      period_from = period_from,
-      period_to = period_to,
-      tz = tz,
-      order_by = order_by,
-      group_by = group_by
+    export_data <- tryCatch(
+      {
+        get_consumption(
+          meter_type = "electricity",
+          mpan_mprn = export_mpan,
+          serial_number = export_serial,
+          api_key = api_key,
+          period_from = period_from,
+          period_to = period_to,
+          tz = tz,
+          order_by = order_by,
+          group_by = group_by
+        )
+      },
+      error = function(e) NULL
     )
   } else {
     # Try to get from environment variables

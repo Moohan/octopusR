@@ -83,17 +83,18 @@ test_that("Correctly handles multi-page parallel requests", {
         results = tibble::tibble(consumption = 1:10, interval_start = "a", interval_end = "b")
       )
     } else {
-      # The subsequent calls to build the request list
-      # Return a simple list that we can identify later
-      list(page = query$page)
+      # Return a real request object so httr2::req_url_query works
+      httr2::request("http://mock") |> httr2::req_url_query(!!!query)
     }
   }
 
   # This mock simulates the parallel execution
   mock_req_perform_parallel <- function(reqs, ...) {
     lapply(reqs, function(req) {
-      # req is what mock_api_multi_page returned when perform=FALSE
-      page_num <- req$page
+      # req is a httr2_request object. Extract page from query.
+      # In recent httr2, req$url is a string.
+      url_parsed <- httr2::url_parse(req$url)
+      page_num <- as.integer(url_parsed$query$page)
       create_mock_httr2_response(
         results = tibble::tibble(consumption = (1:10) + ((page_num - 1) * 10), interval_start = "a", interval_end = "b")
       )
