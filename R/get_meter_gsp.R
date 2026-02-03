@@ -32,5 +32,5 @@ get_meter_gsp <- function(
 
   meter_gsp <- resp[["content"]][["gsp"]]
 
-  return(meter_gsp)
+  meter_gsp
 }

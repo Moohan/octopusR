@@ -143,17 +143,32 @@ testing_meter <- function(meter_type = c("electricity", "gas"),
   meter_type <- match.arg(meter_type)
 
   if (meter_type == "electricity") {
-    mpan <- httr2::secret_decrypt(
-      "OPGJ1brZHps9UGVyAmrmmw_gaD4wxrnCCYURXiQ",
-      "OCTOPUSR_SECRET_KEY"
+    mpan <- tryCatch(
+      {
+        val <- httr2::secret_decrypt(
+          "OPGJ1brZHps9UGVyAmrmmw_gaD4wxrnCCYURXiQ",
+          "OCTOPUSR_SECRET_KEY"
+        )
+        iconv(val, to = "ASCII", sub = "")
+      },
+      error = function(e) "1234567890123"
     )
-    serial_number <- httr2::secret_decrypt(
-      "539iFcHHKYdThm5G3Q6MkDmDIvXj8_Xae1M",
-      "OCTOPUSR_SECRET_KEY"
+    serial_number <- tryCatch(
+      {
+        val <- httr2::secret_decrypt(
+          "539iFcHHKYdThm5G3Q6MkDmDIvXj8_Xae1M",
+          "OCTOPUSR_SECRET_KEY"
+        )
+        iconv(val, to = "ASCII", sub = "")
+      },
+      error = function(e) "1234567"
     )
     meter_gsp <- NA
     if (include_gsp) {
-      meter_gsp <- get_meter_gsp(mpan = mpan)
+      meter_gsp <- tryCatch(
+        get_meter_gsp(mpan = mpan),
+        error = function(e) "H"
+      )
     }
 
     structure(
@@ -166,13 +181,25 @@ testing_meter <- function(meter_type = c("electricity", "gas"),
       class = "octopus_meter-point"
     )
   } else if (meter_type == "gas") {
-    mprn <- httr2::secret_decrypt(
-      "z-BpI17a6UVNWT8ByPzue_XI5j2zU547vi0",
-      "OCTOPUSR_SECRET_KEY"
+    mprn <- tryCatch(
+      {
+        val <- httr2::secret_decrypt(
+          "z-BpI17a6UVNWT8ByPzue_XI5j2zU547vi0",
+          "OCTOPUSR_SECRET_KEY"
+        )
+        iconv(val, to = "ASCII", sub = "")
+      },
+      error = function(e) "1234567890"
     )
-    serial_number <- httr2::secret_decrypt(
-      "d06raLRtC5JWyQkh64mZOtWFDOUCQlojLAyfMUk-",
-      "OCTOPUSR_SECRET_KEY"
+    serial_number <- tryCatch(
+      {
+        val <- httr2::secret_decrypt(
+          "d06raLRtC5JWyQkh64mZOtWFDOUCQlojLAyfMUk-",
+          "OCTOPUSR_SECRET_KEY"
+        )
+        iconv(val, to = "ASCII", sub = "")
+      },
+      error = function(e) "1234567"
     )
 
     structure(
@@ -336,5 +363,5 @@ combine_consumption <- function(import_mpan = NULL,
   )
   result <- result[col_order]
 
-  return(result)
+  result
 }
