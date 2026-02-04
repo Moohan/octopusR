@@ -8,14 +8,14 @@ get_consumption(
   meter_type = c("electricity", "gas"),
   mpan_mprn = NULL,
   serial_number = NULL,
-  direction = NULL,
   api_key = get_api_key(),
   period_from = NULL,
   period_to = NULL,
   tz = NULL,
   order_by = c("-period", "period"),
   page_size = NULL,
-  group_by = c("hour", "day", "week", "month", "quarter")
+  group_by = c("hour", "day", "week", "month", "quarter"),
+  direction = NULL
 )
 }
 \arguments{
@@ -25,9 +25,6 @@ get_consumption(
 MPRN.}
 
 \item{serial_number}{The meter's serial number.}
-
-\item{direction}{For electricity meters, specify "import", "export", or NULL
-(default). When NULL, uses the legacy single MPAN storage.}
 
 \item{api_key}{Your API key. If you are an Octopus Energy customer,
 you can generate an API key on the
@@ -65,6 +62,9 @@ Accepted values are:
 \item \code{month}
 \item \code{quarter}
 }}
+
+\item{direction}{For electricity meters, specify "import", "export", or NULL
+(default). When NULL, uses the legacy single MPAN storage.}
 }
 \value{
 a \link[tibble:tibble-package]{tibble} of the requested consumption data.
