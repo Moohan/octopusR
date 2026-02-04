@@ -78,9 +78,10 @@ combined_data <- combine_consumption(
 )
 ```
 
-The `combine_consumption()` function provides columns for: -
-`import_consumption`: Energy imported from the grid -
-`export_consumption`: Energy exported to the grid  
+The
+[`combine_consumption()`](https://moohan.github.io/octopusR/reference/combine_consumption.md)
+function provides columns for: - `import_consumption`: Energy imported
+from the grid - `export_consumption`: Energy exported to the grid  
 - `net_consumption`: Net energy consumption (import - export)
 
 You can use the other functions in the package to interact with the API.

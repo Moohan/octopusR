@@ -99,11 +99,11 @@
 <span><span class="va">export_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/get_consumption.html">get_consumption</a></span><span class="op">(</span>meter_type <span class="op">=</span> <span class="st">"electricity"</span>, direction <span class="op">=</span> <span class="st">"export"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Combine import and export data with net consumption</span></span>
-<span><span class="va">combined_data</span> <span class="op">&lt;-</span> <span class="fu">combine_consumption</span><span class="op">(</span></span>
+<span><span class="va">combined_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/combine_consumption.html">combine_consumption</a></span><span class="op">(</span></span>
 <span>  period_from <span class="op">=</span> <span class="st">"2023-01-01"</span>,</span>
 <span>  period_to <span class="op">=</span> <span class="st">"2023-01-31"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p>The <code>combine_consumption()</code> function provides columns for: - <code>import_consumption</code>: Energy imported from the grid - <code>export_consumption</code>: Energy exported to the grid<br>
+<p>The <code><a href="reference/combine_consumption.html">combine_consumption()</a></code> function provides columns for: - <code>import_consumption</code>: Energy imported from the grid - <code>export_consumption</code>: Energy exported to the grid<br>
 - <code>net_consumption</code>: Net energy consumption (import - export)</p>
 <p>You can use the other functions in the package to interact with the API. For example, you can use the <code><a href="reference/get_consumption.html">get_consumption()</a></code> function to retrieve data about your energy usage:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">

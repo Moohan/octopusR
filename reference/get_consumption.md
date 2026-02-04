@@ -24,15 +24,16 @@ as characters.
 ``` r
 get_consumption(
   meter_type = c("electricity", "gas"),
-  mpan_mprn = get_meter_details(meter_type)[["mpan_mprn"]],
-  serial_number = get_meter_details(meter_type)[["serial_number"]],
+  mpan_mprn = NULL,
+  serial_number = NULL,
+  direction = NULL,
   api_key = get_api_key(),
   period_from = NULL,
   period_to = NULL,
   tz = NULL,
   order_by = c("-period", "period"),
-  group_by = c("hour", "day", "week", "month", "quarter"),
-  page_size = NULL
+  page_size = NULL,
+  group_by = c("hour", "day", "week", "month", "quarter")
 )
 ```
 
@@ -49,6 +50,11 @@ get_consumption(
 - serial_number:
 
   The meter's serial number.
+
+- direction:
+
+  For electricity meters, specify "import", "export", or NULL (default).
+  When NULL, uses the legacy single MPAN storage.
 
 - api_key:
 
@@ -82,6 +88,11 @@ get_consumption(
   - `-period`, (default), to give results ordered from most recent
     backwards.
 
+- page_size:
+
+  The number of results to return per page. This is intended for
+  internal testing and may be removed in a future release.
+
 - group_by:
 
   Aggregates consumption over a specified time period. A day is
@@ -98,11 +109,6 @@ get_consumption(
   - `month`
 
   - `quarter`
-
-- page_size:
-
-  The number of results to return per page. This is intended for
-  internal testing and may be removed in a future release.
 
 ## Value
 

@@ -84,15 +84,16 @@ the default (<code>tz = NULL</code>) will return the dates unparsed, as characte
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">get_consumption</span><span class="op">(</span></span>
 <span>  meter_type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"electricity"</span>, <span class="st">"gas"</span><span class="op">)</span>,</span>
-<span>  mpan_mprn <span class="op">=</span> <span class="fu">get_meter_details</span><span class="op">(</span><span class="va">meter_type</span><span class="op">)</span><span class="op">[[</span><span class="st">"mpan_mprn"</span><span class="op">]</span><span class="op">]</span>,</span>
-<span>  serial_number <span class="op">=</span> <span class="fu">get_meter_details</span><span class="op">(</span><span class="va">meter_type</span><span class="op">)</span><span class="op">[[</span><span class="st">"serial_number"</span><span class="op">]</span><span class="op">]</span>,</span>
+<span>  mpan_mprn <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  serial_number <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  direction <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  api_key <span class="op">=</span> <span class="fu">get_api_key</span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  period_from <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  period_to <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  tz <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  order_by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"-period"</span>, <span class="st">"period"</span><span class="op">)</span>,</span>
-<span>  group_by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"hour"</span>, <span class="st">"day"</span>, <span class="st">"week"</span>, <span class="st">"month"</span>, <span class="st">"quarter"</span><span class="op">)</span>,</span>
-<span>  page_size <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  page_size <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  group_by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"hour"</span>, <span class="st">"day"</span>, <span class="st">"week"</span>, <span class="st">"month"</span>, <span class="st">"quarter"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -111,6 +112,11 @@ MPRN.</p></dd>
 
 <dt id="arg-serial-number">serial_number<a class="anchor" aria-label="anchor" href="#arg-serial-number"></a></dt>
 <dd><p>The meter's serial number.</p></dd>
+
+
+<dt id="arg-direction">direction<a class="anchor" aria-label="anchor" href="#arg-direction"></a></dt>
+<dd><p>For electricity meters, specify "import", "export", or NULL (default).
+When NULL, uses the legacy single MPAN storage.</p></dd>
 
 
 <dt id="arg-api-key">api_key<a class="anchor" aria-label="anchor" href="#arg-api-key"></a></dt>
@@ -143,6 +149,10 @@ Valid values:</p><ul><li><p><code>period</code>, to give results ordered forward
 </ul></dd>
 
 
+<dt id="arg-page-size">page_size<a class="anchor" aria-label="anchor" href="#arg-page-size"></a></dt>
+<dd><p>The number of results to return per page. This is intended for internal testing and may be removed in a future release.</p></dd>
+
+
 <dt id="arg-group-by">group_by<a class="anchor" aria-label="anchor" href="#arg-group-by"></a></dt>
 <dd><p>Aggregates consumption over a specified time period.
 A day is considered to start and end at midnight in the server's time zone.
@@ -153,10 +163,6 @@ Accepted values are:</p><ul><li><p><code>hour</code></p></li>
 <li><p><code>month</code></p></li>
 <li><p><code>quarter</code></p></li>
 </ul></dd>
-
-
-<dt id="arg-page-size">page_size<a class="anchor" aria-label="anchor" href="#arg-page-size"></a></dt>
-<dd><p>The number of results to return per page. This is intended for internal testing and may be removed in a future release.</p></dd>
 
 </dl></div>
     <div class="section level2">

@@ -2,6 +2,8 @@
 
 ## All functions
 
+- [`combine_consumption()`](https://moohan.github.io/octopusR/reference/combine_consumption.md)
+  : Combine import and export consumption data
 - [`get_consumption()`](https://moohan.github.io/octopusR/reference/get_consumption.md)
   : List consumption for a meter
 - [`get_meter_gsp()`](https://moohan.github.io/octopusR/reference/get_meter_gsp.md)
