@@ -142,11 +142,11 @@ testing_meter <- function(meter_type = c("electricity", "gas")) {
 
   if (meter_type == "electricity") {
     mpan <- httr2::secret_decrypt(
-      "OPGJ1brZHps9UGVyAmrmmw_gaD4wxrnCCYURXiQ",
+      "DR9Bvd3ppfLXD4Zq-tG0kZphNdkW3168-OQrOSk",
       "OCTOPUSR_SECRET_KEY"
     )
     serial_number <- httr2::secret_decrypt(
-      "539iFcHHKYdThm5G3Q6MkDmDIvXj8_Xae1M",
+      "g_K-kAcGIIcsrXeRegX8EjMBf7xnmhbX9ts",
       "OCTOPUSR_SECRET_KEY"
     )
     meter_gsp <- get_meter_gsp(mpan = mpan)

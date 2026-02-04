@@ -41,7 +41,7 @@ is_testing <- function() {
 
 testing_key <- function() {
   httr2::secret_decrypt(
-    "iaSTP6F_jm_pr7dVW2cZkRnKyfS5uRJsklKdcnK0_b7sbeaPz345Cq9IoJmCf9Ha",
+    "gSnStfRq0gqwkVy9notuWa97vp_d7hxX3IOrlMv6g1nlNeMhtHSdvboMx_49zcVWgpityPpCtKA",
     "OCTOPUSR_SECRET_KEY"
   )
 }
