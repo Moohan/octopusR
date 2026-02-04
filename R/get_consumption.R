@@ -15,6 +15,8 @@
 #' @inheritParams set_api_key
 #' @inheritParams set_meter_details
 #' @inheritParams lubridate::ymd_hms
+#' @param page_size The number of results to return per page. This is intended
+#' for internal testing and may be removed in a future release.
 #' @param period_from Show consumption from the given datetime (inclusive).
 #' This parameter can be provided on its own.
 #' @param period_to Show consumption to the given datetime (exclusive).
@@ -34,9 +36,6 @@
 #' * `week`
 #' * `month`
 #' * `quarter`
-#' @param direction For electricity meters, specify "import", "export", or NULL (default).
-#' When NULL, uses the legacy single MPAN storage.
-#' @param page_size The number of results to return per page. This is intended for internal testing and may be removed in a future release.
 #'
 #' @return a [tibble][tibble::tibble-package] of the requested consumption data.
 #' @note For the fastest data aggregation, it is recommended to have either
@@ -46,14 +45,14 @@ get_consumption <- function(
   meter_type = c("electricity", "gas"),
   mpan_mprn = NULL,
   serial_number = NULL,
-  direction = NULL,
   api_key = get_api_key(),
   period_from = NULL,
   period_to = NULL,
   tz = NULL,
   order_by = c("-period", "period"),
   page_size = NULL,
-  group_by = c("hour", "day", "week", "month", "quarter")
+  group_by = c("hour", "day", "week", "month", "quarter"),
+  direction = NULL
 ) {
   if (missing(meter_type)) {
     cli::cli_abort(
@@ -72,9 +71,14 @@ get_consumption <- function(
     direction <- match.arg(direction, c("import", "export"))
   }
 
-  # Get meter details if not provided
+  # Get meter details if not provided. We skip GSP lookup as it is not needed
+  # for consumption data, saving an unnecessary API call.
   if (is.null(mpan_mprn) || is.null(serial_number)) {
-    meter_details <- get_meter_details(meter_type, direction)
+    meter_details <- get_meter_details(
+      meter_type,
+      direction,
+      include_gsp = FALSE
+    )
     if (is.null(mpan_mprn)) {
       mpan_mprn <- meter_details[["mpan_mprn"]]
     }
@@ -119,7 +123,10 @@ get_consumption <- function(
       page_size <- 100L
       cli::cli_inform(c(
         "i" = "Returning 100 rows only as a date range wasn't provided.",
-        "v" = "Specify a date range with {.arg period_to} and {.arg period_from}."
+        "v" = paste0(
+          "Specify a date range with {.arg period_to} and ",
+          "{.arg period_from}."
+        )
       ))
     } else {
       check_datetime_format(period_from)
@@ -151,23 +158,27 @@ get_consumption <- function(
     query = query
   )
 
-  page <- 1L
   total_rows <- resp[["content"]][["count"]]
-  total_pages <- ceiling(total_rows / page_size)
-  if (total_pages == 0) {
-    return(tibble::tibble())
+  if (is.null(total_rows) || total_rows == 0) {
+    return(resp[["content"]][["results"]])
   }
+  total_pages <- ceiling(total_rows / page_size)
   consumption_data_list <- vector("list", total_pages)
   consumption_data_list[[1L]] <- resp[["content"]][["results"]]
 
   if (total_pages > 1) {
+    # Reusing the base request object and only updating the query parameters
+    # significantly reduces overhead compared to rebuilding the full request
+    # for each page.
+    req_base <- octopus_api(
+      path = path,
+      api_key = api_key,
+      query = query,
+      perform = FALSE
+    )
+
     reqs <- lapply(2:total_pages, function(page) {
-      octopus_api(
-        path = path,
-        api_key = api_key,
-        query = append(query, list(page = page)),
-        perform = FALSE
-      )
+      httr2::req_url_query(req_base, page = page)
     })
 
     resps <- httr2::req_perform_parallel(reqs, on_error = "continue")
@@ -206,8 +217,10 @@ get_consumption <- function(
       )
     } else {
       if (!rlang::is_installed(pkg = "lubridate", version = "0.2.1")) {
-        cli::cli_abort("{.pkg lubridate} must be installed to parse dates,
-                       use `tz = NULL` to return characters.")
+        cli::cli_abort(paste0(
+          "{.pkg lubridate} must be installed to parse dates, ",
+          "use `tz = NULL` to return characters."
+        ))
       }
     }
     consumption_data[["interval_start"]] <- lubridate::ymd_hms(
@@ -220,5 +233,5 @@ get_consumption <- function(
     )
   }
 
-  return(consumption_data)
+  consumption_data
 }

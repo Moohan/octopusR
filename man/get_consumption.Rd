@@ -6,15 +6,16 @@
 \usage{
 get_consumption(
   meter_type = c("electricity", "gas"),
-  mpan_mprn = get_meter_details(meter_type)[["mpan_mprn"]],
-  serial_number = get_meter_details(meter_type)[["serial_number"]],
+  mpan_mprn = NULL,
+  serial_number = NULL,
   api_key = get_api_key(),
   period_from = NULL,
   period_to = NULL,
   tz = NULL,
   order_by = c("-period", "period"),
+  page_size = NULL,
   group_by = c("hour", "day", "week", "month", "quarter"),
-  page_size = NULL
+  direction = NULL
 )
 }
 \arguments{
@@ -47,6 +48,9 @@ Valid values:
 \item \code{-period}, (default), to give results ordered from most recent backwards.
 }}
 
+\item{page_size}{The number of results to return per page. This is intended
+for internal testing and may be removed in a future release.}
+
 \item{group_by}{Aggregates consumption over a specified time period.
 A day is considered to start and end at midnight in the server's time zone.
 The default is that consumption is returned in half-hour periods.
@@ -59,7 +63,9 @@ Accepted values are:
 \item \code{quarter}
 }}
 
-\item{page_size}{The number of results to return per page. This is intended for internal testing and may be removed in a future release.}
+\item{direction}{For electricity meters, specify "import", "export", or NULL
+(default). When NULL, uses the legacy single MPAN storage. When specified,
+stores separate import/export MPANs.}
 }
 \value{
 a \link[tibble:tibble-package]{tibble} of the requested consumption data.
