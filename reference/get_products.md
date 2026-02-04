@@ -72,13 +72,13 @@ get_products(is_green = TRUE)
 #>  2 AGILE-OUTG… EXPORT    Agile Ou… Agile Outgo… Outgoing O… TRUE        TRUE    
 #>  3 COOP-SEG-E… EXPORT    Co-op Sm… Co-op Smart… This is ou… FALSE       TRUE    
 #>  4 COOP-SEG-F… EXPORT    Co-op Sm… Co-op Smart… This is ou… FALSE       TRUE    
-#>  5 CP-12M-25-… IMPORT    Co-op Co… Co-op Commu… This fixed… FALSE       TRUE    
+#>  5 CP-12M-26-… IMPORT    Co-op Co… Co-op Commu… This fixed… FALSE       TRUE    
 #>  6 LP-SEG-EO-… EXPORT    my londo… my london s… This is ou… FALSE       TRUE    
 #>  7 LP-SEG-FIX… EXPORT    my londo… my london s… This is ou… FALSE       TRUE    
 #>  8 OUTGOING-S… EXPORT    Octopus … Octopus Out… Outgoing S… FALSE       TRUE    
 #>  9 OUTGOING-S… EXPORT    Octopus … Octopus Out… Outgoing S… FALSE       TRUE    
 #> 10 OUTGOING-V… EXPORT    Outgoing… Outgoing Oc… Outgoing O… TRUE        TRUE    
 #> # ℹ 9 more variables: is_tracker <lgl>, is_prepay <lgl>, is_business <lgl>,
-#> #   is_restricted <lgl>, term <int>, available_from <chr>, available_to <lgl>,
+#> #   is_restricted <lgl>, term <int>, available_from <chr>, available_to <chr>,
 #> #   links <list>, brand <chr>
 ```
