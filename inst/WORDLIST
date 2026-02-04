@@ -6,3 +6,8 @@ MPRN
 OctopusR
 SMETS
 datetime
+lubridate
+MPANs
+OpenSSF
+pkgcheck
+tibble

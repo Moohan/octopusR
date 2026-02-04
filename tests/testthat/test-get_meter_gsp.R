@@ -1,6 +1,11 @@
 skip_if_offline(host = "api.octopus.energy")
 
 test_that("Can get a meter GSP", {
+  skip_on_cran()
+  if (identical(Sys.getenv("OCTOPUSR_SECRET_KEY"), "")) {
+    skip("No secret key found")
+  }
+
   test_meter <- testing_meter("electricity")
   expected_gsp <- httr2::secret_decrypt(
     "5GkfdUf-Fp88BMOFir1kkOOl",
