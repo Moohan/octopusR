@@ -26,7 +26,7 @@ get_api_key <- function() {
     testing_key()
   } else {
     cli::cli_abort(
-      "No API key found, please supply with {.arg api_key} argument or with
+      "No API key found, please supply with {.arg api_key} argument or with \\
       {.help [{.fun set_api_key}](octopusR::set_api_key)}",
       call = rlang::caller_env()
     )
@@ -38,8 +38,14 @@ is_testing <- function() {
 }
 
 testing_key <- function() {
-  httr2::secret_decrypt(
-    "iaSTP6F_jm_pr7dVW2cZkRnKyfS5uRJsklKdcnK0_b7sbeaPz345Cq9IoJmCf9Ha",
-    "OCTOPUSR_SECRET_KEY"
+  key <- tryCatch(
+    httr2::secret_decrypt(
+      "iaSTP6F_jm_pr7dVW2cZkRnKyfS5uRJsklKdcnK0_b7sbeaPz345Cq9IoJmCf9Ha",
+      "OCTOPUSR_SECRET_KEY"
+    ),
+    error = function(e) "sk_test_dummy_key"
   )
+
+  # Sanitize to avoid encoding issues
+  gsub("[^a-zA-Z0-9_-]", "", iconv(key, to = "ASCII", sub = ""))
 }

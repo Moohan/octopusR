@@ -47,14 +47,14 @@ get_consumption <- function(
   meter_type = c("electricity", "gas"),
   mpan_mprn = NULL,
   serial_number = NULL,
-  direction = NULL,
   api_key = get_api_key(),
   period_from = NULL,
   period_to = NULL,
   tz = NULL,
   order_by = c("-period", "period"),
   page_size = NULL,
-  group_by = c("hour", "day", "week", "month", "quarter")
+  group_by = c("hour", "day", "week", "month", "quarter"),
+  direction = NULL
 ) {
   if (missing(meter_type)) {
     cli::cli_abort(
@@ -125,8 +125,7 @@ get_consumption <- function(
       page_size <- 100L
       cli::cli_inform(c(
         "i" = "Returning 100 rows only as a date range wasn't provided.",
-        "v" = "Specify a date range with {.arg period_to} and
-              {.arg period_from}."
+        "v" = "Specify a date range with {.arg period_to} and {.arg period_from}."
       ))
     } else {
       check_datetime_format(period_from)
