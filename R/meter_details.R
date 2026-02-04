@@ -132,9 +132,11 @@ get_meter_details <- function(meter_type = c("electricity", "gas"),
     )
   } else {
     cli::cli_abort(
-      "Meter details were missing or incomplete, please supply with
-      {.arg mpan_mprn} and {.arg serial_number} arguments or with
-      {.help [{.fun set_meter_details}](octopusR::set_meter_details)}.",
+      paste0(
+        "Meter details were missing or incomplete, please supply with ",
+        "{.arg mpan_mprn} and {.arg serial_number} arguments or with ",
+        "{.help [{.fun set_meter_details}](octopusR::set_meter_details)}."
+      ),
       call = rlang::caller_env()
     )
   }
@@ -170,7 +172,10 @@ testing_meter <- function(meter_type = c("electricity", "gas"),
 
     meter_gsp <- NA
     if (include_gsp) {
-      meter_gsp <- get_meter_gsp(mpan = mpan)
+      meter_gsp <- tryCatch(
+        get_meter_gsp(mpan = mpan),
+        error = function(e) "_J"
+      )
     }
 
     structure(

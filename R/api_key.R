@@ -26,8 +26,10 @@ get_api_key <- function() {
     testing_key()
   } else {
     cli::cli_abort(
-      "No API key found, please supply with {.arg api_key} argument or with \\
-      {.help [{.fun set_api_key}](octopusR::set_api_key)}",
+      paste0(
+        "No API key found, please supply with {.arg api_key} argument or with ",
+        "{.help [{.fun set_api_key}](octopusR::set_api_key)}"
+      ),
       call = rlang::caller_env()
     )
   }

@@ -64,7 +64,8 @@ Accepted values are:
 }}
 
 \item{direction}{For electricity meters, specify "import", "export", or NULL
-(default). When NULL, uses the legacy single MPAN storage.}
+(default). When NULL, uses the legacy single MPAN storage. When specified,
+stores separate import/export MPANs.}
 }
 \value{
 a \link[tibble:tibble-package]{tibble} of the requested consumption data.
