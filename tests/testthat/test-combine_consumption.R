@@ -46,10 +46,16 @@ test_that("combine_consumption works with explicit MPANs", {
       )
 
       expect_s3_class(result, "data.frame")
-      expect_named(result, c(
-        "interval_start", "interval_end", "import_consumption",
-        "export_consumption", "net_consumption"
-      ))
+      expect_named(
+        result,
+        c(
+          "interval_start",
+          "interval_end",
+          "import_consumption",
+          "export_consumption",
+          "net_consumption"
+        )
+      )
       expect_equal(result$import_consumption, c(1.5, 2.0, 1.8))
       expect_equal(result$export_consumption, c(0.5, 0.8, 0.3))
       expect_equal(result$net_consumption, c(1.0, 1.2, 1.5))

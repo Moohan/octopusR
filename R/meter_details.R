@@ -21,10 +21,12 @@
 #' @return No return value, called for side effects.
 #'
 #' @export
-set_meter_details <- function(meter_type = c("electricity", "gas"),
-                              mpan_mprn = NULL,
-                              serial_number = NULL,
-                              direction = NULL) {
+set_meter_details <- function(
+  meter_type = c("electricity", "gas"),
+  mpan_mprn = NULL,
+  serial_number = NULL,
+  direction = NULL
+) {
   meter_type <- match.arg(meter_type)
 
   # Validate direction parameter for electricity meters
@@ -199,16 +201,18 @@ testing_meter <- function(meter_type = c("electricity", "gas")) {
 #' @return a [tibble][tibble::tibble-package] with import_consumption,
 #' export_consumption, and net_consumption columns
 #' @export
-combine_consumption <- function(import_mpan = NULL,
-                                import_serial = NULL,
-                                export_mpan = NULL,
-                                export_serial = NULL,
-                                api_key = get_api_key(),
-                                period_from = NULL,
-                                period_to = NULL,
-                                tz = NULL,
-                                order_by = c("-period", "period"),
-                                group_by = c("hour", "day", "week", "month", "quarter")) {
+combine_consumption <- function(
+  import_mpan = NULL,
+  import_serial = NULL,
+  export_mpan = NULL,
+  export_serial = NULL,
+  api_key = get_api_key(),
+  period_from = NULL,
+  period_to = NULL,
+  tz = NULL,
+  order_by = c("-period", "period"),
+  group_by = c("hour", "day", "week", "month", "quarter")
+) {
   # Get import consumption data
   import_data <- NULL
   if (!is.null(import_mpan) && !is.null(import_serial)) {
@@ -296,26 +300,40 @@ combine_consumption <- function(import_mpan = NULL,
     result$net_consumption <- result$import_consumption
   } else {
     # Both import and export data available - merge on time intervals
-    result <- merge(import_data, export_data,
+    result <- merge(
+      import_data,
+      export_data,
       by = c("interval_start", "interval_end"),
       all = TRUE,
       suffixes = c("_import", "_export")
     )
 
     # Rename consumption columns
-    result$import_consumption <- ifelse(is.na(result$consumption_import), 0, result$consumption_import)
-    result$export_consumption <- ifelse(is.na(result$consumption_export), 0, result$consumption_export)
+    result$import_consumption <- ifelse(
+      is.na(result$consumption_import),
+      0,
+      result$consumption_import
+    )
+    result$export_consumption <- ifelse(
+      is.na(result$consumption_export),
+      0,
+      result$consumption_export
+    )
     result$consumption_import <- NULL
     result$consumption_export <- NULL
 
     # Calculate net consumption (import - export)
-    result$net_consumption <- result$import_consumption - result$export_consumption
+    result$net_consumption <- result$import_consumption -
+      result$export_consumption
   }
 
   # Reorder columns for better readability
   col_order <- c(
-    "interval_start", "interval_end", "import_consumption",
-    "export_consumption", "net_consumption"
+    "interval_start",
+    "interval_end",
+    "import_consumption",
+    "export_consumption",
+    "net_consumption"
   )
   result <- result[col_order]
 
