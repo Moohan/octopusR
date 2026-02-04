@@ -72,9 +72,10 @@ get_consumption <- function(
     direction <- match.arg(direction, c("import", "export"))
   }
 
-  # Get meter details if not provided
+  # Get meter details if not provided. We skip GSP lookup as it is not needed
+  # for consumption data, saving an unnecessary API call.
   if (is.null(mpan_mprn) || is.null(serial_number)) {
-    meter_details <- get_meter_details(meter_type, direction)
+    meter_details <- get_meter_details(meter_type, direction, include_gsp = FALSE)
     if (is.null(mpan_mprn)) {
       mpan_mprn <- meter_details[["mpan_mprn"]]
     }
@@ -161,13 +162,18 @@ get_consumption <- function(
   consumption_data_list[[1L]] <- resp[["content"]][["results"]]
 
   if (total_pages > 1) {
+    # Reusing the base request object and only updating the query parameters
+    # significantly reduces overhead compared to rebuilding the full request
+    # for each page.
+    req_base <- octopus_api(
+      path = path,
+      api_key = api_key,
+      query = query,
+      perform = FALSE
+    )
+
     reqs <- lapply(2:total_pages, function(page) {
-      octopus_api(
-        path = path,
-        api_key = api_key,
-        query = append(query, list(page = page)),
-        perform = FALSE
-      )
+      httr2::req_url_query(req_base, page = page)
     })
 
     resps <- httr2::req_perform_parallel(reqs, on_error = "continue")

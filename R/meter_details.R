@@ -72,7 +72,7 @@ set_meter_details <- function(meter_type = c("electricity", "gas"),
 }
 
 get_meter_details <-
-  function(meter_type = c("electricity", "gas"), direction = NULL) {
+  function(meter_type = c("electricity", "gas"), direction = NULL, include_gsp = TRUE) {
     meter_type <- match.arg(meter_type)
 
     # Validate direction parameter
@@ -85,7 +85,7 @@ get_meter_details <-
     }
 
     if (is_testing()) {
-      return(testing_meter(meter_type))
+      return(testing_meter(meter_type, include_gsp = include_gsp))
     }
 
     if (meter_type == "electricity") {
@@ -109,17 +109,18 @@ get_meter_details <-
     }
 
     if (!identical(mpan_mprn, "") && !identical(serial_number, "")) {
+      meter_gsp <- NA
+      if (include_gsp && meter_type == "electricity") {
+        meter_gsp <- get_meter_gsp(mpan = mpan_mprn)
+      }
+
       meter <- structure(
         list(
           type = meter_type,
           mpan_mprn = mpan_mprn,
           serial_number = serial_number,
           direction = direction,
-          gsp = ifelse(
-            meter_type == "electricity",
-            get_meter_gsp(mpan = mpan_mprn),
-            NA
-          )
+          gsp = meter_gsp
         ),
         class = "octopus_meter-point"
       )
@@ -135,7 +136,7 @@ get_meter_details <-
     )
   }
 
-testing_meter <- function(meter_type = c("electricity", "gas")) {
+testing_meter <- function(meter_type = c("electricity", "gas"), include_gsp = TRUE) {
   meter_type <- match.arg(meter_type)
 
   if (meter_type == "electricity") {
@@ -147,7 +148,11 @@ testing_meter <- function(meter_type = c("electricity", "gas")) {
       "539iFcHHKYdThm5G3Q6MkDmDIvXj8_Xae1M",
       "OCTOPUSR_SECRET_KEY"
     )
-    meter_gsp <- get_meter_gsp(mpan = mpan)
+
+    meter_gsp <- NA
+    if (include_gsp) {
+      meter_gsp <- get_meter_gsp(mpan = mpan)
+    }
 
     structure(
       list(
@@ -303,8 +308,10 @@ combine_consumption <- function(import_mpan = NULL,
     )
 
     # Rename consumption columns
-    result$import_consumption <- ifelse(is.na(result$consumption_import), 0, result$consumption_import)
-    result$export_consumption <- ifelse(is.na(result$consumption_export), 0, result$consumption_export)
+    result$import_consumption <- result$consumption_import
+    result$import_consumption[is.na(result$import_consumption)] <- 0
+    result$export_consumption <- result$consumption_export
+    result$export_consumption[is.na(result$export_consumption)] <- 0
     result$consumption_import <- NULL
     result$consumption_export <- NULL
 

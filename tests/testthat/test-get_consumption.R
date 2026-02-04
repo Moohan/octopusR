@@ -84,16 +84,20 @@ test_that("Correctly handles multi-page parallel requests", {
       )
     } else {
       # The subsequent calls to build the request list
-      # Return a simple list that we can identify later
-      list(page = query$page)
+      # Return a mock httr2_request object
+      httr2::request("https://api.octopus.energy") |>
+        httr2::req_url_path_append(path) |>
+        httr2::req_url_query(!!!query)
     }
   }
 
   # This mock simulates the parallel execution
   mock_req_perform_parallel <- function(reqs, ...) {
     lapply(reqs, function(req) {
-      # req is what mock_api_multi_page returned when perform=FALSE
-      page_num <- req$page
+      # req is a httr2_request object, we need to extract the page number
+      url_parsed <- httr2::url_parse(req$url)
+      page_num <- as.integer(url_parsed$query$page)
+      if (is.na(page_num)) page_num <- 1
       create_mock_httr2_response(
         results = tibble::tibble(consumption = (1:10) + ((page_num - 1) * 10), interval_start = "a", interval_end = "b")
       )
