@@ -124,7 +124,7 @@ get_consumption <- function(
       page_size <- 100L
       cli::cli_inform(c(
         "i" = "Returning 100 rows only as a date range wasn't provided.",
-        "v" = "Specify a date range with {.arg period_to} and {.arg period_from}."
+        "v" = "Specify a date range with {.arg period_to} and {.arg period_from}"
       ))
     } else {
       check_datetime_format(period_from)
@@ -133,7 +133,8 @@ get_consumption <- function(
   }
 
   path <- glue::glue(
-    "/v1/{meter_type}-meter-points/{mpan_mprn}/meters/{serial_number}/consumption"
+    "/v1/{meter_type}-meter-points/{mpan_mprn}/meters/{serial_number}/",
+    "consumption"
   )
 
   query <- list(

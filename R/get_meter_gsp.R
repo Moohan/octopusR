@@ -10,7 +10,7 @@
 get_meter_gsp <- function(
   mpan = get_meter_details("electricity")[["mpan_mprn"]]
 ) {
-  if (is.null(mpan) || is.na(mpan) || mpan == "") {
+  if (is.null(mpan) || is.na(mpan) || identical(mpan, "")) {
     cli::cli_abort(
       "Meter details were missing or incomplete, please supply with
       {.arg mpan_mprn} and {.arg serial_number} arguments or with

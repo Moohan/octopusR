@@ -2,9 +2,11 @@
 #'
 #' @description Set the details for your gas/electricity meter. These will be
 #' stored as environment variables. You should add:
-#'  * `OCTOPUSR_MPAN = <electric MPAN>` (or `OCTOPUSR_MPAN_IMPORT`/`OCTOPUSR_MPAN_EXPORT`)
+#'  * `OCTOPUSR_MPAN = <electric MPAN>` (or `OCTOPUSR_MPAN_IMPORT`/
+#'  `OCTOPUSR_MPAN_EXPORT`)
 #'  * `OCTOPUSR_MPRN = <gas MPRN>`
-#'  * `OCTOPUSR_ELEC_SERIAL_NUM = <electric serial number>` (or `OCTOPUSR_ELEC_SERIAL_NUM_IMPORT`/`OCTOPUSR_ELEC_SERIAL_NUM_EXPORT`)
+#'  * `OCTOPUSR_ELEC_SERIAL_NUM = <electric serial number>` (or
+#'  `OCTOPUSR_ELEC_SERIAL_NUM_IMPORT`/`OCTOPUSR_ELEC_SERIAL_NUM_EXPORT`)
 #'  * `OCTOPUSR_GAS_SERIAL_NUM = <gas serial number>`
 #' to your `.Renviron` otherwise you will have to call this function every
 #' session. You can find your meter details (MPAN/MPRN and serial number(s)) on
@@ -14,9 +16,9 @@
 #' @param mpan_mprn The electricity meter-point's MPAN or gas meter-point’s
 #' MPRN.
 #' @param serial_number The meter's serial number.
-#' @param direction For electricity meters, specify "import", "export", or NULL (default).
-#' When NULL, uses the legacy single MPAN storage. When specified, stores separate
-#' import/export MPANs.
+#' @param direction For electricity meters, specify "import", "export", or NULL
+#' (default). When NULL, uses the legacy single MPAN storage. When specified,
+#' stores separate import/export MPANs.
 #'
 #' @return No return value, called for side effects.
 #'
@@ -115,7 +117,7 @@ get_meter_details <-
     }
 
     if (!identical(mpan_mprn, "") && !identical(serial_number, "")) {
-      return(structure(
+      structure(
         list(
           type = meter_type,
           mpan_mprn = mpan_mprn,
@@ -128,15 +130,15 @@ get_meter_details <-
           }
         ),
         class = "octopus_meter-point"
-      ))
-    }
-
-    cli::cli_abort(
-      "Meter details were missing or incomplete, please supply with
+      )
+    } else {
+      cli::cli_abort(
+        "Meter details were missing or incomplete, please supply with
       {.arg mpan_mprn} and {.arg serial_number} arguments or with
       {.help [{.fun set_meter_details}](octopusR::set_meter_details)}.",
-      call = rlang::caller_env()
-    )
+        call = rlang::caller_env()
+      )
+    }
   }
 
 testing_meter <- function(
@@ -251,23 +253,21 @@ combine_consumption <- function(
   group_by = c("hour", "day", "week", "month", "quarter")
 ) {
   # Get import consumption data
-  import_data <- NULL
-  if (!is.null(import_mpan) && !is.null(import_serial)) {
-    import_data <- get_consumption(
-      meter_type = "electricity",
-      mpan_mprn = import_mpan,
-      serial_number = import_serial,
-      api_key = api_key,
-      period_from = period_from,
-      period_to = period_to,
-      tz = tz,
-      order_by = order_by,
-      group_by = group_by
-    )
-  } else {
-    # Try to get from environment variables
-    import_data <- tryCatch(
-      {
+  import_data <- tryCatch(
+    {
+      if (!is.null(import_mpan) && !is.null(import_serial)) {
+        get_consumption(
+          meter_type = "electricity",
+          mpan_mprn = import_mpan,
+          serial_number = import_serial,
+          api_key = api_key,
+          period_from = period_from,
+          period_to = period_to,
+          tz = tz,
+          order_by = order_by,
+          group_by = group_by
+        )
+      } else {
         get_consumption(
           meter_type = "electricity",
           direction = "import",
@@ -278,29 +278,27 @@ combine_consumption <- function(
           order_by = order_by,
           group_by = group_by
         )
-      },
-      error = function(e) NULL
-    )
-  }
+      }
+    },
+    error = function(e) NULL
+  )
 
   # Get export consumption data
-  export_data <- NULL
-  if (!is.null(export_mpan) && !is.null(export_serial)) {
-    export_data <- get_consumption(
-      meter_type = "electricity",
-      mpan_mprn = export_mpan,
-      serial_number = export_serial,
-      api_key = api_key,
-      period_from = period_from,
-      period_to = period_to,
-      tz = tz,
-      order_by = order_by,
-      group_by = group_by
-    )
-  } else {
-    # Try to get from environment variables
-    export_data <- tryCatch(
-      {
+  export_data <- tryCatch(
+    {
+      if (!is.null(export_mpan) && !is.null(export_serial)) {
+        get_consumption(
+          meter_type = "electricity",
+          mpan_mprn = export_mpan,
+          serial_number = export_serial,
+          api_key = api_key,
+          period_from = period_from,
+          period_to = period_to,
+          tz = tz,
+          order_by = order_by,
+          group_by = group_by
+        )
+      } else {
         get_consumption(
           meter_type = "electricity",
           direction = "export",
@@ -311,10 +309,10 @@ combine_consumption <- function(
           order_by = order_by,
           group_by = group_by
         )
-      },
-      error = function(e) NULL
-    )
-  }
+      }
+    },
+    error = function(e) NULL
+  )
 
   # Combine the data
   if (is.null(import_data) && is.null(export_data)) {

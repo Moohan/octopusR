@@ -52,7 +52,8 @@ testing_key <- function() {
     error = function(e) "sk_test_dummy_key"
   )
 
-  # Sanitize to prevent wide string translation errors if decryption returned garbage
+  # Sanitize to prevent wide string translation errors if decryption
+  # returned garbage
   api_key <- iconv(api_key, to = "ASCII", sub = "")
   api_key <- gsub("[^a-zA-Z0-9_-]", "", api_key)
 

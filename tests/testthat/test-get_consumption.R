@@ -128,7 +128,7 @@ test_that("Correctly handles multi-page parallel requests", {
   consumption_data <- get_consumption(
     meter_type = "electricity",
     period_from = "2023-01-01",
-    page_size = 10 # This needs to be smaller than the mocked count of 30
+    page_size = 10 # Needs to be smaller than mocked count 30
   )
 
   # Verify the result
