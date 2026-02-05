@@ -2,9 +2,17 @@ skip_if_offline(host = "api.octopus.energy")
 
 test_that("combine_consumption handles missing data gracefully", {
   # Test with no import or export data available
-  expect_error(
-    combine_consumption(),
-    "No import or export consumption data could be retrieved"
+  # Mock get_consumption to fail for both import and export
+  with_mocked_bindings(
+    get_consumption = function(...) {
+      stop("No data available from API")
+    },
+    {
+      expect_error(
+        combine_consumption(),
+        "No import or export consumption data could be retrieved"
+      )
+    }
   )
 })
 
@@ -29,10 +37,10 @@ test_that("combine_consumption works with explicit MPANs", {
   # Mock get_consumption to return test data
   with_mocked_bindings(
     get_consumption = function(meter_type, mpan_mprn, serial_number, ...) {
-      if (mpan_mprn == "123456789012") {
+      if (identical(mpan_mprn, "123456789012")) {
         # Import data
         mock_consumption_data(c(1.5, 2.0, 1.8))
-      } else if (mpan_mprn == "987654321098") {
+      } else {
         # Export data
         mock_consumption_data(c(0.5, 0.8, 0.3))
       }
@@ -66,8 +74,12 @@ test_that("combine_consumption works with explicit MPANs", {
 test_that("combine_consumption works with only import data", {
   # Mock get_consumption to return only import data
   with_mocked_bindings(
-    get_consumption = function(meter_type, mpan_mprn, serial_number, ...) {
-      if (mpan_mprn == "123456789012") {
+    get_consumption = function(...) {
+      args <- list(...)
+      mpan <- args$mpan_mprn
+      if (is.null(mpan)) mpan <- args[[2]]
+
+      if (identical(mpan, "123456789012")) {
         mock_consumption_data(c(1.5, 2.0, 1.8))
       } else {
         stop("No data")
@@ -92,8 +104,12 @@ test_that("combine_consumption works with only import data", {
 test_that("combine_consumption works with only export data", {
   # Mock get_consumption to return only export data
   with_mocked_bindings(
-    get_consumption = function(meter_type, mpan_mprn, serial_number, ...) {
-      if (mpan_mprn == "987654321098") {
+    get_consumption = function(...) {
+      args <- list(...)
+      mpan <- args$mpan_mprn
+      if (is.null(mpan)) mpan <- args[[2]]
+
+      if (identical(mpan, "987654321098")) {
         mock_consumption_data(c(0.5, 0.8, 0.3))
       } else {
         stop("No data")

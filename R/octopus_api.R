@@ -5,15 +5,7 @@ octopus_api <- function(
   use_api_key = FALSE,
   perform = TRUE
 ) {
-  if (use_api_key || !missing(api_key)) {
-    if (missing(api_key)) {
-      api_key <- get_api_key()
-    }
-
-    base_url <- glue::glue("https://{api_key}@api.octopus.energy/")
-  } else {
-    base_url <- "https://api.octopus.energy/"
-  }
+  base_url <- "https://api.octopus.energy/"
 
   req <- httr2::request(base_url) |>
     httr2::req_user_agent("octopusR (https://github.com/Moohan/octopusR)") |>
@@ -23,26 +15,33 @@ octopus_api <- function(
     httr2::req_cache(tools::R_user_dir("octopusR", "cache")) |>
     httr2::req_progress("down")
 
-  if (isFALSE(perform)) {
-    return(req)
+  if (use_api_key || !missing(api_key)) {
+    if (missing(api_key) || is.null(api_key)) {
+      api_key <- get_api_key()
+    }
+    req <- req |> httr2::req_auth_basic(api_key, "")
   }
 
-  resp <- req |>
-    httr2::req_error(body = octopus_error_body) |>
-    httr2::req_perform()
+  if (isFALSE(perform)) {
+    req
+  } else {
+    resp <- req |>
+      httr2::req_error(body = octopus_error_body) |>
+      httr2::req_perform()
 
-  parsed <- httr2::resp_body_json(resp, simplifyVector = TRUE)
+    parsed <- httr2::resp_body_json(resp, simplifyVector = TRUE)
 
-  parsed[["results"]] <- tibble::as_tibble(parsed[["results"]])
+    parsed[["results"]] <- tibble::as_tibble(parsed[["results"]])
 
-  structure(
-    list(
-      response = resp,
-      path = path,
-      content = parsed
-    ),
-    class = "octopus_api"
-  )
+    structure(
+      list(
+        response = resp,
+        path = path,
+        content = parsed
+      ),
+      class = "octopus_api"
+    )
+  }
 }
 
 octopus_error_body <- function(resp) {

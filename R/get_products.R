@@ -78,7 +78,5 @@ get_products <- function(
     )
   }
 
-  products <- resp[["content"]][["results"]]
-
-  return(products)
+  resp[["content"]][["results"]]
 }
