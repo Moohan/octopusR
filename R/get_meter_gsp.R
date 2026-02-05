@@ -19,18 +19,11 @@ get_meter_gsp <- function(
     )
   }
 
-  path <- glue::glue(
-    "/v1",
-    "electricity-meter-points",
-    mpan,
-    .sep = "/"
-  )
+  path <- glue::glue("/v1/electricity-meter-points/{mpan}")
 
   resp <- octopus_api(
     path = path
   )
 
-  meter_gsp <- resp[["content"]][["gsp"]]
-
-  return(meter_gsp)
+  resp[["content"]][["gsp"]]
 }
