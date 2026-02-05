@@ -5,15 +5,7 @@ octopus_api <- function(
   use_api_key = FALSE,
   perform = TRUE
 ) {
-  if (use_api_key || !missing(api_key)) {
-    if (missing(api_key)) {
-      api_key <- get_api_key()
-    }
-
-    base_url <- glue::glue("https://{api_key}@api.octopus.energy/")
-  } else {
-    base_url <- "https://api.octopus.energy/"
-  }
+  base_url <- "https://api.octopus.energy/"
 
   req <- httr2::request(base_url) |>
     httr2::req_user_agent("octopusR (https://github.com/Moohan/octopusR)") |>
@@ -22,6 +14,13 @@ octopus_api <- function(
     httr2::req_throttle(5L) |>
     httr2::req_cache(tools::R_user_dir("octopusR", "cache")) |>
     httr2::req_progress("down")
+
+  if (use_api_key || !missing(api_key)) {
+    if (missing(api_key) || is.null(api_key)) {
+      api_key <- get_api_key()
+    }
+    req <- req |> httr2::req_auth_basic(api_key, "")
+  }
 
   if (isFALSE(perform)) {
     req
