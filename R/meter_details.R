@@ -93,10 +93,9 @@ get_meter_details <-
     }
 
     if (is_testing()) {
-      return(testing_meter(meter_type, include_gsp = include_gsp))
-    }
-
-    if (meter_type == "electricity") {
+      testing_meter(meter_type, include_gsp = include_gsp)
+    } else {
+      if (meter_type == "electricity") {
       if (is.null(direction)) {
         # Try legacy single MPAN first
         mpan_mprn <- Sys.getenv("OCTOPUSR_MPAN")
@@ -131,13 +130,14 @@ get_meter_details <-
         ),
         class = "octopus_meter-point"
       )
-    } else {
-      cli::cli_abort(
-        "Meter details were missing or incomplete, please supply with
+      } else {
+        cli::cli_abort(
+          "Meter details were missing or incomplete, please supply with
       {.arg mpan_mprn} and {.arg serial_number} arguments or with
       {.help [{.fun set_meter_details}](octopusR::set_meter_details)}.",
-        call = rlang::caller_env()
-      )
+          call = rlang::caller_env()
+        )
+      }
     }
   }
 
