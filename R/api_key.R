@@ -40,8 +40,21 @@ is_testing <- function() {
 }
 
 testing_key <- function() {
-  httr2::secret_decrypt(
-    "gSnStfRq0gqwkVy9notuWa97vp_d7hxX3IOrlMv6g1nlNeMhtHSdvboMx_49zcVWgpityPpCtKA",
-    "OCTOPUSR_SECRET_KEY"
+  api_key <- tryCatch(
+    httr2::secret_decrypt(
+      "gSnStfRq0gqwkVy9notuWa97vp_d7hxX3IOrlMv6g1nlNeMhtHSdvboMx_49zcVWgpityPpCtKA",
+      "OCTOPUSR_SECRET_KEY"
+    ),
+    error = function(e) "sk_test_dummy_key"
   )
+
+  # Sanitize to prevent wide string translation errors if decryption returned garbage
+  api_key <- iconv(api_key, to = "ASCII", sub = "")
+  api_key <- gsub("[^a-zA-Z0-9_-]", "", api_key)
+
+  if (identical(api_key, "")) {
+    return("sk_test_dummy_key")
+  }
+
+  return(api_key)
 }

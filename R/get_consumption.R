@@ -161,13 +161,15 @@ get_consumption <- function(
   consumption_data_list[[1L]] <- resp[["content"]][["results"]]
 
   if (total_pages > 1) {
+    # Reuse the base request object to avoid redundant setup overhead.
+    base_req <- octopus_api(
+      path = path,
+      api_key = api_key,
+      query = query,
+      perform = FALSE
+    )
     reqs <- lapply(2:total_pages, function(page) {
-      octopus_api(
-        path = path,
-        api_key = api_key,
-        query = append(query, list(page = page)),
-        perform = FALSE
-      )
+      httr2::req_url_query(base_req, page = page)
     })
 
     resps <- httr2::req_perform_parallel(reqs, on_error = "continue")
