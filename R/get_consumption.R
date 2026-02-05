@@ -108,10 +108,10 @@ get_consumption <- function(
     group_by <- match.arg(group_by)
   }
 
-  if (!missing(period_to)) {
+  if (!missing(period_to) && !is.null(period_to)) {
     check_datetime_format(period_to)
 
-    if (missing(period_from)) {
+    if (missing(period_from) || is.null(period_from)) {
       cli::cli_abort(
         "You must also specify {.arg period_to} when specifying
         {.arg period_from}."
@@ -120,7 +120,7 @@ get_consumption <- function(
   }
 
   if (is.null(page_size)) {
-    if (missing(period_from)) {
+    if (missing(period_from) || is.null(period_from)) {
       page_size <- 100L
       cli::cli_inform(c(
         "i" = "Returning 100 rows only as a date range wasn't provided.",
@@ -211,8 +211,10 @@ get_consumption <- function(
       } else {
         if (!rlang::is_installed(pkg = "lubridate", version = "0.2.1")) {
           cli::cli_abort(
-            "{.pkg lubridate} must be installed to parse dates,
-                       use `tz = NULL` to return characters."
+            paste0(
+              "{.pkg lubridate} must be installed to parse dates, ",
+              "use `tz = NULL` to return characters."
+            )
           )
         }
       }
