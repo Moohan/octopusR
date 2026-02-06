@@ -165,45 +165,45 @@ get_consumption <- function(
     consumption_data <- tibble::as_tibble(data.frame())
   } else {
     consumption_data_list <- vector("list", total_pages)
-  consumption_data_list[[1L]] <- resp[["content"]][["results"]]
+    consumption_data_list[[1L]] <- resp[["content"]][["results"]]
 
-  if (total_pages > 1) {
-    base_req <- octopus_api(
-      path = path,
-      api_key = api_key,
-      query = query,
-      perform = FALSE
-    )
-    reqs <- lapply(2:total_pages, function(page) {
-      httr2::req_url_query(base_req, page = page)
-    })
+    if (total_pages > 1) {
+      base_req <- octopus_api(
+        path = path,
+        api_key = api_key,
+        query = query,
+        perform = FALSE
+      )
+      reqs <- lapply(2:total_pages, function(page) {
+        httr2::req_url_query(base_req, page = page)
+      })
 
-    resps <- httr2::req_perform_parallel(reqs, on_error = "continue")
+      resps <- httr2::req_perform_parallel(reqs, on_error = "continue")
 
-    # Directly populate the final list, avoiding an intermediate object.
-    consumption_data_list[2:total_pages] <- lapply(resps, function(r) {
-      if (inherits(r, "httr2_response")) {
-        httr2::resp_body_json(r, simplifyVector = TRUE)[["results"]]
-      } else {
-        NULL
-      }
-    })
-  }
-  # Filter out NULL elements from any failed API calls before binding. This
-  # prevents `do.call(rbind, ...)` from failing.
-  consumption_data_list <- Filter(Negate(is.null), consumption_data_list)
+      # Directly populate the final list, avoiding an intermediate object.
+      consumption_data_list[2:total_pages] <- lapply(resps, function(r) {
+        if (inherits(r, "httr2_response")) {
+          httr2::resp_body_json(r, simplifyVector = TRUE)[["results"]]
+        } else {
+          NULL
+        }
+      })
+    }
+    # Filter out NULL elements from any failed API calls before binding. This
+    # prevents `do.call(rbind, ...)` from failing.
+    consumption_data_list <- Filter(Negate(is.null), consumption_data_list)
 
-  # Using data.table::rbindlist() or vctrs::vec_rbind() provides a significant
-  # performance boost over the base R alternative of do.call(rbind, ...).
-  if (rlang::is_installed("data.table")) {
-    consumption_data <- data.table::rbindlist(consumption_data_list)
-  } else if (rlang::is_installed("vctrs")) {
-    consumption_data <- vctrs::vec_rbind(!!!consumption_data_list)
-  } else {
-    consumption_data <- do.call(rbind, consumption_data_list)
-  }
+    # Using data.table::rbindlist() or vctrs::vec_rbind() provides a significant
+    # performance boost over the base R alternative of do.call(rbind, ...).
+    if (rlang::is_installed("data.table")) {
+      consumption_data <- data.table::rbindlist(consumption_data_list)
+    } else if (rlang::is_installed("vctrs")) {
+      consumption_data <- vctrs::vec_rbind(!!!consumption_data_list)
+    } else {
+      consumption_data <- do.call(rbind, consumption_data_list)
+    }
 
-  consumption_data <- tibble::as_tibble(consumption_data)
+    consumption_data <- tibble::as_tibble(consumption_data)
   }
 
   if (!is.null(tz)) {

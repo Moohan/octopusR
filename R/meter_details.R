@@ -95,26 +95,25 @@ get_meter_details <-
     if (is_testing()) {
       testing_meter(meter_type, include_gsp = include_gsp)
     } else {
-
-    if (meter_type == "electricity") {
-      if (is.null(direction)) {
-        # Try legacy single MPAN first
-        mpan_mprn <- Sys.getenv("OCTOPUSR_MPAN")
-        serial_number <- Sys.getenv("OCTOPUSR_ELEC_SERIAL_NUM")
-      } else {
-        # Use directional MPANs
-        if (direction == "import") {
-          mpan_mprn <- Sys.getenv("OCTOPUSR_MPAN_IMPORT")
-          serial_number <- Sys.getenv("OCTOPUSR_ELEC_SERIAL_NUM_IMPORT")
-        } else if (direction == "export") {
-          mpan_mprn <- Sys.getenv("OCTOPUSR_MPAN_EXPORT")
-          serial_number <- Sys.getenv("OCTOPUSR_ELEC_SERIAL_NUM_EXPORT")
+      if (meter_type == "electricity") {
+        if (is.null(direction)) {
+          # Try legacy single MPAN first
+          mpan_mprn <- Sys.getenv("OCTOPUSR_MPAN")
+          serial_number <- Sys.getenv("OCTOPUSR_ELEC_SERIAL_NUM")
+        } else {
+          # Use directional MPANs
+          if (direction == "import") {
+            mpan_mprn <- Sys.getenv("OCTOPUSR_MPAN_IMPORT")
+            serial_number <- Sys.getenv("OCTOPUSR_ELEC_SERIAL_NUM_IMPORT")
+          } else if (direction == "export") {
+            mpan_mprn <- Sys.getenv("OCTOPUSR_MPAN_EXPORT")
+            serial_number <- Sys.getenv("OCTOPUSR_ELEC_SERIAL_NUM_EXPORT")
+          }
         }
+      } else if (meter_type == "gas") {
+        mpan_mprn <- Sys.getenv("OCTOPUSR_MPRN")
+        serial_number <- Sys.getenv("OCTOPUSR_GAS_SERIAL_NUM")
       }
-    } else if (meter_type == "gas") {
-      mpan_mprn <- Sys.getenv("OCTOPUSR_MPRN")
-      serial_number <- Sys.getenv("OCTOPUSR_GAS_SERIAL_NUM")
-    }
 
       if (!identical(mpan_mprn, "") && !identical(serial_number, "")) {
         structure(
