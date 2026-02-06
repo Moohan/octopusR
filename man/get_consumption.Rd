@@ -26,8 +26,8 @@ MPRN.}
 
 \item{serial_number}{The meter's serial number.}
 
-\item{direction}{For electricity meters, specify "import", "export", or NULL (default).
-When NULL, uses the legacy single MPAN storage.}
+\item{direction}{For electricity meters, specify "import", "export", or NULL
+(default). When NULL, uses the legacy single MPAN storage.}
 
 \item{api_key}{Your API key. If you are an Octopus Energy customer,
 you can generate an API key on the
@@ -37,8 +37,8 @@ you can generate an API key on the
 This parameter can be provided on its own.}
 
 \item{period_to}{Show consumption to the given datetime (exclusive).
-This parameter also requires providing the \code{period_from} parameter
-to create a range.}
+This parameter also requires providing the \code{period_from} parameter to create
+a range.}
 
 \item{tz}{a character string that specifies which time zone to parse the date with. The string
 must be a time zone that is recognized by the user's OS.}
@@ -51,7 +51,8 @@ Valid values:
 \item \code{-period}, (default), to give results ordered from most recent backwards.
 }}
 
-\item{page_size}{The number of results to return per page. This is intended for internal testing and may be removed in a future release.}
+\item{page_size}{The number of results to return per page. This is intended
+for internal testing and may be removed in a future release.}
 
 \item{group_by}{Aggregates consumption over a specified time period.
 A day is considered to start and end at midnight in the server's time zone.
