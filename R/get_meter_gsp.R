@@ -30,7 +30,5 @@ get_meter_gsp <- function(
     path = path
   )
 
-  meter_gsp <- resp[["content"]][["gsp"]]
-
-  return(meter_gsp)
+  resp[["content"]][["gsp"]]
 }

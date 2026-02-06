@@ -21,11 +21,9 @@ set_api_key <- function(api_key = NULL) {
 get_api_key <- function() {
   api_key <- Sys.getenv("OCTOPUSR_API_KEY")
   if (!identical(api_key, "")) {
-    return(api_key)
-  }
-
-  if (is_testing()) {
-    return(testing_key())
+    api_key
+  } else if (is_testing()) {
+    testing_key()
   } else {
     cli::cli_abort(
       "No API key found, please supply with {.arg api_key} argument or with
@@ -51,7 +49,8 @@ testing_key <- function() {
   key <- iconv(key, to = "ASCII", sub = "")
   # Handle case where it decrypts to garbage instead of failing
   if (identical(key, "") || !grepl("^[a-zA-Z0-9_-]+$", key)) {
-    return("sk_test_dummy_key")
+    "sk_test_dummy_key"
+  } else {
+    key
   }
-  key
 }
