@@ -2,9 +2,11 @@
 #'
 #' @description Set the details for your gas/electricity meter. These will be
 #' stored as environment variables. You should add:
-#'  * `OCTOPUSR_MPAN = <electric MPAN>` (or `OCTOPUSR_MPAN_IMPORT`/`OCTOPUSR_MPAN_EXPORT`)
+#'  * `OCTOPUSR_MPAN = <electric MPAN>` (or `OCTOPUSR_MPAN_IMPORT`/
+#'    `OCTOPUSR_MPAN_EXPORT`)
 #'  * `OCTOPUSR_MPRN = <gas MPRN>`
-#'  * `OCTOPUSR_ELEC_SERIAL_NUM = <electric serial number>` (or `OCTOPUSR_ELEC_SERIAL_NUM_IMPORT`/`OCTOPUSR_ELEC_SERIAL_NUM_EXPORT`)
+#'  * `OCTOPUSR_ELEC_SERIAL_NUM = <electric serial number>` (or
+#'    `OCTOPUSR_ELEC_SERIAL_NUM_IMPORT`/`OCTOPUSR_ELEC_SERIAL_NUM_EXPORT`)
 #'  * `OCTOPUSR_GAS_SERIAL_NUM = <gas serial number>`
 #' to your `.Renviron` otherwise you will have to call this function every
 #' session. You can find your meter details (MPAN/MPRN and serial number(s)) on
@@ -14,8 +16,8 @@
 #' @param mpan_mprn The electricity meter-point's MPAN or gas meter-point’s
 #' MPRN.
 #' @param serial_number The meter's serial number.
-#' @param direction For electricity meters, specify "import", "export", or NULL (default).
-#' When NULL, uses the legacy single MPAN storage. When specified, stores separate
+#' @param direction For electricity meters, specify "import", "export", or NULL
+#' (default). When NULL, uses the legacy single MPAN storage. When specified,
 #' import/export MPANs.
 #'
 #' @return No return value, called for side effects.
@@ -91,8 +93,8 @@ get_meter_details <-
     }
 
     if (is_testing()) {
-      return(testing_meter(meter_type, include_gsp = include_gsp))
-    }
+      testing_meter(meter_type, include_gsp = include_gsp)
+    } else {
 
     if (meter_type == "electricity") {
       if (is.null(direction)) {
@@ -114,31 +116,30 @@ get_meter_details <-
       serial_number <- Sys.getenv("OCTOPUSR_GAS_SERIAL_NUM")
     }
 
-    if (!identical(mpan_mprn, "") && !identical(serial_number, "")) {
-      meter <- structure(
-        list(
-          type = meter_type,
-          mpan_mprn = mpan_mprn,
-          serial_number = serial_number,
-          direction = direction,
-          gsp = ifelse(
-            meter_type == "electricity" && isTRUE(include_gsp),
-            get_meter_gsp(mpan = mpan_mprn),
-            NA
-          )
-        ),
-        class = "octopus_meter-point"
-      )
-
-      return(meter)
+      if (!identical(mpan_mprn, "") && !identical(serial_number, "")) {
+        structure(
+          list(
+            type = meter_type,
+            mpan_mprn = mpan_mprn,
+            serial_number = serial_number,
+            direction = direction,
+            gsp = ifelse(
+              meter_type == "electricity" && isTRUE(include_gsp),
+              get_meter_gsp(mpan = mpan_mprn),
+              NA
+            )
+          ),
+          class = "octopus_meter-point"
+        )
+      } else {
+        cli::cli_abort(
+          "Meter details were missing or incomplete, please supply with
+          {.arg mpan_mprn} and {.arg serial_number} arguments or with
+          {.help [{.fun set_meter_details}](octopusR::set_meter_details)}.",
+          call = rlang::caller_env()
+        )
+      }
     }
-
-    cli::cli_abort(
-      "Meter details were missing or incomplete, please supply with
-      {.arg mpan_mprn} and {.arg serial_number} arguments or with
-      {.help [{.fun set_meter_details}](octopusR::set_meter_details)}.",
-      call = rlang::caller_env()
-    )
   }
 
 testing_meter <- function(
@@ -156,8 +157,8 @@ testing_meter <- function(
       error = function(e) ""
     )
     mpan <- iconv(mpan, to = "ASCII", sub = "")
-    if (identical(mpan, "") || !grepl("^[a-zA-Z0-9_-]+$", mpan)) {
-      mpan <- "1234567890123"
+    if (identical(mpan, "") || !grepl("^[a-zA-Z0-9_-]{12,}$", mpan)) {
+      mpan <- "123456789012"
     }
 
     serial_number <- tryCatch(
@@ -168,7 +169,8 @@ testing_meter <- function(
       error = function(e) ""
     )
     serial_number <- iconv(serial_number, to = "ASCII", sub = "")
-    if (identical(serial_number, "") || !grepl("^[a-zA-Z0-9_-]+$", serial_number)) {
+    if (identical(serial_number, "") ||
+      !grepl("^[a-zA-Z0-9_-]{10,}$", serial_number)) {
       serial_number <- "21L1234567"
     }
     meter_gsp <- if (isTRUE(include_gsp)) get_meter_gsp(mpan = mpan) else NA
@@ -191,7 +193,7 @@ testing_meter <- function(
       error = function(e) ""
     )
     mprn <- iconv(mprn, to = "ASCII", sub = "")
-    if (identical(mprn, "") || !grepl("^[a-zA-Z0-9_-]+$", mprn)) {
+    if (identical(mprn, "") || !grepl("^[a-zA-Z0-9_-]{10,}$", mprn)) {
       mprn <- "1234567890"
     }
 
@@ -203,7 +205,8 @@ testing_meter <- function(
       error = function(e) ""
     )
     serial_number <- iconv(serial_number, to = "ASCII", sub = "")
-    if (identical(serial_number, "") || !grepl("^[a-zA-Z0-9_-]+$", serial_number)) {
+    if (identical(serial_number, "") ||
+      !grepl("^[a-zA-Z0-9_-]{10,}$", serial_number)) {
       serial_number <- "G4A12345678900"
     }
 
@@ -253,16 +256,21 @@ combine_consumption <- function(
   # Get import consumption data
   import_data <- NULL
   if (!is.null(import_mpan) && !is.null(import_serial)) {
-    import_data <- get_consumption(
-      meter_type = "electricity",
-      mpan_mprn = import_mpan,
-      serial_number = import_serial,
-      api_key = api_key,
-      period_from = period_from,
-      period_to = period_to,
-      tz = tz,
-      order_by = order_by,
-      group_by = group_by
+    import_data <- tryCatch(
+      {
+        get_consumption(
+          meter_type = "electricity",
+          mpan_mprn = import_mpan,
+          serial_number = import_serial,
+          api_key = api_key,
+          period_from = period_from,
+          period_to = period_to,
+          tz = tz,
+          order_by = order_by,
+          group_by = group_by
+        )
+      },
+      error = function(e) NULL
     )
   } else {
     # Try to get from environment variables
@@ -286,16 +294,21 @@ combine_consumption <- function(
   # Get export consumption data
   export_data <- NULL
   if (!is.null(export_mpan) && !is.null(export_serial)) {
-    export_data <- get_consumption(
-      meter_type = "electricity",
-      mpan_mprn = export_mpan,
-      serial_number = export_serial,
-      api_key = api_key,
-      period_from = period_from,
-      period_to = period_to,
-      tz = tz,
-      order_by = order_by,
-      group_by = group_by
+    export_data <- tryCatch(
+      {
+        get_consumption(
+          meter_type = "electricity",
+          mpan_mprn = export_mpan,
+          serial_number = export_serial,
+          api_key = api_key,
+          period_from = period_from,
+          period_to = period_to,
+          tz = tz,
+          order_by = order_by,
+          group_by = group_by
+        )
+      },
+      error = function(e) NULL
     )
   } else {
     # Try to get from environment variables
@@ -372,7 +385,5 @@ combine_consumption <- function(
     "export_consumption",
     "net_consumption"
   )
-  result <- result[col_order]
-
-  return(result)
+  result[col_order]
 }

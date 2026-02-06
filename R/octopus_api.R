@@ -25,25 +25,25 @@ octopus_api <- function(
     httr2::req_progress("down")
 
   if (isFALSE(perform)) {
-    return(req)
+    req
+  } else {
+    resp <- req |>
+      httr2::req_error(body = octopus_error_body) |>
+      httr2::req_perform()
+
+    parsed <- httr2::resp_body_json(resp, simplifyVector = TRUE)
+
+    parsed[["results"]] <- tibble::as_tibble(parsed[["results"]])
+
+    structure(
+      list(
+        response = resp,
+        path = path,
+        content = parsed
+      ),
+      class = "octopus_api"
+    )
   }
-
-  resp <- req |>
-    httr2::req_error(body = octopus_error_body) |>
-    httr2::req_perform()
-
-  parsed <- httr2::resp_body_json(resp, simplifyVector = TRUE)
-
-  parsed[["results"]] <- tibble::as_tibble(parsed[["results"]])
-
-  structure(
-    list(
-      response = resp,
-      path = path,
-      content = parsed
-    ),
-    class = "octopus_api"
-  )
 }
 
 octopus_error_body <- function(resp) {

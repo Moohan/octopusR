@@ -124,7 +124,10 @@ get_consumption <- function(
       page_size <- 100L
       cli::cli_inform(c(
         "i" = "Returning 100 rows only as a date range wasn't provided.",
-        "v" = "Specify a date range with {.arg period_to} and {.arg period_from}."
+        "v" = paste0(
+          "Specify a date range with {.arg period_to} and ",
+          "{.arg period_from}."
+        )
       ))
     } else {
       check_datetime_format(period_from)
@@ -159,9 +162,9 @@ get_consumption <- function(
   total_rows <- resp[["content"]][["count"]]
   total_pages <- ceiling(total_rows / page_size)
   if (total_pages == 0) {
-    return(tibble::tibble())
-  }
-  consumption_data_list <- vector("list", total_pages)
+    consumption_data <- tibble::as_tibble(data.frame())
+  } else {
+    consumption_data_list <- vector("list", total_pages)
   consumption_data_list[[1L]] <- resp[["content"]][["results"]]
 
   if (total_pages > 1) {
@@ -201,6 +204,7 @@ get_consumption <- function(
   }
 
   consumption_data <- tibble::as_tibble(consumption_data)
+  }
 
   if (!is.null(tz)) {
     if (rlang::is_interactive()) {

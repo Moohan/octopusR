@@ -40,7 +40,10 @@ is_testing <- function() {
 testing_key <- function() {
   key <- tryCatch(
     httr2::secret_decrypt(
-      "gSnStfRq0gqwkVy9notuWa97vp_d7hxX3IOrlMv6g1nlNeMhtHSdvboMx_49zcVWgpityPpCtKA",
+      paste0(
+        "gSnStfRq0gqwkVy9notuWa97vp_d7hxX3IOrlMv6g1nlNeMhtHSdvboMx_49zcVW",
+        "gpityPpCtKA"
+      ),
       "OCTOPUSR_SECRET_KEY"
     ),
     error = function(e) ""
@@ -48,7 +51,7 @@ testing_key <- function() {
   # Sanitize to avoid "input string 1 is invalid" warnings
   key <- iconv(key, to = "ASCII", sub = "")
   # Handle case where it decrypts to garbage instead of failing
-  if (identical(key, "") || !grepl("^[a-zA-Z0-9_-]+$", key)) {
+  if (identical(key, "") || !grepl("^[a-zA-Z0-9_-]{16,}$", key)) {
     "sk_test_dummy_key"
   } else {
     key
