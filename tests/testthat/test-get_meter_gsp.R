@@ -20,8 +20,9 @@ test_that("Can get a meter GSP", {
     ),
     error = function(e) ""
   )
-  if (identical(expected_gsp, "")) {
-    skip("Secrets not available")
+  expected_gsp <- iconv(expected_gsp, to = "ASCII", sub = "")
+  if (identical(expected_gsp, "") || !grepl("^[A-Z_]{2}$", expected_gsp)) {
+    skip("Secrets not available or incorrect decryption")
   }
 
   expect_equal(
