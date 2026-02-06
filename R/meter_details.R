@@ -18,7 +18,7 @@
 #' @param serial_number The meter's serial number.
 #' @param direction For electricity meters, specify "import", "export", or NULL
 #' (default). When NULL, uses the legacy single MPAN storage. When specified,
-#' import/export MPANs.
+#' stores separate import/export MPANs.
 #'
 #' @return No return value, called for side effects.
 #'
@@ -75,11 +75,9 @@ set_meter_details <- function(
   }
 }
 
-# Internal function to retrieve meter details from environment variables or
-# testing mocks.
-# @param meter_type Type of meter-point, electricity or gas
-# @param direction For electricity meters, specify "import", "export", or NULL
-# @param include_gsp Logical. If TRUE, retrieves Grid Supply Point.
+#' @rdname set_meter_details
+#' @param include_gsp Logical. If TRUE, retrieves Grid Supply Point.
+#' @export
 get_meter_details <- function(
   meter_type = c("electricity", "gas"),
   direction = NULL,
@@ -174,7 +172,7 @@ testing_meter <- function(
     serial_number <- iconv(serial_number, to = "ASCII", sub = "")
     if (
       identical(serial_number, "") ||
-        !grepl("^[a-zA-Z0-9_-]{10,}$", serial_number)
+      !grepl("^[a-zA-Z0-9_-]{10,}$", serial_number)
     ) {
       serial_number <- "21L1234567"
     }
@@ -212,7 +210,7 @@ testing_meter <- function(
     serial_number <- iconv(serial_number, to = "ASCII", sub = "")
     if (
       identical(serial_number, "") ||
-        !grepl("^[a-zA-Z0-9_-]{10,}$", serial_number)
+      !grepl("^[a-zA-Z0-9_-]{10,}$", serial_number)
     ) {
       serial_number <- "G4A12345678900"
     }

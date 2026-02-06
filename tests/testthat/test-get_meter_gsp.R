@@ -21,8 +21,10 @@ test_that("Can get a meter GSP", {
     error = function(e) ""
   )
   expected_gsp <- iconv(expected_gsp, to = "ASCII", sub = "")
-  if (identical(expected_gsp, "") || !grepl("^[A-Z_]{2}$", expected_gsp)) {
-    skip("Secrets not available or incorrect decryption")
+  # GSP codes must be an underscore followed by a single uppercase letter.
+  # Anything else is almost certainly decryption failure or malformed data.
+  if (!grepl("^_[A-Z]$", expected_gsp)) {
+    skip("Secrets not working as expected")
   }
 
   expect_equal(
