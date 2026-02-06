@@ -80,7 +80,8 @@ test_that("errors properly with incorrect params", {
 })
 
 test_that("Correctly handles multi-page parallel requests", {
-  # This mock handles the two ways octopus_api is called in the multi-page scenario
+  # This mock handles the two ways octopus_api is called in the multi-page
+  # scenario
   mock_api_multi_page <- function(path, query, ..., perform = TRUE) {
     if (perform) {
       # The first call to get page count
@@ -94,16 +95,18 @@ test_that("Correctly handles multi-page parallel requests", {
       )
     } else {
       # The subsequent calls to build the request list
-      # Return a simple list that we can identify later
-      list(page = query$page)
+      # Return a real request object so httr2::req_url_query doesn't fail
+      httr2::request("https://api.octopus.energy/v1/test") |>
+        httr2::req_url_query(!!!query)
     }
   }
 
   # This mock simulates the parallel execution
   mock_req_perform_parallel <- function(reqs, ...) {
     lapply(reqs, function(req) {
-      # req is what mock_api_multi_page returned when perform=FALSE
-      page_num <- req$page
+      # Extract page from the request object
+      url <- httr2::url_parse(req$url)
+      page_num <- as.integer(url$query$page)
       create_mock_httr2_response(
         results = tibble::tibble(
           consumption = (1:10) + ((page_num - 1) * 10),

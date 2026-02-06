@@ -2,6 +2,7 @@
 % Please edit documentation in R/meter_details.R
 \name{set_meter_details}
 \alias{set_meter_details}
+\alias{get_meter_details}
 \title{Set the details for your gas/electricity meter}
 \usage{
 set_meter_details(
@@ -9,6 +10,12 @@ set_meter_details(
   mpan_mprn = NULL,
   serial_number = NULL,
   direction = NULL
+)
+
+get_meter_details(
+  meter_type = c("electricity", "gas"),
+  direction = NULL,
+  include_gsp = TRUE
 )
 }
 \arguments{
@@ -19,9 +26,11 @@ MPRN.}
 
 \item{serial_number}{The meter's serial number.}
 
-\item{direction}{For electricity meters, specify "import", "export", or NULL (default).
-When NULL, uses the legacy single MPAN storage. When specified, stores separate
-import/export MPANs.}
+\item{direction}{For electricity meters, specify "import", "export", or NULL
+(default). When NULL, uses the legacy single MPAN storage. When specified,
+stores separate import/export MPANs.}
+
+\item{include_gsp}{Logical. If TRUE, retrieves Grid Supply Point.}
 }
 \value{
 No return value, called for side effects.
@@ -30,9 +39,11 @@ No return value, called for side effects.
 Set the details for your gas/electricity meter. These will be
 stored as environment variables. You should add:
 \itemize{
-\item \verb{OCTOPUSR_MPAN = <electric MPAN>} (or \code{OCTOPUSR_MPAN_IMPORT}/\code{OCTOPUSR_MPAN_EXPORT})
+\item \verb{OCTOPUSR_MPAN = <electric MPAN>} (or \code{OCTOPUSR_MPAN_IMPORT}/
+\code{OCTOPUSR_MPAN_EXPORT})
 \item \verb{OCTOPUSR_MPRN = <gas MPRN>}
-\item \verb{OCTOPUSR_ELEC_SERIAL_NUM = <electric serial number>} (or \code{OCTOPUSR_ELEC_SERIAL_NUM_IMPORT}/\code{OCTOPUSR_ELEC_SERIAL_NUM_EXPORT})
+\item \verb{OCTOPUSR_ELEC_SERIAL_NUM = <electric serial number>} (or
+\code{OCTOPUSR_ELEC_SERIAL_NUM_IMPORT}/\code{OCTOPUSR_ELEC_SERIAL_NUM_EXPORT})
 \item \verb{OCTOPUSR_GAS_SERIAL_NUM = <gas serial number>}
 to your \code{.Renviron} otherwise you will have to call this function every
 session. You can find your meter details (MPAN/MPRN and serial number(s)) on
