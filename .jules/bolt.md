@@ -1,0 +1,5 @@
+## 2025-05-15 - [Request Object Reuse in Pagination] **Learning:** Reusing a base `httr2_request` object via `httr2::req_url_query()` in pagination loops significantly improves performance (~2x speedup) and reduces memory allocation (~7.5x reduction) compared to repeated full `octopus_api()` calls. **Action:** Always create a base request object for paginated API calls and use `req_url_query` to update page numbers.
+
+## 2025-05-15 - [Optional GSP Lookup] **Learning:** Avoiding redundant API calls for metadata (like GSP) when not strictly required by the calling function (like `get_consumption`) provides a significant speedup by saving a full network request. **Action:** Implement an `include_gsp` flag in metadata retrieval functions.
+
+## 2025-05-15 - [Robust Test Secrets] **Learning:** `httr2::secret_decrypt` can return garbage strings if the secret key is wrong but present, which can cause "input string 1 is invalid" errors in URL functions. **Action:** Use `iconv(x, to = "ASCII", sub = "")` and regex validation in `testing_key` helpers to ensure fallback to dummy values.

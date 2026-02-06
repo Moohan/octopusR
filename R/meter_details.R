@@ -74,7 +74,11 @@ set_meter_details <- function(
 }
 
 get_meter_details <-
-  function(meter_type = c("electricity", "gas"), direction = NULL) {
+  function(
+    meter_type = c("electricity", "gas"),
+    direction = NULL,
+    include_gsp = TRUE
+  ) {
     meter_type <- match.arg(meter_type)
 
     # Validate direction parameter
@@ -87,7 +91,7 @@ get_meter_details <-
     }
 
     if (is_testing()) {
-      return(testing_meter(meter_type))
+      return(testing_meter(meter_type, include_gsp = include_gsp))
     }
 
     if (meter_type == "electricity") {
@@ -118,7 +122,7 @@ get_meter_details <-
           serial_number = serial_number,
           direction = direction,
           gsp = ifelse(
-            meter_type == "electricity",
+            meter_type == "electricity" && isTRUE(include_gsp),
             get_meter_gsp(mpan = mpan_mprn),
             NA
           )
@@ -137,19 +141,37 @@ get_meter_details <-
     )
   }
 
-testing_meter <- function(meter_type = c("electricity", "gas")) {
+testing_meter <- function(
+  meter_type = c("electricity", "gas"),
+  include_gsp = TRUE
+) {
   meter_type <- match.arg(meter_type)
 
   if (meter_type == "electricity") {
-    mpan <- httr2::secret_decrypt(
-      "DR9Bvd3ppfLXD4Zq-tG0kZphNdkW3168-OQrOSk",
-      "OCTOPUSR_SECRET_KEY"
+    mpan <- tryCatch(
+      httr2::secret_decrypt(
+        "DR9Bvd3ppfLXD4Zq-tG0kZphNdkW3168-OQrOSk",
+        "OCTOPUSR_SECRET_KEY"
+      ),
+      error = function(e) ""
     )
-    serial_number <- httr2::secret_decrypt(
-      "g_K-kAcGIIcsrXeRegX8EjMBf7xnmhbX9ts",
-      "OCTOPUSR_SECRET_KEY"
+    mpan <- iconv(mpan, to = "ASCII", sub = "")
+    if (identical(mpan, "") || !grepl("^[a-zA-Z0-9_-]+$", mpan)) {
+      mpan <- "1234567890123"
+    }
+
+    serial_number <- tryCatch(
+      httr2::secret_decrypt(
+        "g_K-kAcGIIcsrXeRegX8EjMBf7xnmhbX9ts",
+        "OCTOPUSR_SECRET_KEY"
+      ),
+      error = function(e) ""
     )
-    meter_gsp <- get_meter_gsp(mpan = mpan)
+    serial_number <- iconv(serial_number, to = "ASCII", sub = "")
+    if (identical(serial_number, "") || !grepl("^[a-zA-Z0-9_-]+$", serial_number)) {
+      serial_number <- "21L1234567"
+    }
+    meter_gsp <- if (isTRUE(include_gsp)) get_meter_gsp(mpan = mpan) else NA
 
     structure(
       list(
@@ -161,14 +183,29 @@ testing_meter <- function(meter_type = c("electricity", "gas")) {
       class = "octopus_meter-point"
     )
   } else if (meter_type == "gas") {
-    mprn <- httr2::secret_decrypt(
-      "z-BpI17a6UVNWT8ByPzue_XI5j2zU547vi0",
-      "OCTOPUSR_SECRET_KEY"
+    mprn <- tryCatch(
+      httr2::secret_decrypt(
+        "z-BpI17a6UVNWT8ByPzue_XI5j2zU547vi0",
+        "OCTOPUSR_SECRET_KEY"
+      ),
+      error = function(e) ""
     )
-    serial_number <- httr2::secret_decrypt(
-      "d06raLRtC5JWyQkh64mZOtWFDOUCQlojLAyfMUk-",
-      "OCTOPUSR_SECRET_KEY"
+    mprn <- iconv(mprn, to = "ASCII", sub = "")
+    if (identical(mprn, "") || !grepl("^[a-zA-Z0-9_-]+$", mprn)) {
+      mprn <- "1234567890"
+    }
+
+    serial_number <- tryCatch(
+      httr2::secret_decrypt(
+        "d06raLRtC5JWyQkh64mZOtWFDOUCQlojLAyfMUk-",
+        "OCTOPUSR_SECRET_KEY"
+      ),
+      error = function(e) ""
     )
+    serial_number <- iconv(serial_number, to = "ASCII", sub = "")
+    if (identical(serial_number, "") || !grepl("^[a-zA-Z0-9_-]+$", serial_number)) {
+      serial_number <- "G4A12345678900"
+    }
 
     structure(
       list(
