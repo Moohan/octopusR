@@ -172,7 +172,7 @@ testing_meter <- function(
     serial_number <- iconv(serial_number, to = "ASCII", sub = "")
     if (
       identical(serial_number, "") ||
-      !grepl("^[a-zA-Z0-9_-]{10,}$", serial_number)
+        !grepl("^[a-zA-Z0-9_-]{10,}$", serial_number)
     ) {
       serial_number <- "21L1234567"
     }
@@ -210,7 +210,7 @@ testing_meter <- function(
     serial_number <- iconv(serial_number, to = "ASCII", sub = "")
     if (
       identical(serial_number, "") ||
-      !grepl("^[a-zA-Z0-9_-]{10,}$", serial_number)
+        !grepl("^[a-zA-Z0-9_-]{10,}$", serial_number)
     ) {
       serial_number <- "G4A12345678900"
     }
