@@ -2,9 +2,25 @@ skip_if_offline(host = "api.octopus.energy")
 
 test_that("Can get a meter GSP", {
   test_meter <- testing_meter("electricity")
-  expected_gsp <- httr2::secret_decrypt(
-    "5GkfdUf-Fp88BMOFir1kkOOl",
-    "OCTOPUSR_SECRET_KEY"
+  # Check if MPAN looks valid
+  skip_if(
+    !grepl("^[0-9]{10,}$", test_meter[["mpan_mprn"]]),
+    "Secret key is likely incorrect or missing"
+  )
+
+  expected_gsp <- tryCatch(
+    httr2::secret_decrypt(
+      "5GkfdUf-Fp88BMOFir1kkOOl",
+      "OCTOPUSR_SECRET_KEY"
+    ),
+    error = function(e) ""
+  )
+  expected_gsp <- iconv(expected_gsp, to = "ASCII", sub = "")
+
+  # GSPs are usually single letters, maybe prefixed by _
+  skip_if(
+    !grepl("^[A-Z_]{1,2}$", expected_gsp),
+    "Secret key is likely incorrect"
   )
 
   expect_equal(
