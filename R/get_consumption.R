@@ -184,7 +184,8 @@ get_consumption <- function(
     consumption_data_list[2:total_pages] <- lapply(resps, function(r) {
       if (inherits(r, "httr2_response")) {
         # Cast to tibble for consistency as per Technical Memory
-        results <- httr2::resp_body_json(r, simplifyVector = TRUE)[["results"]]
+        results <- httr2::resp_body_json(r, simplifyVector = TRUE)
+        results <- results[["results"]]
         tibble::as_tibble(results)
       } else {
         NULL

@@ -54,7 +54,7 @@ testing_key <- function() {
   # Sanitize derived strings and validate to detect failed decryption
   key <- iconv(key, to = "ASCII", sub = "")
 
-  if (!grepl("^[A-Za-z0-9_-]+$", key)) {
+  if (!grepl("^sk_(live|test)_[A-Za-z0-9]+$", key)) {
     "sk_test_dummy_key"
   } else {
     key

@@ -2,11 +2,11 @@
 #'
 #' @description Set the details for your gas/electricity meter. These will be
 #' stored as environment variables. You should add:
-#'  * `OCTOPUSR_MPAN = <electric MPAN>` (or `OCTOPUSR_MPAN_IMPORT`/
-#'  `OCTOPUSR_MPAN_EXPORT`)
+#'  * `OCTOPUSR_MPAN = <electric MPAN>`
+#'  (or `OCTOPUSR_MPAN_IMPORT`/`OCTOPUSR_MPAN_EXPORT`)
 #'  * `OCTOPUSR_MPRN = <gas MPRN>`
-#'  * `OCTOPUSR_ELEC_SERIAL_NUM = <electric serial number>` (or
-#'  `OCTOPUSR_ELEC_SERIAL_NUM_IMPORT`/`OCTOPUSR_ELEC_SERIAL_NUM_EXPORT`)
+#'  * `OCTOPUSR_ELEC_SERIAL_NUM = <electric serial number>`
+#'  (or `OCTOPUSR_ELEC_SERIAL_NUM_IMPORT`/`OCTOPUSR_ELEC_SERIAL_NUM_EXPORT`)
 #'  * `OCTOPUSR_GAS_SERIAL_NUM = <gas serial number>`
 #' to your `.Renviron` otherwise you will have to call this function every
 #' session. You can find your meter details (MPAN/MPRN and serial number(s)) on
@@ -162,10 +162,10 @@ testing_meter <- function(meter_type = c("electricity", "gas")) {
     mpan <- iconv(mpan, to = "ASCII", sub = "")
     serial_number <- iconv(serial_number, to = "ASCII", sub = "")
 
-    if (!grepl("^[A-Za-z0-9_-]+$", mpan)) {
+    if (!grepl("^[0-9]{10,}$", mpan)) {
       mpan <- "sk_test_mpan"
     }
-    if (!grepl("^[A-Za-z0-9_-]+$", serial_number)) {
+    if (!grepl("^[A-Za-z0-9]{5,}$", serial_number)) {
       serial_number <- "sk_test_serial"
     }
 
@@ -203,10 +203,10 @@ testing_meter <- function(meter_type = c("electricity", "gas")) {
     mprn <- iconv(mprn, to = "ASCII", sub = "")
     serial_number <- iconv(serial_number, to = "ASCII", sub = "")
 
-    if (!grepl("^[A-Za-z0-9_-]+$", mprn)) {
+    if (!grepl("^[0-9]{10,}$", mprn)) {
       mprn <- "sk_test_mpan"
     }
-    if (!grepl("^[A-Za-z0-9_-]+$", serial_number)) {
+    if (!grepl("^[A-Za-z0-9]{5,}$", serial_number)) {
       serial_number <- "sk_test_serial"
     }
 
