@@ -2,7 +2,10 @@ skip_if_offline(host = "api.octopus.energy")
 
 test_that("Can get a meter GSP", {
   test_meter <- testing_meter("electricity")
-  skip_if(test_meter[["mpan_mprn"]] == "sk_test_mpan", "Secret key is likely incorrect")
+  skip_if(
+    test_meter[["mpan_mprn"]] == "sk_test_mpan",
+    "Secret key is likely incorrect"
+  )
 
   expected_gsp <- httr2::secret_decrypt(
     "5GkfdUf-Fp88BMOFir1kkOOl",
