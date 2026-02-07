@@ -161,13 +161,18 @@ get_consumption <- function(
   consumption_data_list[[1L]] <- resp[["content"]][["results"]]
 
   if (total_pages > 1) {
+    # Reusing a base request object via httr2::req_url_query() significantly
+    # improves performance and reduces memory allocation compared to repeated
+    # full octopus_api() calls.
+    base_req <- octopus_api(
+      path = path,
+      api_key = api_key,
+      query = query,
+      perform = FALSE
+    )
+
     reqs <- lapply(2:total_pages, function(page) {
-      octopus_api(
-        path = path,
-        api_key = api_key,
-        query = append(query, list(page = page)),
-        perform = FALSE
-      )
+      httr2::req_url_query(base_req, page = page)
     })
 
     resps <- httr2::req_perform_parallel(reqs, on_error = "continue")
@@ -175,7 +180,8 @@ get_consumption <- function(
     # Directly populate the final list, avoiding an intermediate object.
     consumption_data_list[2:total_pages] <- lapply(resps, function(r) {
       if (inherits(r, "httr2_response")) {
-        httr2::resp_body_json(r, simplifyVector = TRUE)[["results"]]
+        # Cast to tibble for consistency as per Technical Memory
+        tibble::as_tibble(httr2::resp_body_json(r, simplifyVector = TRUE)[["results"]])
       } else {
         NULL
       }
