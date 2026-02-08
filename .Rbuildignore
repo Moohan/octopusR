@@ -17,3 +17,5 @@
 ^revdep$
 ^\.pre-commit-config\.yaml$
 ^codemeta\.json$
+^\.jules$
+^\.jules$
