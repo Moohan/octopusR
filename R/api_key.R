@@ -40,8 +40,24 @@ is_testing <- function() {
 }
 
 testing_key <- function() {
-  httr2::secret_decrypt(
-    "gSnStfRq0gqwkVy9notuWa97vp_d7hxX3IOrlMv6g1nlNeMhtHSdvboMx_49zcVWgpityPpCtKA",
-    "OCTOPUSR_SECRET_KEY"
+  key <- tryCatch(
+    {
+      httr2::secret_decrypt(
+        "gSnStfRq0gqwkVy9notuWa97vp_d7hxX3IOrlMv6g1nlNeMhtHSdvboMx_49zcVWgpityPpCtKA",
+        "OCTOPUSR_SECRET_KEY"
+      )
+    },
+    error = function(e) "sk_test_dummy_key"
   )
+  sanitize_derived_string(key, "sk_test_dummy_key")
+}
+
+sanitize_derived_string <- function(x, fallback) {
+  # If decryption fails or uses wrong key, secret_decrypt might return garbage
+  # instead of erroring.
+  sanitized <- iconv(x, to = "ASCII", sub = "")
+  if (!identical(x, sanitized) || !grepl("^[A-Za-z0-9_-]+$", sanitized)) {
+    return(fallback)
+  }
+  return(x)
 }
