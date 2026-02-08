@@ -162,72 +162,73 @@ get_consumption <- function(
   total_rows <- resp[["content"]][["count"]]
   total_pages <- ceiling(total_rows / page_size)
   if (total_pages == 0) {
-    return(tibble::tibble())
-  }
-  consumption_data_list <- vector("list", total_pages)
-  consumption_data_list[[1L]] <- resp[["content"]][["results"]]
-
-  if (total_pages > 1) {
-    reqs <- lapply(2:total_pages, function(page) {
-      octopus_api(
-        path = path,
-        api_key = api_key,
-        query = append(query, list(page = page)),
-        perform = FALSE
-      )
-    })
-
-    resps <- httr2::req_perform_parallel(reqs, on_error = "continue")
-
-    # Directly populate the final list, avoiding an intermediate object.
-    consumption_data_list[2:total_pages] <- lapply(resps, function(r) {
-      if (inherits(r, "httr2_response")) {
-        httr2::resp_body_json(r, simplifyVector = TRUE)[["results"]]
-      } else {
-        NULL
-      }
-    })
-  }
-  # Filter out NULL elements from any failed API calls before binding. This
-  # prevents `do.call(rbind, ...)` from failing.
-  consumption_data_list <- Filter(Negate(is.null), consumption_data_list)
-
-  # Using data.table::rbindlist() or vctrs::vec_rbind() provides a significant
-  # performance boost over the base R alternative of do.call(rbind, ...).
-  if (rlang::is_installed("data.table")) {
-    consumption_data <- data.table::rbindlist(consumption_data_list)
-  } else if (rlang::is_installed("vctrs")) {
-    consumption_data <- vctrs::vec_rbind(!!!consumption_data_list)
+    tibble::tibble()
   } else {
-    consumption_data <- do.call(rbind, consumption_data_list)
-  }
+    consumption_data_list <- vector("list", total_pages)
+    consumption_data_list[[1L]] <- resp[["content"]][["results"]]
 
-  consumption_data <- tibble::as_tibble(consumption_data)
-
-  if (!is.null(tz)) {
-    if (rlang::is_interactive()) {
-      rlang::check_installed(
-        pkg = "lubridate",
-        reason = "to parse dates, use `tz = NULL` to return characters.",
-        version = "0.2.1"
-      )
-    } else {
-      if (!rlang::is_installed(pkg = "lubridate", version = "0.2.1")) {
-        cli::cli_abort(
-          "{.pkg lubridate} must be installed to parse dates,
-                       use `tz = NULL` to return characters."
+    if (total_pages > 1) {
+      reqs <- lapply(2:total_pages, function(page) {
+        octopus_api(
+          path = path,
+          api_key = api_key,
+          query = append(query, list(page = page)),
+          perform = FALSE
         )
-      }
-    }
-    consumption_data[["interval_start"]] <- lubridate::ymd_hms(
-      consumption_data[["interval_start"]],
-      tz = tz
-    )
-    consumption_data[["interval_end"]] <- lubridate::ymd_hms(
-      consumption_data[["interval_end"]],
-      tz = tz
-    )
-  }
+      })
 
-  consumption_data
+      resps <- httr2::req_perform_parallel(reqs, on_error = "continue")
+
+      # Directly populate the final list, avoiding an intermediate object.
+      consumption_data_list[2:total_pages] <- lapply(resps, function(r) {
+        if (inherits(r, "httr2_response")) {
+          httr2::resp_body_json(r, simplifyVector = TRUE)[["results"]]
+        } else {
+          NULL
+        }
+      })
+    }
+    # Filter out NULL elements from any failed API calls before binding. This
+    # prevents `do.call(rbind, ...)` from failing.
+    consumption_data_list <- Filter(Negate(is.null), consumption_data_list)
+
+    # Using data.table::rbindlist() or vctrs::vec_rbind() provides a significant
+    # performance boost over the base R alternative of do.call(rbind, ...).
+    if (rlang::is_installed("data.table")) {
+      consumption_data <- data.table::rbindlist(consumption_data_list)
+    } else if (rlang::is_installed("vctrs")) {
+      consumption_data <- vctrs::vec_rbind(!!!consumption_data_list)
+    } else {
+      consumption_data <- do.call(rbind, consumption_data_list)
+    }
+
+    consumption_data <- tibble::as_tibble(consumption_data)
+
+    if (!is.null(tz)) {
+      if (rlang::is_interactive()) {
+        rlang::check_installed(
+          pkg = "lubridate",
+          reason = "to parse dates, use `tz = NULL` to return characters.",
+          version = "0.2.1"
+        )
+      } else {
+        if (!rlang::is_installed(pkg = "lubridate", version = "0.2.1")) {
+          cli::cli_abort(
+            "{.pkg lubridate} must be installed to parse dates,
+                       use `tz = NULL` to return characters."
+          )
+        }
+      }
+      consumption_data[["interval_start"]] <- lubridate::ymd_hms(
+        consumption_data[["interval_start"]],
+        tz = tz
+      )
+      consumption_data[["interval_end"]] <- lubridate::ymd_hms(
+        consumption_data[["interval_end"]],
+        tz = tz
+      )
+    }
+
+    consumption_data
+  }
 }

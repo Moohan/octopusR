@@ -61,18 +61,18 @@ get_products <- function(
 
   check_logical(authenticate)
 
-  if (authenticate) {
+  resp <- if (authenticate) {
     if (missing(api_key)) {
       api_key <- get_api_key()
     }
-    resp <- octopus_api(
+    octopus_api(
       path = path,
       query = query,
       use_api_key = TRUE,
       api_key = api_key
     )
   } else {
-    resp <- octopus_api(
+    octopus_api(
       path = path,
       query = query
     )
