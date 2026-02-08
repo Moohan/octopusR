@@ -1,12 +1,17 @@
 skip_if_offline(host = "api.octopus.energy")
 
 test_that("Can get a meter GSP", {
-  skip_if(grepl("^sk_test_", get_api_key()), "Using dummy API keys")
   test_meter <- testing_meter("electricity")
-  expected_gsp <- httr2::secret_decrypt(
-    "5GkfdUf-Fp88BMOFir1kkOOl",
-    "OCTOPUSR_SECRET_KEY"
+  skip_if(grepl("^sk_test_", test_meter[["mpan_mprn"]]), "Using dummy MPAN")
+
+  expected_gsp <- tryCatch(
+    httr2::secret_decrypt(
+      "5GkfdUf-Fp88BMOFir1kkOOl",
+      "OCTOPUSR_SECRET_KEY"
+    ),
+    error = function(e) "DUMMY_GSP"
   )
+  skip_if(expected_gsp == "DUMMY_GSP", "No valid GSP secret")
 
   expect_equal(
     get_meter_gsp(mpan = test_meter[["mpan_mprn"]]),
