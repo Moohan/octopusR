@@ -62,7 +62,7 @@ sanitize_derived_string <- function(x, fallback) {
     # Ensure it is valid ASCII and contains only expected characters
     sanitized <- iconv(x, to = "ASCII", sub = "")
     if (is.na(sanitized) || !identical(x, sanitized) ||
-      !grepl("^[A-Za-z0-9_-]+$", sanitized)) {
+          !grepl("^[A-Za-z0-9_-]+$", sanitized)) {
       fallback
     } else {
       x

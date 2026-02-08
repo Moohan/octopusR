@@ -72,7 +72,8 @@ test_that("Correctly handles multi-page parallel requests", {
       )
     } else {
       # The calls to create request objects (perform = FALSE)
-      # We just need to return something that can be passed to req_perform_parallel
+      # We just need to return something that can be passed to
+      # req_perform_parallel
       httr2::request("https://api.octopus.energy/v1/test")
     }
   }
@@ -89,11 +90,13 @@ test_that("Correctly handles multi-page parallel requests", {
         )
       )
 
-      # We need a way to create a mock response that httr2::resp_body_json can read
+      # We need a way to create a mock response that httr2::resp_body_json
+      # can read
       # A simple approach is to use a real response object if possible,
       # but mocking it as a list with the right class might also work depending
       # on how get_consumption is implemented.
-      # Since get_consumption uses httr2::resp_body_json(r, simplifyVector = TRUE),
+      # Since get_consumption uses httr2::resp_body_json(r,
+      # simplifyVector = TRUE),
       # we should return something it likes.
       structure(
         list(

@@ -11,6 +11,10 @@ test_that("Can get a meter GSP", {
     ),
     error = function(e) "DUMMY_GSP"
   )
+  expected_gsp <- octopusR:::sanitize_derived_string(
+    expected_gsp,
+    "DUMMY_GSP"
+  )
   skip_if(expected_gsp == "DUMMY_GSP", "No valid GSP secret")
 
   expect_equal(
