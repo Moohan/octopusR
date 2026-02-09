@@ -34,8 +34,8 @@
 #' * `week`
 #' * `month`
 #' * `quarter`
-#' @param direction For electricity meters, specify "import", "export",
-#' or NULL (default). When NULL, uses the legacy single MPAN storage.
+#' @param direction For electricity meters, specify "import", "export", or
+#' NULL (default). When NULL, uses the legacy single MPAN storage.
 #' @param page_size The number of results to return per page. This is intended
 #' for internal testing and may be removed in a future release.
 #'
@@ -79,8 +79,7 @@ get_consumption <- function(
     # metadata, which is not needed for consumption data.
     # This provides a measurable speedup by reducing network latency.
     meter_details <- get_meter_details(
-      meter_type, direction,
-      include_gsp = FALSE
+      meter_type, direction, include_gsp = FALSE
     )
     if (is.null(mpan_mprn)) {
       mpan_mprn <- meter_details[["mpan_mprn"]]
@@ -168,11 +167,11 @@ get_consumption <- function(
   consumption_data_list[[1L]] <- resp[["content"]][["results"]]
 
   if (total_pages > 1) {
-    reqs <- lapply(2:total_pages, function(page) {
+    reqs <- lapply(2:total_pages, function(p) {
       octopus_api(
         path = path,
         api_key = api_key,
-        query = append(query, list(page = page)),
+        query = append(query, list(page = p)),
         perform = FALSE
       )
     })

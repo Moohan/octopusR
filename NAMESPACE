@@ -2,7 +2,6 @@
 
 export(combine_consumption)
 export(get_consumption)
-export(get_meter_details)
 export(get_meter_gsp)
 export(get_products)
 export(set_api_key)
