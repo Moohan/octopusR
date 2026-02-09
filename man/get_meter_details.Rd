@@ -13,18 +13,19 @@ get_meter_details(
 \arguments{
 \item{meter_type}{Type of meter-point, electricity or gas}
 
-\item{direction}{For electricity meters, specify "import", "export", or NULL (default).
-When NULL, uses the legacy single MPAN storage. When specified, stores separate
-import/export MPANs.}
+\item{direction}{For electricity meters, specify "import", "export", or
+NULL (default). When NULL, uses the legacy single MPAN storage. When
+specified, stores separate import/export MPANs.}
 
-\item{include_gsp}{(boolean, default: TRUE) Whether to include the Grid Supply Point (GSP)
-in the returned details. Setting this to \code{FALSE} avoids a redundant API call
-when GSP data is not required (e.g., in \code{get_consumption}).}
+\item{include_gsp}{(boolean, default: TRUE) Whether to include the
+Grid Supply Point (GSP) in the returned details. Setting this to \code{FALSE}
+avoids a redundant API call when GSP data is not required
+(e.g., in \code{get_consumption}).}
 }
 \value{
 an \code{octopus_meter-point} object.
 }
 \description{
-This function retrieves the stored meter details from environment
-variables.
+This function retrieves the stored meter details from
+environment variables.
 }

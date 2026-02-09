@@ -2,9 +2,11 @@
 #'
 #' @description Set the details for your gas/electricity meter. These will be
 #' stored as environment variables. You should add:
-#'  * `OCTOPUSR_MPAN = <electric MPAN>` (or `OCTOPUSR_MPAN_IMPORT`/`OCTOPUSR_MPAN_EXPORT`)
+#'  * `OCTOPUSR_MPAN = <electric MPAN>` (or `OCTOPUSR_MPAN_IMPORT`/
+#'    `OCTOPUSR_MPAN_EXPORT`)
 #'  * `OCTOPUSR_MPRN = <gas MPRN>`
-#'  * `OCTOPUSR_ELEC_SERIAL_NUM = <electric serial number>` (or `OCTOPUSR_ELEC_SERIAL_NUM_IMPORT`/`OCTOPUSR_ELEC_SERIAL_NUM_EXPORT`)
+#'  * `OCTOPUSR_ELEC_SERIAL_NUM = <electric serial number>` (or
+#'    `OCTOPUSR_ELEC_SERIAL_NUM_IMPORT`/`OCTOPUSR_ELEC_SERIAL_NUM_EXPORT`)
 #'  * `OCTOPUSR_GAS_SERIAL_NUM = <gas serial number>`
 #' to your `.Renviron` otherwise you will have to call this function every
 #' session. You can find your meter details (MPAN/MPRN and serial number(s)) on
@@ -14,9 +16,9 @@
 #' @param mpan_mprn The electricity meter-point's MPAN or gas meter-point’s
 #' MPRN.
 #' @param serial_number The meter's serial number.
-#' @param direction For electricity meters, specify "import", "export", or NULL (default).
-#' When NULL, uses the legacy single MPAN storage. When specified, stores separate
-#' import/export MPANs.
+#' @param direction For electricity meters, specify "import", "export", or
+#' NULL (default). When NULL, uses the legacy single MPAN storage. When
+#' specified, stores separate import/export MPANs.
 #'
 #' @return No return value, called for side effects.
 #'
@@ -75,13 +77,14 @@ set_meter_details <- function(
 
 #' Get the details for your gas/electricity meter
 #'
-#' @description This function retrieves the stored meter details from environment
-#' variables.
+#' @description This function retrieves the stored meter details from
+#' environment variables.
 #'
 #' @inheritParams set_meter_details
-#' @param include_gsp (boolean, default: TRUE) Whether to include the Grid Supply Point (GSP)
-#' in the returned details. Setting this to `FALSE` avoids a redundant API call
-#' when GSP data is not required (e.g., in `get_consumption`).
+#' @param include_gsp (boolean, default: TRUE) Whether to include the
+#' Grid Supply Point (GSP) in the returned details. Setting this to `FALSE`
+#' avoids a redundant API call when GSP data is not required
+#' (e.g., in `get_consumption`).
 #'
 #' @return an `octopus_meter-point` object.
 #'
@@ -142,15 +145,15 @@ get_meter_details <-
         class = "octopus_meter-point"
       )
 
-      return(meter)
+      meter
+    } else {
+      cli::cli_abort(
+        "Meter details were missing or incomplete, please supply with
+        {.arg mpan_mprn} and {.arg serial_number} arguments or with
+        {.help [{.fun set_meter_details}](octopusR::set_meter_details)}.",
+        call = rlang::caller_env()
+      )
     }
-
-    cli::cli_abort(
-      "Meter details were missing or incomplete, please supply with
-      {.arg mpan_mprn} and {.arg serial_number} arguments or with
-      {.help [{.fun set_meter_details}](octopusR::set_meter_details)}.",
-      call = rlang::caller_env()
-    )
   }
 
 testing_meter <- function(meter_type = c("electricity", "gas"),
@@ -164,7 +167,8 @@ testing_meter <- function(meter_type = c("electricity", "gas"),
           "DR9Bvd3ppfLXD4Zq-tG0kZphNdkW3168-OQrOSk",
           "OCTOPUSR_SECRET_KEY"
         )
-        if (is.na(iconv(val, to = "ASCII")) || !grepl("^[A-Za-z0-9_-]+$", val)) {
+        if (is.na(iconv(val, to = "ASCII")) ||
+              !grepl("^[A-Za-z0-9_-]+$", val)) {
           stop("Invalid decryption")
         }
         val
@@ -177,7 +181,8 @@ testing_meter <- function(meter_type = c("electricity", "gas"),
           "g_K-kAcGIIcsrXeRegX8EjMBf7xnmhbX9ts",
           "OCTOPUSR_SECRET_KEY"
         )
-        if (is.na(iconv(val, to = "ASCII")) || !grepl("^[A-Za-z0-9_-]+$", val)) {
+        if (is.na(iconv(val, to = "ASCII")) ||
+              !grepl("^[A-Za-z0-9_-]+$", val)) {
           stop("Invalid decryption")
         }
         val
@@ -208,7 +213,8 @@ testing_meter <- function(meter_type = c("electricity", "gas"),
           "z-BpI17a6UVNWT8ByPzue_XI5j2zU547vi0",
           "OCTOPUSR_SECRET_KEY"
         )
-        if (is.na(iconv(val, to = "ASCII")) || !grepl("^[A-Za-z0-9_-]+$", val)) {
+        if (is.na(iconv(val, to = "ASCII")) ||
+              !grepl("^[A-Za-z0-9_-]+$", val)) {
           stop("Invalid decryption")
         }
         val
@@ -221,7 +227,8 @@ testing_meter <- function(meter_type = c("electricity", "gas"),
           "d06raLRtC5JWyQkh64mZOtWFDOUCQlojLAyfMUk-",
           "OCTOPUSR_SECRET_KEY"
         )
-        if (is.na(iconv(val, to = "ASCII")) || !grepl("^[A-Za-z0-9_-]+$", val)) {
+        if (is.na(iconv(val, to = "ASCII")) ||
+              !grepl("^[A-Za-z0-9_-]+$", val)) {
           stop("Invalid decryption")
         }
         val
@@ -401,7 +408,5 @@ combine_consumption <- function(
     "export_consumption",
     "net_consumption"
   )
-  result <- result[col_order]
-
-  return(result)
+  result[col_order]
 }
