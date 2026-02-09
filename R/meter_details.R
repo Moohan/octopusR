@@ -168,7 +168,7 @@ testing_meter <- function(meter_type = c("electricity", "gas"),
           "OCTOPUSR_SECRET_KEY"
         )
         if (is.na(iconv(val, to = "ASCII")) ||
-              !grepl("^[A-Za-z0-9_-]+$", val)) {
+          !grepl("^[A-Za-z0-9_-]+$", val)) {
           stop("Invalid decryption")
         }
         val
@@ -182,7 +182,7 @@ testing_meter <- function(meter_type = c("electricity", "gas"),
           "OCTOPUSR_SECRET_KEY"
         )
         if (is.na(iconv(val, to = "ASCII")) ||
-              !grepl("^[A-Za-z0-9_-]+$", val)) {
+          !grepl("^[A-Za-z0-9_-]+$", val)) {
           stop("Invalid decryption")
         }
         val
@@ -214,7 +214,7 @@ testing_meter <- function(meter_type = c("electricity", "gas"),
           "OCTOPUSR_SECRET_KEY"
         )
         if (is.na(iconv(val, to = "ASCII")) ||
-              !grepl("^[A-Za-z0-9_-]+$", val)) {
+          !grepl("^[A-Za-z0-9_-]+$", val)) {
           stop("Invalid decryption")
         }
         val
@@ -228,7 +228,7 @@ testing_meter <- function(meter_type = c("electricity", "gas"),
           "OCTOPUSR_SECRET_KEY"
         )
         if (is.na(iconv(val, to = "ASCII")) ||
-              !grepl("^[A-Za-z0-9_-]+$", val)) {
+          !grepl("^[A-Za-z0-9_-]+$", val)) {
           stop("Invalid decryption")
         }
         val

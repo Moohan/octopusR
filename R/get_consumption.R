@@ -79,7 +79,8 @@ get_consumption <- function(
     # metadata, which is not needed for consumption data.
     # This provides a measurable speedup by reducing network latency.
     meter_details <- get_meter_details(
-      meter_type, direction, include_gsp = FALSE
+      meter_type, direction,
+      include_gsp = FALSE
     )
     if (is.null(mpan_mprn)) {
       mpan_mprn <- meter_details[["mpan_mprn"]]
