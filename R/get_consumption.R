@@ -34,9 +34,10 @@
 #' * `week`
 #' * `month`
 #' * `quarter`
-#' @param direction For electricity meters, specify "import", "export", or NULL (default).
-#' When NULL, uses the legacy single MPAN storage.
-#' @param page_size The number of results to return per page. This is intended for internal testing and may be removed in a future release.
+#' @param direction For electricity meters, specify "import", "export", or
+#' NULL (default). When NULL, uses the legacy single MPAN storage.
+#' @param page_size The number of results to return per page. This is intended
+#' for internal testing and may be removed in a future release.
 #'
 #' @return a [tibble][tibble::tibble-package] of the requested consumption data.
 #' @note For the fastest data aggregation, it is recommended to have either
@@ -74,7 +75,13 @@ get_consumption <- function(
 
   # Get meter details if not provided
   if (is.null(mpan_mprn) || is.null(serial_number)) {
-    meter_details <- get_meter_details(meter_type, direction)
+    # Optimization: include_gsp = FALSE avoids a redundant API call for GSP
+    # metadata, which is not needed for consumption data.
+    # This provides a measurable speedup by reducing network latency.
+    meter_details <- get_meter_details(
+      meter_type, direction,
+      include_gsp = FALSE
+    )
     if (is.null(mpan_mprn)) {
       mpan_mprn <- meter_details[["mpan_mprn"]]
     }
@@ -119,7 +126,8 @@ get_consumption <- function(
       page_size <- 100L
       cli::cli_inform(c(
         "i" = "Returning 100 rows only as a date range wasn't provided.",
-        "v" = "Specify a date range with {.arg period_to} and {.arg period_from}."
+        "v" = "Specify a date range with {.arg period_to} and
+               {.arg period_from}."
       ))
     } else {
       check_datetime_format(period_from)
@@ -151,7 +159,6 @@ get_consumption <- function(
     query = query
   )
 
-  page <- 1L
   total_rows <- resp[["content"]][["count"]]
   total_pages <- ceiling(total_rows / page_size)
   if (total_pages == 0) {
@@ -161,11 +168,11 @@ get_consumption <- function(
   consumption_data_list[[1L]] <- resp[["content"]][["results"]]
 
   if (total_pages > 1) {
-    reqs <- lapply(2:total_pages, function(page) {
+    reqs <- lapply(2:total_pages, function(p) {
       octopus_api(
         path = path,
         api_key = api_key,
-        query = append(query, list(page = page)),
+        query = append(query, list(page = p)),
         perform = FALSE
       )
     })
@@ -222,5 +229,5 @@ get_consumption <- function(
     )
   }
 
-  return(consumption_data)
+  consumption_data
 }
