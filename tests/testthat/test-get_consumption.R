@@ -99,10 +99,11 @@ test_that("Correctly handles multi-page parallel requests", {
     }
   }
 
-  # This mock simulates the parallel execution
-  mock_req_perform_parallel <- function(reqs, ...) {
-    lapply(reqs, function(req) {
-      # req is what mock_api_multi_page returned when perform=FALSE
+  # This mock simulates the parallel execution, accounting for the `on_success`
+  # callback used in the refactored code.
+  mock_req_perform_parallel <- function(reqs, on_success = NULL, ...) {
+    # 1. Generate the list of mock httr2_response objects
+    responses <- lapply(reqs, function(req) {
       page_num <- req$page
       create_mock_httr2_response(
         results = tibble::tibble(
@@ -112,6 +113,14 @@ test_that("Correctly handles multi-page parallel requests", {
         )
       )
     })
+
+    # 2. If an on_success callback is provided, apply it to each response,
+    # mimicking the behavior of the real `req_perform_parallel`.
+    if (!is.null(on_success)) {
+      lapply(responses, on_success)
+    } else {
+      responses
+    }
   }
 
   # Stub the two external functions
