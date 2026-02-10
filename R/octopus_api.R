@@ -5,17 +5,19 @@ octopus_api <- function(
   use_api_key = FALSE,
   perform = TRUE
 ) {
+  base_url <- "https://api.octopus.energy/"
+
+  req <- httr2::request(base_url)
+
   if (use_api_key || !missing(api_key)) {
     if (missing(api_key)) {
       api_key <- get_api_key()
     }
 
-    base_url <- glue::glue("https://{api_key}@api.octopus.energy/")
-  } else {
-    base_url <- "https://api.octopus.energy/"
+    req <- req |> httr2::req_auth_basic(api_key, "")
   }
 
-  req <- httr2::request(base_url) |>
+  req <- req |>
     httr2::req_user_agent("octopusR (https://github.com/Moohan/octopusR)") |>
     httr2::req_url_path_append(path) |>
     httr2::req_url_query(!!!query) |>
