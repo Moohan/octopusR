@@ -160,7 +160,7 @@ testing_meter <- function(
       error = function(e) NULL
     )
     if (is.null(mpan) || is.na(iconv(mpan, to = "ASCII")) ||
-          !grepl("^[A-Za-z0-9_-]+$", mpan)) {
+      !grepl("^[A-Za-z0-9_-]+$", mpan)) {
       mpan <- "sk_test_mpan"
     }
 
@@ -174,7 +174,7 @@ testing_meter <- function(
       error = function(e) NULL
     )
     if (is.null(serial_number) || is.na(iconv(serial_number, to = "ASCII")) ||
-          !grepl("^[A-Za-z0-9_-]+$", serial_number)) {
+      !grepl("^[A-Za-z0-9_-]+$", serial_number)) {
       serial_number <- "sk_test_serial"
     }
 
@@ -204,7 +204,7 @@ testing_meter <- function(
       error = function(e) NULL
     )
     if (is.null(mprn) || is.na(iconv(mprn, to = "ASCII")) ||
-          !grepl("^[A-Za-z0-9_-]+$", mprn)) {
+      !grepl("^[A-Za-z0-9_-]+$", mprn)) {
       mprn <- "sk_test_mprn"
     }
 
@@ -218,7 +218,7 @@ testing_meter <- function(
       error = function(e) NULL
     )
     if (is.null(serial_number) || is.na(iconv(serial_number, to = "ASCII")) ||
-          !grepl("^[A-Za-z0-9_-]+$", serial_number)) {
+      !grepl("^[A-Za-z0-9_-]+$", serial_number)) {
       serial_number <- "sk_test_serial"
     }
 
