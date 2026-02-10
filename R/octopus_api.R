@@ -26,8 +26,8 @@ octopus_api <- function(
     httr2::req_progress("down")
 
   if (isFALSE(perform)) {
-    return(req)
-  }
+    req
+  } else {
 
   resp <- req |>
     httr2::req_error(body = octopus_error_body) |>
@@ -45,6 +45,7 @@ octopus_api <- function(
     ),
     class = "octopus_api"
   )
+  }
 }
 
 octopus_error_body <- function(resp) {

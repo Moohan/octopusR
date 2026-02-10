@@ -21,11 +21,9 @@ set_api_key <- function(api_key = NULL) {
 get_api_key <- function() {
   api_key <- Sys.getenv("OCTOPUSR_API_KEY")
   if (!identical(api_key, "")) {
-    return(api_key)
-  }
-
-  if (is_testing()) {
-    return(testing_key())
+    api_key
+  } else if (is_testing()) {
+    testing_key()
   } else {
     cli::cli_abort(
       "No API key found, please supply with {.arg api_key} argument or with
@@ -50,9 +48,13 @@ testing_key <- function() {
     error = function(e) NULL
   )
 
-  if (is.null(key) || is.na(iconv(key, to = "ASCII")) || !grepl("^[A-Za-z0-9_-]+$", key)) {
-    return("sk_test_dummy_key")
-  }
+  is_invalid <- is.null(key) ||
+    is.na(iconv(key, to = "ASCII")) ||
+    !grepl("^[A-Za-z0-9_-]+$", key)
 
-  key
+  if (is_invalid) {
+    "sk_test_dummy_key"
+  } else {
+    key
+  }
 }

@@ -91,8 +91,8 @@ get_meter_details <-
     }
 
     if (is_testing()) {
-      return(testing_meter(meter_type, include_gsp = include_gsp))
-    }
+      testing_meter(meter_type, include_gsp = include_gsp)
+    } else {
 
     if (meter_type == "electricity") {
       if (is.null(direction)) {
@@ -130,16 +130,17 @@ get_meter_details <-
         class = "octopus_meter-point"
       )
 
-      return(meter)
-    }
-
-    cli::cli_abort(
-      "Meter details were missing or incomplete, please supply with
+      meter
+    } else {
+      cli::cli_abort(
+        "Meter details were missing or incomplete, please supply with
       {.arg mpan_mprn} and {.arg serial_number} arguments or with
       {.help [{.fun set_meter_details}](octopusR::set_meter_details)}.",
-      call = rlang::caller_env()
-    )
+        call = rlang::caller_env()
+      )
+    }
   }
+}
 
 testing_meter <- function(meter_type = c("electricity", "gas"), include_gsp = TRUE) {
   meter_type <- match.arg(meter_type)
@@ -154,7 +155,8 @@ testing_meter <- function(meter_type = c("electricity", "gas"), include_gsp = TR
       },
       error = function(e) NULL
     )
-    if (is.null(mpan) || is.na(iconv(mpan, to = "ASCII")) || !grepl("^[A-Za-z0-9_-]+$", mpan)) {
+    if (is.null(mpan) || is.na(iconv(mpan, to = "ASCII")) ||
+      !grepl("^[A-Za-z0-9_-]+$", mpan)) {
       mpan <- "sk_test_mpan"
     }
 
@@ -197,7 +199,8 @@ testing_meter <- function(meter_type = c("electricity", "gas"), include_gsp = TR
       },
       error = function(e) NULL
     )
-    if (is.null(mprn) || is.na(iconv(mprn, to = "ASCII")) || !grepl("^[A-Za-z0-9_-]+$", mprn)) {
+    if (is.null(mprn) || is.na(iconv(mprn, to = "ASCII")) ||
+      !grepl("^[A-Za-z0-9_-]+$", mprn)) {
       mprn <- "sk_test_mprn"
     }
 
@@ -388,5 +391,5 @@ combine_consumption <- function(
   )
   result <- result[col_order]
 
-  return(result)
+  result
 }
