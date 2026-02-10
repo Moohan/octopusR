@@ -2,9 +2,11 @@
 #'
 #' @description Set the details for your gas/electricity meter. These will be
 #' stored as environment variables. You should add:
-#'  * `OCTOPUSR_MPAN = <electric MPAN>` (or `OCTOPUSR_MPAN_IMPORT`/`OCTOPUSR_MPAN_EXPORT`)
+#'  * `OCTOPUSR_MPAN = <electric MPAN>` (or `OCTOPUSR_MPAN_IMPORT`/
+#'  `OCTOPUSR_MPAN_EXPORT`)
 #'  * `OCTOPUSR_MPRN = <gas MPRN>`
-#'  * `OCTOPUSR_ELEC_SERIAL_NUM = <electric serial number>` (or `OCTOPUSR_ELEC_SERIAL_NUM_IMPORT`/`OCTOPUSR_ELEC_SERIAL_NUM_EXPORT`)
+#'  * `OCTOPUSR_ELEC_SERIAL_NUM = <electric serial number>` (or
+#'  `OCTOPUSR_ELEC_SERIAL_NUM_IMPORT`/`OCTOPUSR_ELEC_SERIAL_NUM_EXPORT`)
 #'  * `OCTOPUSR_GAS_SERIAL_NUM = <gas serial number>`
 #' to your `.Renviron` otherwise you will have to call this function every
 #' session. You can find your meter details (MPAN/MPRN and serial number(s)) on
@@ -14,9 +16,9 @@
 #' @param mpan_mprn The electricity meter-point's MPAN or gas meter-point’s
 #' MPRN.
 #' @param serial_number The meter's serial number.
-#' @param direction For electricity meters, specify "import", "export", or NULL (default).
-#' When NULL, uses the legacy single MPAN storage. When specified, stores separate
-#' import/export MPANs.
+#' @param direction For electricity meters, specify "import", "export", or NULL
+#' (default). When NULL, uses the legacy single MPAN storage. When specified,
+#' stores separate import/export MPANs.
 #'
 #' @return No return value, called for side effects.
 #'
@@ -133,15 +135,18 @@ get_meter_details <-
       } else {
         cli::cli_abort(
           "Meter details were missing or incomplete, please supply with
-      {.arg mpan_mprn} and {.arg serial_number} arguments or with
-      {.help [{.fun set_meter_details}](octopusR::set_meter_details)}.",
+        {.arg mpan_mprn} and {.arg serial_number} arguments or with
+        {.help [{.fun set_meter_details}](octopusR::set_meter_details)}.",
           call = rlang::caller_env()
         )
       }
     }
   }
 
-testing_meter <- function(meter_type = c("electricity", "gas"), include_gsp = TRUE) {
+testing_meter <- function(
+  meter_type = c("electricity", "gas"),
+  include_gsp = TRUE
+) {
   meter_type <- match.arg(meter_type)
 
   if (meter_type == "electricity") {
@@ -155,7 +160,7 @@ testing_meter <- function(meter_type = c("electricity", "gas"), include_gsp = TR
       error = function(e) NULL
     )
     if (is.null(mpan) || is.na(iconv(mpan, to = "ASCII")) ||
-      !grepl("^[A-Za-z0-9_-]+$", mpan)) {
+          !grepl("^[A-Za-z0-9_-]+$", mpan)) {
       mpan <- "sk_test_mpan"
     }
 
@@ -169,7 +174,7 @@ testing_meter <- function(meter_type = c("electricity", "gas"), include_gsp = TR
       error = function(e) NULL
     )
     if (is.null(serial_number) || is.na(iconv(serial_number, to = "ASCII")) ||
-      !grepl("^[A-Za-z0-9_-]+$", serial_number)) {
+          !grepl("^[A-Za-z0-9_-]+$", serial_number)) {
       serial_number <- "sk_test_serial"
     }
 
@@ -199,7 +204,7 @@ testing_meter <- function(meter_type = c("electricity", "gas"), include_gsp = TR
       error = function(e) NULL
     )
     if (is.null(mprn) || is.na(iconv(mprn, to = "ASCII")) ||
-      !grepl("^[A-Za-z0-9_-]+$", mprn)) {
+          !grepl("^[A-Za-z0-9_-]+$", mprn)) {
       mprn <- "sk_test_mprn"
     }
 
@@ -213,7 +218,7 @@ testing_meter <- function(meter_type = c("electricity", "gas"), include_gsp = TR
       error = function(e) NULL
     )
     if (is.null(serial_number) || is.na(iconv(serial_number, to = "ASCII")) ||
-      !grepl("^[A-Za-z0-9_-]+$", serial_number)) {
+          !grepl("^[A-Za-z0-9_-]+$", serial_number)) {
       serial_number <- "sk_test_serial"
     }
 
@@ -366,7 +371,8 @@ combine_consumption <- function(
     )
 
     # Rename consumption columns
-    # Optimized NA replacement using logical indexing (approx 3.5x faster than ifelse)
+    # Optimized NA replacement using logical indexing (approx 3.5x faster than
+    # ifelse)
     result$import_consumption <- result$consumption_import
     result$import_consumption[is.na(result$import_consumption)] <- 0
 

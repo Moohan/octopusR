@@ -28,22 +28,23 @@ octopus_api <- function(
   if (isFALSE(perform)) {
     req
   } else {
-    resp <- req |>
-      httr2::req_error(body = octopus_error_body) |>
-      httr2::req_perform()
 
-    parsed <- httr2::resp_body_json(resp, simplifyVector = TRUE)
+  resp <- req |>
+    httr2::req_error(body = octopus_error_body) |>
+    httr2::req_perform()
 
-    parsed[["results"]] <- tibble::as_tibble(parsed[["results"]])
+  parsed <- httr2::resp_body_json(resp, simplifyVector = TRUE)
 
-    structure(
-      list(
-        response = resp,
-        path = path,
-        content = parsed
-      ),
-      class = "octopus_api"
-    )
+  parsed[["results"]] <- tibble::as_tibble(parsed[["results"]])
+
+  structure(
+    list(
+      response = resp,
+      path = path,
+      content = parsed
+    ),
+    class = "octopus_api"
+  )
   }
 }
 
