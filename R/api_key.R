@@ -41,7 +41,10 @@ testing_key <- function() {
   key <- tryCatch(
     {
       httr2::secret_decrypt(
-        "gSnStfRq0gqwkVy9notuWa97vp_d7hxX3IOrlMv6g1nlNeMhtHSdvboMx_49zcVWgpityPpCtKA",
+        paste0(
+          "gSnStfRq0gqwkVy9notuWa97vp_d7hxX3IOrlMv6g",
+          "1nlNeMhtHSdvboMx_49zcVWgpityPpCtKA"
+        ),
         "OCTOPUSR_SECRET_KEY"
       )
     },

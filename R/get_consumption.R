@@ -124,7 +124,7 @@ get_consumption <- function(
       page_size <- 100L
       cli::cli_inform(c(
         "i" = "Returning 100 rows only as a date range wasn't provided.",
-        "v" = "Specify a date range with {.arg period_to} and {.arg period_from}."
+        "v" = "Specify date range with {.arg period_to} and {.arg period_from}."
       ))
     } else {
       check_datetime_format(period_from)
@@ -159,8 +159,9 @@ get_consumption <- function(
   total_rows <- resp[["content"]][["count"]]
   total_pages <- ceiling(total_rows / page_size)
   if (total_pages == 0) {
-    tibble::tibble()
-  } else {
+    return(tibble::tibble())
+  }
+
   consumption_data_list <- vector("list", total_pages)
   consumption_data_list[[1L]] <- resp[["content"]][["results"]]
 
@@ -211,8 +212,10 @@ get_consumption <- function(
     } else {
       if (!rlang::is_installed(pkg = "lubridate", version = "0.2.1")) {
         cli::cli_abort(
-          "{.pkg lubridate} must be installed to parse dates,
-                       use `tz = NULL` to return characters."
+          paste0(
+            "{.pkg lubridate} must be installed to parse dates, ",
+            "use `tz = NULL` to return characters."
+          )
         )
       }
     }
@@ -227,5 +230,4 @@ get_consumption <- function(
   }
 
   consumption_data
-  }
 }
