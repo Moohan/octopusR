@@ -1,6 +1,7 @@
 skip_if_offline(host = "api.octopus.energy")
 
 test_that("Can get a meter GSP", {
+  skip_if(grepl("^sk_test_", get_api_key()), "Using dummy API keys")
   test_meter <- testing_meter("electricity")
   expected_gsp <- httr2::secret_decrypt(
     "5GkfdUf-Fp88BMOFir1kkOOl",
