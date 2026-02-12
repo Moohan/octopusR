@@ -95,7 +95,6 @@ get_meter_details <-
     if (is_testing()) {
       testing_meter(meter_type)
     } else {
-
       if (meter_type == "electricity") {
         if (is.null(direction)) {
           # Try legacy single MPAN first
