@@ -96,25 +96,25 @@ get_meter_details <-
       testing_meter(meter_type)
     } else {
 
-    if (meter_type == "electricity") {
-      if (is.null(direction)) {
-        # Try legacy single MPAN first
-        mpan_mprn <- Sys.getenv("OCTOPUSR_MPAN")
-        serial_number <- Sys.getenv("OCTOPUSR_ELEC_SERIAL_NUM")
-      } else {
-        # Use directional MPANs
-        if (direction == "import") {
-          mpan_mprn <- Sys.getenv("OCTOPUSR_MPAN_IMPORT")
-          serial_number <- Sys.getenv("OCTOPUSR_ELEC_SERIAL_NUM_IMPORT")
-        } else if (direction == "export") {
-          mpan_mprn <- Sys.getenv("OCTOPUSR_MPAN_EXPORT")
-          serial_number <- Sys.getenv("OCTOPUSR_ELEC_SERIAL_NUM_EXPORT")
+      if (meter_type == "electricity") {
+        if (is.null(direction)) {
+          # Try legacy single MPAN first
+          mpan_mprn <- Sys.getenv("OCTOPUSR_MPAN")
+          serial_number <- Sys.getenv("OCTOPUSR_ELEC_SERIAL_NUM")
+        } else {
+          # Use directional MPANs
+          if (direction == "import") {
+            mpan_mprn <- Sys.getenv("OCTOPUSR_MPAN_IMPORT")
+            serial_number <- Sys.getenv("OCTOPUSR_ELEC_SERIAL_NUM_IMPORT")
+          } else if (direction == "export") {
+            mpan_mprn <- Sys.getenv("OCTOPUSR_MPAN_EXPORT")
+            serial_number <- Sys.getenv("OCTOPUSR_ELEC_SERIAL_NUM_EXPORT")
+          }
         }
+      } else if (meter_type == "gas") {
+        mpan_mprn <- Sys.getenv("OCTOPUSR_MPRN")
+        serial_number <- Sys.getenv("OCTOPUSR_GAS_SERIAL_NUM")
       }
-    } else if (meter_type == "gas") {
-      mpan_mprn <- Sys.getenv("OCTOPUSR_MPRN")
-      serial_number <- Sys.getenv("OCTOPUSR_GAS_SERIAL_NUM")
-    }
 
       if (!identical(mpan_mprn, "") && !identical(serial_number, "")) {
         meter_gsp <- NA
@@ -173,12 +173,14 @@ testing_meter <- function(meter_type = c("electricity", "gas")) {
     )
 
     # Sanitize derived strings to detect failed decryption (garbage strings)
-    if (is.na(iconv(mpan, to = "ASCII")) ||
-        !grepl("^[A-Za-z0-9_-]+$", mpan)) {
+    is_invalid_mpan <- is.na(iconv(mpan, to = "ASCII")) ||
+      !grepl("^[A-Za-z0-9_-]+$", mpan)
+    if (is_invalid_mpan) {
       mpan <- "sk_test_mpan"
     }
-    if (is.na(iconv(serial_number, to = "ASCII")) ||
-        !grepl("^[A-Za-z0-9_-]+$", serial_number)) {
+    is_invalid_serial <- is.na(iconv(serial_number, to = "ASCII")) ||
+      !grepl("^[A-Za-z0-9_-]+$", serial_number)
+    if (is_invalid_serial) {
       serial_number <- "sk_test_serial"
     }
 
@@ -229,12 +231,14 @@ testing_meter <- function(meter_type = c("electricity", "gas")) {
     )
 
     # Sanitize derived strings to detect failed decryption (garbage strings)
-    if (is.na(iconv(mprn, to = "ASCII")) ||
-        !grepl("^[A-Za-z0-9_-]+$", mprn)) {
+    is_invalid_mprn <- is.na(iconv(mprn, to = "ASCII")) ||
+      !grepl("^[A-Za-z0-9_-]+$", mprn)
+    if (is_invalid_mprn) {
       mprn <- "sk_test_mprn"
     }
-    if (is.na(iconv(serial_number, to = "ASCII")) ||
-        !grepl("^[A-Za-z0-9_-]+$", serial_number)) {
+    is_invalid_serial <- is.na(iconv(serial_number, to = "ASCII")) ||
+      !grepl("^[A-Za-z0-9_-]+$", serial_number)
+    if (is_invalid_serial) {
       serial_number <- "sk_test_serial"
     }
 
