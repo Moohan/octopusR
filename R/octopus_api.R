@@ -36,7 +36,9 @@ octopus_api <- function(
 
   parsed <- httr2::resp_body_json(resp, simplifyVector = TRUE)
 
-  parsed[["results"]] <- tibble::as_tibble(parsed[["results"]])
+  if ("results" %in% names(parsed) && !is.null(parsed[["results"]])) {
+    parsed[["results"]] <- tibble::as_tibble(parsed[["results"]])
+  }
 
   structure(
     list(
