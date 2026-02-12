@@ -55,6 +55,7 @@ testing_key <- function() {
 
   # Sanitize derived strings to detect failed decryption (garbage strings)
   is_invalid <- is.na(iconv(key, to = "ASCII")) ||
+    nchar(key) < 10 ||
     !grepl("^[A-Za-z0-9_-]+$", key) ||
     grepl("^sk_test_", key)
   if (is_invalid) {

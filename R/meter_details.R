@@ -95,6 +95,7 @@ get_meter_details <-
     if (is_testing()) {
       testing_meter(meter_type)
     } else {
+
       if (meter_type == "electricity") {
         if (is.null(direction)) {
           # Try legacy single MPAN first
@@ -173,28 +174,29 @@ testing_meter <- function(meter_type = c("electricity", "gas")) {
 
     # Sanitize derived strings to detect failed decryption (garbage strings)
     is_invalid_mpan <- is.na(iconv(mpan, to = "ASCII")) ||
+      nchar(mpan) < 5 ||
       !grepl("^[A-Za-z0-9_-]+$", mpan)
     if (is_invalid_mpan) {
       mpan <- "sk_test_mpan"
     }
     is_invalid_serial <- is.na(iconv(serial_number, to = "ASCII")) ||
+      nchar(serial_number) < 5 ||
       !grepl("^[A-Za-z0-9_-]+$", serial_number)
     if (is_invalid_serial) {
       serial_number <- "sk_test_serial"
     }
 
-    meter_gsp <- tryCatch(
-      {
-        if (grepl("^sk_test_", mpan)) {
-          "H"
-        } else {
+    meter_gsp <- "H"
+    if (!grepl("^sk_test_", mpan)) {
+      meter_gsp <- tryCatch(
+        {
           get_meter_gsp(mpan = mpan)
+        },
+        error = function(e) {
+          "H"
         }
-      },
-      error = function(e) {
-        "H"
-      }
-    )
+      )
+    }
 
     structure(
       list(
@@ -231,11 +233,13 @@ testing_meter <- function(meter_type = c("electricity", "gas")) {
 
     # Sanitize derived strings to detect failed decryption (garbage strings)
     is_invalid_mprn <- is.na(iconv(mprn, to = "ASCII")) ||
+      nchar(mprn) < 5 ||
       !grepl("^[A-Za-z0-9_-]+$", mprn)
     if (is_invalid_mprn) {
       mprn <- "sk_test_mprn"
     }
     is_invalid_serial <- is.na(iconv(serial_number, to = "ASCII")) ||
+      nchar(serial_number) < 5 ||
       !grepl("^[A-Za-z0-9_-]+$", serial_number)
     if (is_invalid_serial) {
       serial_number <- "sk_test_serial"
