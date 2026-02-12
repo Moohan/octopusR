@@ -2,9 +2,11 @@
 #'
 #' @description Set the details for your gas/electricity meter. These will be
 #' stored as environment variables. You should add:
-#'  * `OCTOPUSR_MPAN = <electric MPAN>` (or `OCTOPUSR_MPAN_IMPORT`/`OCTOPUSR_MPAN_EXPORT`)
+#'  * `OCTOPUSR_MPAN = <electric MPAN>` (or `OCTOPUSR_MPAN_IMPORT`/
+#'    `OCTOPUSR_MPAN_EXPORT`)
 #'  * `OCTOPUSR_MPRN = <gas MPRN>`
-#'  * `OCTOPUSR_ELEC_SERIAL_NUM = <electric serial number>` (or `OCTOPUSR_ELEC_SERIAL_NUM_IMPORT`/`OCTOPUSR_ELEC_SERIAL_NUM_EXPORT`)
+#'  * `OCTOPUSR_ELEC_SERIAL_NUM = <electric serial number>` (or
+#'    `OCTOPUSR_ELEC_SERIAL_NUM_IMPORT`/`OCTOPUSR_ELEC_SERIAL_NUM_EXPORT`)
 #'  * `OCTOPUSR_GAS_SERIAL_NUM = <gas serial number>`
 #' to your `.Renviron` otherwise you will have to call this function every
 #' session. You can find your meter details (MPAN/MPRN and serial number(s)) on
@@ -14,9 +16,9 @@
 #' @param mpan_mprn The electricity meter-point's MPAN or gas meter-point’s
 #' MPRN.
 #' @param serial_number The meter's serial number.
-#' @param direction For electricity meters, specify "import", "export", or NULL (default).
-#' When NULL, uses the legacy single MPAN storage. When specified, stores separate
-#' import/export MPANs.
+#' @param direction For electricity meters, specify "import", "export", or
+#' NULL (default). When NULL, uses the legacy single MPAN storage. When
+#' specified, stores separate import/export MPANs.
 #'
 #' @return No return value, called for side effects.
 #'
@@ -91,8 +93,8 @@ get_meter_details <-
     }
 
     if (is_testing()) {
-      return(testing_meter(meter_type))
-    }
+      testing_meter(meter_type)
+    } else {
 
     if (meter_type == "electricity") {
       if (is.null(direction)) {
@@ -114,32 +116,33 @@ get_meter_details <-
       serial_number <- Sys.getenv("OCTOPUSR_GAS_SERIAL_NUM")
     }
 
-    if (!identical(mpan_mprn, "") && !identical(serial_number, "")) {
-      meter_gsp <- NA
-      if (include_gsp && meter_type == "electricity") {
-        meter_gsp <- get_meter_gsp(mpan = mpan_mprn)
-      }
+      if (!identical(mpan_mprn, "") && !identical(serial_number, "")) {
+        meter_gsp <- NA
+        if (include_gsp && meter_type == "electricity") {
+          meter_gsp <- get_meter_gsp(mpan = mpan_mprn)
+        }
 
-      meter <- structure(
-        list(
-          type = meter_type,
-          mpan_mprn = mpan_mprn,
-          serial_number = serial_number,
-          direction = direction,
-          gsp = meter_gsp
-        ),
-        class = "octopus_meter-point"
-      )
+        meter <- structure(
+          list(
+            type = meter_type,
+            mpan_mprn = mpan_mprn,
+            serial_number = serial_number,
+            direction = direction,
+            gsp = meter_gsp
+          ),
+          class = "octopus_meter-point"
+        )
 
-      return(meter)
-    }
-
-    cli::cli_abort(
-      "Meter details were missing or incomplete, please supply with
+        meter
+      } else {
+        cli::cli_abort(
+          "Meter details were missing or incomplete, please supply with
       {.arg mpan_mprn} and {.arg serial_number} arguments or with
       {.help [{.fun set_meter_details}](octopusR::set_meter_details)}.",
-      call = rlang::caller_env()
-    )
+          call = rlang::caller_env()
+        )
+      }
+    }
   }
 
 testing_meter <- function(meter_type = c("electricity", "gas")) {
@@ -171,11 +174,11 @@ testing_meter <- function(meter_type = c("electricity", "gas")) {
 
     # Sanitize derived strings to detect failed decryption (garbage strings)
     if (is.na(iconv(mpan, to = "ASCII")) ||
-      !grepl("^[A-Za-z0-9_-]+$", mpan)) {
+        !grepl("^[A-Za-z0-9_-]+$", mpan)) {
       mpan <- "sk_test_mpan"
     }
     if (is.na(iconv(serial_number, to = "ASCII")) ||
-      !grepl("^[A-Za-z0-9_-]+$", serial_number)) {
+        !grepl("^[A-Za-z0-9_-]+$", serial_number)) {
       serial_number <- "sk_test_serial"
     }
 
@@ -227,11 +230,11 @@ testing_meter <- function(meter_type = c("electricity", "gas")) {
 
     # Sanitize derived strings to detect failed decryption (garbage strings)
     if (is.na(iconv(mprn, to = "ASCII")) ||
-      !grepl("^[A-Za-z0-9_-]+$", mprn)) {
+        !grepl("^[A-Za-z0-9_-]+$", mprn)) {
       mprn <- "sk_test_mprn"
     }
     if (is.na(iconv(serial_number, to = "ASCII")) ||
-      !grepl("^[A-Za-z0-9_-]+$", serial_number)) {
+        !grepl("^[A-Za-z0-9_-]+$", serial_number)) {
       serial_number <- "sk_test_serial"
     }
 
@@ -389,6 +392,7 @@ combine_consumption <- function(
 
     result$export_consumption <- result$consumption_export
     result$export_consumption[is.na(result$export_consumption)] <- 0
+
     result$consumption_import <- NULL
     result$consumption_export <- NULL
 
@@ -405,7 +409,5 @@ combine_consumption <- function(
     "export_consumption",
     "net_consumption"
   )
-  result <- result[col_order]
-
-  return(result)
+  result[col_order]
 }
