@@ -21,11 +21,9 @@ set_api_key <- function(api_key = NULL) {
 get_api_key <- function() {
   api_key <- Sys.getenv("OCTOPUSR_API_KEY")
   if (!identical(api_key, "")) {
-    return(api_key)
-  }
-
-  if (is_testing()) {
-    return(testing_key())
+    api_key
+  } else if (is_testing()) {
+    testing_key()
   } else {
     cli::cli_abort(
       "No API key found, please supply with {.arg api_key} argument or with
@@ -43,7 +41,10 @@ testing_key <- function() {
   key <- tryCatch(
     {
       httr2::secret_decrypt(
-        "gSnStfRq0gqwkVy9notuWa97vp_d7hxX3IOrlMv6g1nlNeMhtHSdvboMx_49zcVWgpityPpCtKA",
+        paste0(
+          "gSnStfRq0gqwkVy9notuWa97vp_d7hxX3IOrlMv6g1nlNeMhtHSdvbo",
+          "Mx_49zcVWgpityPpCtKA"
+        ),
         "OCTOPUSR_SECRET_KEY"
       )
     },
@@ -51,12 +52,14 @@ testing_key <- function() {
   )
 
   # Check for garbage (failed decryption without error)
-  if (identical(key, "") ||
+  is_invalid <- identical(key, "") ||
     is.na(iconv(key, to = "ASCII")) ||
     nchar(key) < 10 ||
-    !grepl("^[A-Za-z0-9_-]+$", key)) {
-    return("sk_test_dummy_key")
-  }
+    !grepl("^[A-Za-z0-9_-]+$", key)
 
-  return(key)
+  if (is_invalid) {
+    "sk_test_dummy_key"
+  } else {
+    key
+  }
 }
