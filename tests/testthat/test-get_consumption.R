@@ -80,7 +80,7 @@ test_that("errors properly with incorrect params", {
 })
 
 test_that("Correctly handles multi-page parallel requests", {
-  # This mock handles the two ways octopus_api is called in the multi-page scenario
+  # This mock handles the two ways octopus_api is called in multi-page logic
   mock_api_multi_page <- function(path, query, ..., perform = TRUE) {
     if (perform) {
       # The first call to get page count
