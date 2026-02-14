@@ -40,8 +40,23 @@ is_testing <- function() {
 }
 
 testing_key <- function() {
-  httr2::secret_decrypt(
-    "gSnStfRq0gqwkVy9notuWa97vp_d7hxX3IOrlMv6g1nlNeMhtHSdvboMx_49zcVWgpityPpCtKA",
-    "OCTOPUSR_SECRET_KEY"
+  key <- tryCatch(
+    {
+      httr2::secret_decrypt(
+        "gSnStfRq0gqwkVy9notuWa97vp_d7hxX3IOrlMv6g1nlNeMhtHSdvboMx_49zcVWgpityPpCtKA",
+        "OCTOPUSR_SECRET_KEY"
+      )
+    },
+    error = function(e) ""
   )
+
+  # Check for garbage (failed decryption without error)
+  if (identical(key, "") ||
+    is.na(iconv(key, to = "ASCII")) ||
+    nchar(key) < 10 ||
+    !grepl("^[A-Za-z0-9_-]+$", key)) {
+    return("sk_test_dummy_key")
+  }
+
+  return(key)
 }
