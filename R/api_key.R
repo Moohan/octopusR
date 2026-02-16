@@ -51,10 +51,9 @@ testing_key <- function() {
     error = function(e) NULL
   )
 
-  is_invalid <- is.null(key) ||
-    is.na(iconv(key, to = "ASCII")) ||
-    nchar(key) < 10 ||
-    !grepl("^[A-Za-z0-9_-]+$", key)
+  is_invalid <- is.null(key) || is.na(iconv(key, to = "ASCII"))
+  is_invalid <- is_invalid || nchar(key) < 10
+  is_invalid <- is_invalid || !grepl("^[A-Za-z0-9_-]+$", key)
 
   if (is_invalid) {
     return("sk_test_dummy_key")

@@ -347,6 +347,7 @@ combine_consumption <- function(
 
     result$export_consumption <- result$consumption_export
     result$export_consumption[is.na(result$export_consumption)] <- 0
+
     result$consumption_import <- NULL
     result$consumption_export <- NULL
 
