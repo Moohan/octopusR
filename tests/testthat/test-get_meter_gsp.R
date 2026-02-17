@@ -4,9 +4,24 @@ test_that("Can get a meter GSP", {
   skip_if(grepl("^sk_test_", get_api_key()), "Using dummy API keys")
 
   test_meter <- testing_meter("electricity")
-  expected_gsp <- httr2::secret_decrypt(
-    "5GkfdUf-Fp88BMOFir1kkOOl",
-    "OCTOPUSR_SECRET_KEY"
+
+  # skip if mpan is dummy
+  skip_if(grepl("^sk_test_", test_meter[["mpan_mprn"]]), "Using dummy MPAN")
+
+  expected_gsp <- tryCatch(
+    httr2::secret_decrypt(
+      "5GkfdUf-Fp88BMOFir1kkOOl",
+      "OCTOPUSR_SECRET_KEY"
+    ),
+    error = function(e) ""
+  )
+
+  # skip if expected_gsp is garbage
+  skip_if(
+    identical(expected_gsp, "") ||
+      is.na(iconv(expected_gsp, to = "ASCII")) ||
+      nchar(expected_gsp) != 1,
+    "Expected GSP looks like garbage"
   )
 
   expect_equal(
