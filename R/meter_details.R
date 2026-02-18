@@ -335,7 +335,5 @@ combine_consumption <- function(
     "export_consumption",
     "net_consumption"
   )
-  result <- result[col_order]
-
-  return(result)
+  result[col_order]
 }
