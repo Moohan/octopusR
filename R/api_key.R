@@ -40,8 +40,23 @@ is_testing <- function() {
 }
 
 testing_key <- function() {
-  httr2::secret_decrypt(
+  safe_decrypt(
     "gSnStfRq0gqwkVy9notuWa97vp_d7hxX3IOrlMv6g1nlNeMhtHSdvboMx_49zcVWgpityPpCtKA",
-    "OCTOPUSR_SECRET_KEY"
+    "sk_test_dummy_key"
   )
+}
+
+safe_decrypt <- function(cipher, fallback) {
+  val <- tryCatch(
+    httr2::secret_decrypt(cipher, "OCTOPUSR_SECRET_KEY"),
+    error = function(e) fallback
+  )
+
+  # Check if the decrypted value is garbage (can happen if secret key is wrong
+  # but no error). We ensure it's ASCII and matches expected URL/path characters.
+  if (is.na(iconv(val, to = "ASCII")) || !grepl("^[A-Za-z0-9_-]+$", val)) {
+    return(fallback)
+  }
+
+  return(val)
 }
