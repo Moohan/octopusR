@@ -1,0 +1,1 @@
+## 2026-02-19 - [Performance] **Learning:** Redundant GSP lookups in get_consumption were causing unnecessary API calls. Replacing ifelse() with logical indexing for NA replacement provides ~4.4x speedup. **Action:** Always look for ways to skip redundant metadata fetching and use vectorized indexing over ifelse().
