@@ -74,7 +74,12 @@ get_consumption <- function(
 
   # Get meter details if not provided
   if (is.null(mpan_mprn) || is.null(serial_number)) {
-    meter_details <- get_meter_details(meter_type, direction)
+    # Skip fetching GSP as it's not needed for consumption data
+    meter_details <- get_meter_details(
+      meter_type,
+      direction,
+      include_gsp = FALSE
+    )
     if (is.null(mpan_mprn)) {
       mpan_mprn <- meter_details[["mpan_mprn"]]
     }
@@ -172,14 +177,14 @@ get_consumption <- function(
 
     resps <- httr2::req_perform_parallel(reqs, on_error = "continue")
 
-    # Directly populate the final list, avoiding an intermediate object.
-    consumption_data_list[2:total_pages] <- lapply(resps, function(r) {
-      if (inherits(r, "httr2_response")) {
+    # Use resps_successes() to cleanly extract successful responses.
+    successes <- httr2::resps_successes(resps)
+    consumption_data_list[seq_along(successes) + 1] <- lapply(
+      successes,
+      function(r) {
         httr2::resp_body_json(r, simplifyVector = TRUE)[["results"]]
-      } else {
-        NULL
       }
-    })
+    )
   }
   # Filter out NULL elements from any failed API calls before binding. This
   # prevents `do.call(rbind, ...)` from failing.

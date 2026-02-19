@@ -74,7 +74,11 @@ set_meter_details <- function(
 }
 
 get_meter_details <-
-  function(meter_type = c("electricity", "gas"), direction = NULL) {
+  function(
+    meter_type = c("electricity", "gas"),
+    direction = NULL,
+    include_gsp = TRUE
+  ) {
     meter_type <- match.arg(meter_type)
 
     # Validate direction parameter
@@ -87,7 +91,7 @@ get_meter_details <-
     }
 
     if (is_testing()) {
-      return(testing_meter(meter_type))
+      return(testing_meter(meter_type, include_gsp = include_gsp))
     }
 
     if (meter_type == "electricity") {
@@ -111,17 +115,19 @@ get_meter_details <-
     }
 
     if (!identical(mpan_mprn, "") && !identical(serial_number, "")) {
+      # Conditionally fetch GSP to avoid unnecessary API calls
+      gsp_val <- NA
+      if (include_gsp && meter_type == "electricity") {
+        gsp_val <- get_meter_gsp(mpan = mpan_mprn)
+      }
+
       meter <- structure(
         list(
           type = meter_type,
           mpan_mprn = mpan_mprn,
           serial_number = serial_number,
           direction = direction,
-          gsp = ifelse(
-            meter_type == "electricity",
-            get_meter_gsp(mpan = mpan_mprn),
-            NA
-          )
+          gsp = gsp_val
         ),
         class = "octopus_meter-point"
       )
@@ -137,19 +143,26 @@ get_meter_details <-
     )
   }
 
-testing_meter <- function(meter_type = c("electricity", "gas")) {
+testing_meter <- function(
+  meter_type = c("electricity", "gas"),
+  include_gsp = TRUE
+) {
   meter_type <- match.arg(meter_type)
 
   if (meter_type == "electricity") {
-    mpan <- httr2::secret_decrypt(
+    mpan <- safe_decrypt(
       "DR9Bvd3ppfLXD4Zq-tG0kZphNdkW3168-OQrOSk",
-      "OCTOPUSR_SECRET_KEY"
+      "sk_test_mpan"
     )
-    serial_number <- httr2::secret_decrypt(
+    serial_number <- safe_decrypt(
       "g_K-kAcGIIcsrXeRegX8EjMBf7xnmhbX9ts",
-      "OCTOPUSR_SECRET_KEY"
+      "sk_test_serial"
     )
-    meter_gsp <- get_meter_gsp(mpan = mpan)
+
+    meter_gsp <- NA
+    if (include_gsp) {
+      meter_gsp <- get_meter_gsp(mpan = mpan)
+    }
 
     structure(
       list(
@@ -161,13 +174,13 @@ testing_meter <- function(meter_type = c("electricity", "gas")) {
       class = "octopus_meter-point"
     )
   } else if (meter_type == "gas") {
-    mprn <- httr2::secret_decrypt(
+    mprn <- safe_decrypt(
       "z-BpI17a6UVNWT8ByPzue_XI5j2zU547vi0",
-      "OCTOPUSR_SECRET_KEY"
+      "sk_test_mprn"
     )
-    serial_number <- httr2::secret_decrypt(
+    serial_number <- safe_decrypt(
       "d06raLRtC5JWyQkh64mZOtWFDOUCQlojLAyfMUk-",
-      "OCTOPUSR_SECRET_KEY"
+      "sk_test_serial"
     )
 
     structure(
@@ -214,23 +227,22 @@ combine_consumption <- function(
   group_by = c("hour", "day", "week", "month", "quarter")
 ) {
   # Get import consumption data
-  import_data <- NULL
-  if (!is.null(import_mpan) && !is.null(import_serial)) {
-    import_data <- get_consumption(
-      meter_type = "electricity",
-      mpan_mprn = import_mpan,
-      serial_number = import_serial,
-      api_key = api_key,
-      period_from = period_from,
-      period_to = period_to,
-      tz = tz,
-      order_by = order_by,
-      group_by = group_by
-    )
-  } else {
-    # Try to get from environment variables
-    import_data <- tryCatch(
-      {
+  import_data <- tryCatch(
+    {
+      if (!is.null(import_mpan) && !is.null(import_serial)) {
+        get_consumption(
+          meter_type = "electricity",
+          mpan_mprn = import_mpan,
+          serial_number = import_serial,
+          api_key = api_key,
+          period_from = period_from,
+          period_to = period_to,
+          tz = tz,
+          order_by = order_by,
+          group_by = group_by
+        )
+      } else {
+        # Try to get from environment variables
         get_consumption(
           meter_type = "electricity",
           direction = "import",
@@ -241,29 +253,28 @@ combine_consumption <- function(
           order_by = order_by,
           group_by = group_by
         )
-      },
-      error = function(e) NULL
-    )
-  }
+      }
+    },
+    error = function(e) NULL
+  )
 
   # Get export consumption data
-  export_data <- NULL
-  if (!is.null(export_mpan) && !is.null(export_serial)) {
-    export_data <- get_consumption(
-      meter_type = "electricity",
-      mpan_mprn = export_mpan,
-      serial_number = export_serial,
-      api_key = api_key,
-      period_from = period_from,
-      period_to = period_to,
-      tz = tz,
-      order_by = order_by,
-      group_by = group_by
-    )
-  } else {
-    # Try to get from environment variables
-    export_data <- tryCatch(
-      {
+  export_data <- tryCatch(
+    {
+      if (!is.null(export_mpan) && !is.null(export_serial)) {
+        get_consumption(
+          meter_type = "electricity",
+          mpan_mprn = export_mpan,
+          serial_number = export_serial,
+          api_key = api_key,
+          period_from = period_from,
+          period_to = period_to,
+          tz = tz,
+          order_by = order_by,
+          group_by = group_by
+        )
+      } else {
+        # Try to get from environment variables
         get_consumption(
           meter_type = "electricity",
           direction = "export",
@@ -274,10 +285,10 @@ combine_consumption <- function(
           order_by = order_by,
           group_by = group_by
         )
-      },
-      error = function(e) NULL
-    )
-  }
+      }
+    },
+    error = function(e) NULL
+  )
 
   # Combine the data
   if (is.null(import_data) && is.null(export_data)) {
@@ -309,16 +320,13 @@ combine_consumption <- function(
     )
 
     # Rename consumption columns
-    result$import_consumption <- ifelse(
-      is.na(result$consumption_import),
-      0,
-      result$consumption_import
-    )
-    result$export_consumption <- ifelse(
-      is.na(result$consumption_export),
-      0,
-      result$consumption_export
-    )
+    # Using logical indexing for NA replacement is significantly faster than
+    # ifelse() for large vectors.
+    result$import_consumption <- result$consumption_import
+    result$import_consumption[is.na(result$import_consumption)] <- 0
+
+    result$export_consumption <- result$consumption_export
+    result$export_consumption[is.na(result$export_consumption)] <- 0
     result$consumption_import <- NULL
     result$consumption_export <- NULL
 
