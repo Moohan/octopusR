@@ -51,8 +51,10 @@ safe_decrypt <- function(cipher, fallback) {
     {
       res <- httr2::secret_decrypt(cipher, "OCTOPUSR_SECRET_KEY")
       # Basic sanitization: check if it's valid ASCII and matches format
+      # Most secrets are at least 10 chars (MPAN 13, serial ~10, key ~35)
       is_invalid <- is.na(iconv(res, to = "ASCII")) ||
-        !grepl("^[A-Za-z0-9_-]+$", res)
+        !grepl("^[A-Za-z0-9_-]+$", res) ||
+        nchar(res) < 5
       if (is_invalid) {
         fallback
       } else {
