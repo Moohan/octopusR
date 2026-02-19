@@ -9,20 +9,20 @@ test_that("Can get a meter GSP", {
   skip_if(grepl("^sk_test_", test_meter$mpan_mprn), "Using dummy MPAN")
 
   # Use a more robust check for the expected GSP
-  expected_gsp_res <- tryCatch(
+  verified_gsp <- tryCatch(
     httr2::secret_decrypt("5GkfdUf-Fp88BMOFir1kkOOl", "OCTOPUSR_SECRET_KEY"),
     error = function(e) NULL
   )
-  skip_if(is.null(expected_gsp_res), "Could not decrypt expected GSP")
+  skip_if(is.null(verified_gsp), "Could not decrypt expected GSP")
   # GSP should be a single character A-P
   skip_if(
-    !grepl("^[A-P]$", expected_gsp_res),
+    !grepl("^[A-P]$", verified_gsp),
     "Decrypted GSP looks like garbage"
   )
 
   expect_equal(
     get_meter_gsp(mpan = test_meter[["mpan_mprn"]]),
-    expected_gsp_res
+    verified_gsp
   )
 })
 
