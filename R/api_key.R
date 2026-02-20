@@ -39,9 +39,23 @@ is_testing <- function() {
   identical(Sys.getenv("TESTTHAT"), "true")
 }
 
+safe_decrypt <- function(cipher, fallback) {
+  tryCatch(
+    {
+      res <- httr2::secret_decrypt(cipher, "OCTOPUSR_SECRET_KEY")
+      # Sanitize: check if it's ASCII and matches a reasonable pattern
+      if (is.na(iconv(res, to = "ASCII")) || !grepl("^[A-Za-z0-9_-]+$", res)) {
+        return(fallback)
+      }
+      res
+    },
+    error = function(e) fallback
+  )
+}
+
 testing_key <- function() {
-  httr2::secret_decrypt(
+  safe_decrypt(
     "gSnStfRq0gqwkVy9notuWa97vp_d7hxX3IOrlMv6g1nlNeMhtHSdvboMx_49zcVWgpityPpCtKA",
-    "OCTOPUSR_SECRET_KEY"
+    "sk_test_dummy_key"
   )
 }
