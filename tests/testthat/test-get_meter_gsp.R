@@ -12,8 +12,10 @@ test_that("Can get a meter GSP", {
     "J"
   )
 
-  # skip if expected GSP is clearly garbage (one char letter usually A-P)
-  skip_if(!grepl("^[A-P]$", expected_gsp), "Garbage GSP decryption")
+  # skip if expected GSP is clearly garbage
+  # Usually single letter A-P, sometimes with underscore prefix.
+  # If decryption returned garbage that doesn't match this, skip.
+  skip_if(!grepl("^(_?)[A-P]$", expected_gsp), "Garbage GSP decryption")
 
   expect_equal(
     get_meter_gsp(mpan = test_meter[["mpan_mprn"]]),

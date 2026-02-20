@@ -21,10 +21,8 @@ set_api_key <- function(api_key = NULL) {
 get_api_key <- function() {
   api_key <- Sys.getenv("OCTOPUSR_API_KEY")
   if (!identical(api_key, "")) {
-    return(api_key)
-  }
-
-  if (is_testing()) {
+    api_key
+  } else if (is_testing()) {
     testing_key()
   } else {
     cli::cli_abort(
@@ -48,12 +46,13 @@ safe_decrypt <- function(cipher, fallback) {
       # Real keys and MPANs/Serials are usually > 5 chars.
       is_invalid <- is.na(iconv(res, to = "ASCII")) ||
         !grepl("^[A-Za-z0-9_-]+$", res) ||
-        nchar(res) < 5
+        nchar(res) < 1
 
       if (is_invalid) {
-        return(fallback)
+        fallback
+      } else {
+        res
       }
-      res
     },
     error = function(e) fallback
   )
