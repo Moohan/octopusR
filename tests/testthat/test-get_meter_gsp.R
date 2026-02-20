@@ -9,13 +9,11 @@ test_that("Can get a meter GSP", {
 
   expected_gsp <- safe_decrypt(
     "5GkfdUf-Fp88BMOFir1kkOOl",
-    "J"
+    "sk_test_gsp"
   )
 
-  # skip if expected GSP is clearly garbage
-  # Usually single letter A-P, sometimes with underscore prefix.
-  # If decryption returned garbage that doesn't match this, skip.
-  skip_if(!grepl("^(_?)[A-P]$", expected_gsp), "Garbage GSP decryption")
+  # skip if expected GSP is dummy
+  skip_if(grepl("^sk_test_", expected_gsp), "Using dummy GSP")
 
   expect_equal(
     get_meter_gsp(mpan = test_meter[["mpan_mprn"]]),

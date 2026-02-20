@@ -37,16 +37,15 @@ is_testing <- function() {
   identical(Sys.getenv("TESTTHAT"), "true")
 }
 
-safe_decrypt <- function(cipher, fallback) {
+safe_decrypt <- function(cipher, fallback, min_length = 1) {
   tryCatch(
     {
       res <- httr2::secret_decrypt(cipher, "OCTOPUSR_SECRET_KEY")
       # Sanitize: check if it's ASCII and matches a reasonable pattern
       # Also check length - garbage from wrong key is often very short or long
-      # Real keys and MPANs/Serials are usually > 5 chars.
       is_invalid <- is.na(iconv(res, to = "ASCII")) ||
         !grepl("^[A-Za-z0-9_-]+$", res) ||
-        nchar(res) < 1
+        nchar(res) < min_length
 
       if (is_invalid) {
         fallback
@@ -64,6 +63,7 @@ testing_key <- function() {
       "gSnStfRq0gqwkVy9notuWa97vp_d7hxX3IOrlMv6g1nl",
       "NeMhtHSdvboMx_49zcVWgpityPpCtKA"
     ),
-    "sk_test_dummy_key"
+    "sk_test_dummy_key",
+    min_length = 10
   )
 }

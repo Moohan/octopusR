@@ -146,11 +146,13 @@ testing_meter <-
     if (meter_type == "electricity") {
       mpan <- safe_decrypt(
         "DR9Bvd3ppfLXD4Zq-tG0kZphNdkW3168-OQrOSk",
-        "sk_test_mpan"
+        "sk_test_mpan",
+        min_length = 5
       )
       serial_number <- safe_decrypt(
         "g_K-kAcGIIcsrXeRegX8EjMBf7xnmhbX9ts",
-        "sk_test_serial"
+        "sk_test_serial",
+        min_length = 5
       )
       meter_gsp <- if (include_gsp) get_meter_gsp(mpan = mpan) else NA
 
@@ -166,11 +168,13 @@ testing_meter <-
     } else if (meter_type == "gas") {
       mprn <- safe_decrypt(
         "z-BpI17a6UVNWT8ByPzue_XI5j2zU547vi0",
-        "sk_test_mprn"
+        "sk_test_mprn",
+        min_length = 5
       )
       serial_number <- safe_decrypt(
         "d06raLRtC5JWyQkh64mZOtWFDOUCQlojLAyfMUk-",
-        "sk_test_serial"
+        "sk_test_serial",
+        min_length = 5
       )
 
       structure(
