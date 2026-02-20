@@ -25,7 +25,7 @@ get_api_key <- function() {
   }
 
   if (is_testing()) {
-    return(testing_key())
+    testing_key()
   } else {
     cli::cli_abort(
       "No API key found, please supply with {.arg api_key} argument or with
@@ -44,7 +44,13 @@ safe_decrypt <- function(cipher, fallback) {
     {
       res <- httr2::secret_decrypt(cipher, "OCTOPUSR_SECRET_KEY")
       # Sanitize: check if it's ASCII and matches a reasonable pattern
-      if (is.na(iconv(res, to = "ASCII")) || !grepl("^[A-Za-z0-9_-]+$", res)) {
+      # Also check length - garbage from wrong key is often very short or long
+      # Real keys and MPANs/Serials are usually > 5 chars.
+      is_invalid <- is.na(iconv(res, to = "ASCII")) ||
+        !grepl("^[A-Za-z0-9_-]+$", res) ||
+        nchar(res) < 5
+
+      if (is_invalid) {
         return(fallback)
       }
       res
@@ -55,7 +61,10 @@ safe_decrypt <- function(cipher, fallback) {
 
 testing_key <- function() {
   safe_decrypt(
-    "gSnStfRq0gqwkVy9notuWa97vp_d7hxX3IOrlMv6g1nlNeMhtHSdvboMx_49zcVWgpityPpCtKA",
+    paste0(
+      "gSnStfRq0gqwkVy9notuWa97vp_d7hxX3IOrlMv6g1nl",
+      "NeMhtHSdvboMx_49zcVWgpityPpCtKA"
+    ),
     "sk_test_dummy_key"
   )
 }
