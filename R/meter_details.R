@@ -163,26 +163,26 @@ testing_meter <-
         ),
         class = "octopus_meter-point"
       )
-  } else if (meter_type == "gas") {
-    mprn <- safe_decrypt(
-      "z-BpI17a6UVNWT8ByPzue_XI5j2zU547vi0",
-      "sk_test_mprn"
-    )
-    serial_number <- safe_decrypt(
-      "d06raLRtC5JWyQkh64mZOtWFDOUCQlojLAyfMUk-",
-      "sk_test_serial"
-    )
+    } else if (meter_type == "gas") {
+      mprn <- safe_decrypt(
+        "z-BpI17a6UVNWT8ByPzue_XI5j2zU547vi0",
+        "sk_test_mprn"
+      )
+      serial_number <- safe_decrypt(
+        "d06raLRtC5JWyQkh64mZOtWFDOUCQlojLAyfMUk-",
+        "sk_test_serial"
+      )
 
-    structure(
-      list(
-        type = "gas",
-        mpan_mprn = mprn,
-        serial_number = serial_number
-      ),
-      class = "octopus_meter-point"
-    )
+      structure(
+        list(
+          type = "gas",
+          mpan_mprn = mprn,
+          serial_number = serial_number
+        ),
+        class = "octopus_meter-point"
+      )
+    }
   }
-}
 
 #' Combine import and export consumption data
 #'
