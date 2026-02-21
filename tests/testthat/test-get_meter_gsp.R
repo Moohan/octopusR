@@ -32,8 +32,10 @@ test_that("Can get a meter GSP", {
   if (!identical(actual_gsp, expected_gsp)) {
     testthat::skip_if(
       grepl("^(_?[A-P])$", actual_gsp),
-      paste0("Actual GSP (", actual_gsp, ") differs from expected (",
-             expected_gsp, ") due to environment differences")
+      paste0(
+        "Actual GSP (", actual_gsp, ") differs from expected (",
+        expected_gsp, ") due to environment differences"
+      )
     )
   }
 
