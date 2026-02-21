@@ -55,9 +55,7 @@ safe_decrypt <- function(cipher, fallback) {
       # Octopus keys/MPANs/Serials/GSPs are usually alphanumeric + _ or -.
       is_invalid <- is.na(iconv(res, to = "ASCII")) ||
         grepl("[^A-Za-z0-9_-]", res) ||
-        nchar(res) < 1 ||
-        # suspect garbage if it's very short and contains underscore
-        (nchar(res) < 4 && grepl("_", res))
+        nchar(res) < 1
       if (is_invalid) {
         stop("Invalid decryption result")
       }

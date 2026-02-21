@@ -78,7 +78,12 @@ get_consumption <- function(
 
   # Get meter details if not provided
   if (is.null(mpan_mprn) || is.null(serial_number)) {
-    meter_details <- get_meter_details(meter_type, direction)
+    # Consumption endpoint doesn't need GSP info, so skip it to save an API call
+    meter_details <- get_meter_details(
+      meter_type,
+      direction,
+      include_gsp = FALSE
+    )
     if (is.null(mpan_mprn)) {
       mpan_mprn <- meter_details[["mpan_mprn"]]
     }
@@ -182,7 +187,14 @@ get_consumption <- function(
 
       success_data <- lapply(
         httr2::resps_successes(resps),
-        \(r) httr2::resp_body_json(r, simplifyVector = TRUE)[["results"]]
+        \(r) {
+          parsed <- httr2::resp_body_json(r, simplifyVector = TRUE)
+          if (is.list(parsed) && "results" %in% names(parsed)) {
+            tibble::as_tibble(parsed[["results"]])
+          } else {
+            NULL
+          }
+        }
       )
 
       consumption_data_list <- c(consumption_data_list[1], success_data)
