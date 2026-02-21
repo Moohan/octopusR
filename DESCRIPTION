@@ -13,6 +13,8 @@ License: MIT + file LICENSE
 URL: https://github.com/Moohan/octopusR,
     https://moohan.github.io/octopusR/
 BugReports: https://github.com/Moohan/octopusR/issues
+Depends:
+    R (>= 4.1.0)
 Imports: 
     askpass,
     cli,
