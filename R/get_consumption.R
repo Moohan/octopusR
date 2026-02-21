@@ -25,7 +25,8 @@
 #' returned in reverse order from latest available figure.
 #' Valid values:
 #' * `period`, to give results ordered forward.
-#' * `-period`, (default), to give results ordered from most recent backwards.
+#' * `-period`, (default), to give results ordered from most
+#' recent backwards.
 #' @param group_by Aggregates consumption over a specified time period.
 #' A day is considered to start and end at midnight in the server's time zone.
 #' The default is that consumption is returned in half-hour periods.
@@ -38,7 +39,8 @@
 #' @param direction For electricity meters, specify "import", "export",
 #' or NULL (default). When NULL, uses the legacy single MPAN storage.
 #' @param page_size The number of results to return per page.
-#' This is intended for internal testing and may be removed in a future release.
+#' This is intended for internal testing and may be removed in a
+#' future release.
 #'
 #' @return a [tibble][tibble::tibble-package] of the requested consumption data.
 #' @note For the fastest data aggregation, it is recommended to have either

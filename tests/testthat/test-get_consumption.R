@@ -30,7 +30,11 @@ test_that("Can return electric consumption data sample", {
   mockery::stub(get_consumption, "octopus_api", mock_api)
 
   expect_message(
-    consumption_data <- get_consumption("electricity", mpan_mprn = "123", serial_number = "456"),
+    consumption_data <- get_consumption(
+      "electricity",
+      mpan_mprn = "123",
+      serial_number = "456"
+    ),
     "Returning 100 rows"
   )
 
@@ -56,7 +60,11 @@ test_that("Can return gas consumption data sample", {
   mockery::stub(get_consumption, "octopus_api", mock_api)
 
   expect_message(
-    consumption_data <- get_consumption("gas", mpan_mprn = "123", serial_number = "456"),
+    consumption_data <- get_consumption(
+      "gas",
+      mpan_mprn = "123",
+      serial_number = "456"
+    ),
     "Returning 100 rows"
   )
 
@@ -74,13 +82,19 @@ test_that("errors properly with incorrect params", {
     "You must specify \"electricity\" or \"gas\" for `meter_type`"
   )
   expect_error(
-    get_consumption("electricity", mpan_mprn = "123", serial_number = "456", period_to = Sys.Date()),
+    get_consumption(
+      "electricity",
+      mpan_mprn = "123",
+      serial_number = "456",
+      period_to = Sys.Date()
+    ),
     "To use `period_to` you must also provide the `period_from` parameter"
   )
 })
 
 test_that("Correctly handles multi-page parallel requests", {
-  # This mock handles the two ways octopus_api is called in the multi-page scenario
+  # This mock handles the two ways octopus_api is called in the
+  # multi-page scenario
   mock_api_multi_page <- function(path, query, ..., perform = TRUE) {
     if (perform) {
       # The first call to get page count

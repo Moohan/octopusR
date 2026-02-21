@@ -50,12 +50,14 @@ safe_decrypt <- function(cipher, fallback) {
   tryCatch(
     {
       res <- httr2::secret_decrypt(cipher, "OCTOPUSR_SECRET_KEY")
-      # Sanitize res: check if it's ASCII and matches a safe pattern
-      # We use iconv to check for valid ASCII and grepl to exclude
-      # non-alphanumeric/unprintable characters.
+      # Sanitize res: check if it's ASCII and matches a safe pattern.
+      # httr2::secret_decrypt can return garbage if the key is wrong.
+      # Octopus keys/MPANs/Serials/GSPs are usually alphanumeric + _ or -.
       is_invalid <- is.na(iconv(res, to = "ASCII")) ||
         grepl("[^A-Za-z0-9_-]", res) ||
-        nchar(res) < 1
+        nchar(res) < 1 ||
+        # suspect garbage if it's very short and contains underscore
+        (nchar(res) < 4 && grepl("_", res))
       if (is_invalid) {
         stop("Invalid decryption result")
       }

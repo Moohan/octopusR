@@ -7,9 +7,22 @@ test_that("Can get a meter GSP", {
   )
 
   test_meter <- testing_meter("electricity")
+
+  # Check if MPAN looks valid (not garbage from failed decryption)
+  testthat::skip_if(
+    !grepl("^[0-9]{10,15}$", test_meter[["mpan_mprn"]]),
+    "MPAN does not look like a valid decrypted value"
+  )
+
   expected_gsp <- safe_decrypt(
     "5GkfdUf-Fp88BMOFir1kkOOl",
     "J"
+  )
+
+  # Check if expected GSP looks valid
+  testthat::skip_if(
+    !grepl("^[A-P]$", expected_gsp),
+    "Expected GSP does not look like a valid decrypted value"
   )
 
   expect_equal(
