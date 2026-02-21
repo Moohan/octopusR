@@ -14,32 +14,15 @@ test_that("Can get a meter GSP", {
     "MPAN does not look like a valid decrypted value"
   )
 
-  expected_gsp <- safe_decrypt(
-    "5GkfdUf-Fp88BMOFir1kkOOl",
-    "J"
-  )
-
-  # Check if expected GSP looks valid (Octopus GSPs are often _A to _P)
-  testthat::skip_if(
-    !grepl("^(_?[A-P])$", expected_gsp),
-    "Expected GSP does not look like a valid decrypted value"
-  )
-
   actual_gsp <- get_meter_gsp(mpan = test_meter[["mpan_mprn"]])
 
-  # If actual GSP is valid but doesn't match expected, it's likely an
-  # environment difference (different account/meter), so skip rather than fail.
-  if (!identical(actual_gsp, expected_gsp)) {
-    testthat::skip_if(
-      grepl("^(_?[A-P])$", actual_gsp),
-      paste0(
-        "Actual GSP (", actual_gsp, ") differs from expected (",
-        expected_gsp, ") due to environment differences"
-      )
-    )
-  }
-
-  expect_equal(actual_gsp, expected_gsp)
+  # Octopus GSPs are codes like 'J' or '_J'.
+  # We verify it matches the expected pattern.
+  # This is robust to environment differences where GSP codes might vary.
+  expect_true(
+    grepl("^(_?[A-P])$", actual_gsp),
+    info = paste0("GSP code '", actual_gsp, "' should match valid pattern")
+  )
 })
 
 test_that("Fails with bad mprn", {

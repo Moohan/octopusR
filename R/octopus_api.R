@@ -33,10 +33,11 @@ octopus_api <- function(
 
   parsed <- httr2::resp_body_json(resp, simplifyVector = TRUE)
 
-  if (is.list(parsed) &&
-    "results" %in% names(parsed) &&
-    !is.null(parsed[["results"]])) {
-    parsed[["results"]] <- tibble::as_tibble(parsed[["results"]])
+  # Robust conversion to tibble for paginated results
+  if (is.list(parsed) && "results" %in% names(parsed)) {
+    if (!is.null(parsed[["results"]])) {
+      parsed[["results"]] <- tibble::as_tibble(parsed[["results"]])
+    }
   }
 
   structure(
