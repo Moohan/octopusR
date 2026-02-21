@@ -161,29 +161,26 @@ get_consumption <- function(
   consumption_data_list[[1L]] <- resp[["content"]][["results"]]
 
   if (total_pages > 1) {
+    base_req <- octopus_api(
+      path = path,
+      api_key = api_key,
+      query = query,
+      perform = FALSE
+    )
+
     reqs <- lapply(2:total_pages, function(page) {
-      octopus_api(
-        path = path,
-        api_key = api_key,
-        query = append(query, list(page = page)),
-        perform = FALSE
-      )
+      httr2::req_url_query(base_req, page = page)
     })
 
     resps <- httr2::req_perform_parallel(reqs, on_error = "continue")
 
-    # Directly populate the final list, avoiding an intermediate object.
-    consumption_data_list[2:total_pages] <- lapply(resps, function(r) {
-      if (inherits(r, "httr2_response")) {
-        httr2::resp_body_json(r, simplifyVector = TRUE)[["results"]]
-      } else {
-        NULL
-      }
-    })
+    success_data <- lapply(
+      httr2::resps_successes(resps),
+      \(r) httr2::resp_body_json(r, simplifyVector = TRUE)[["results"]]
+    )
+
+    consumption_data_list <- c(consumption_data_list[1], success_data)
   }
-  # Filter out NULL elements from any failed API calls before binding. This
-  # prevents `do.call(rbind, ...)` from failing.
-  consumption_data_list <- Filter(Negate(is.null), consumption_data_list)
 
   # Using data.table::rbindlist() or vctrs::vec_rbind() provides a significant
   # performance boost over the base R alternative of do.call(rbind, ...).

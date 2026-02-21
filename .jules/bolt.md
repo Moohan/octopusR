@@ -1,0 +1,1 @@
+## 2026-02-21 - [Pagination Optimization] **Learning:** Reusing a base httr2_request object and using resps_successes() significantly reduces memory allocation and execution time for multi-page API requests. **Action:** Apply this pattern to all paginated API endpoints.
