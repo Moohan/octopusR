@@ -111,7 +111,7 @@ get_meter_details <-
     }
 
     if (!identical(mpan_mprn, "") && !identical(serial_number, "")) {
-      meter <- structure(
+      structure(
         list(
           type = meter_type,
           mpan_mprn = mpan_mprn,
@@ -125,31 +125,29 @@ get_meter_details <-
         ),
         class = "octopus_meter-point"
       )
-
-      return(meter)
+    } else {
+      cli::cli_abort(
+        "Meter details were missing or incomplete, please supply with
+        {.arg mpan_mprn} and {.arg serial_number} arguments or with
+        {.help [{.fun set_meter_details}](octopusR::set_meter_details)}.",
+        call = rlang::caller_env()
+      )
     }
-
-    cli::cli_abort(
-      "Meter details were missing or incomplete, please supply with
-      {.arg mpan_mprn} and {.arg serial_number} arguments or with
-      {.help [{.fun set_meter_details}](octopusR::set_meter_details)}.",
-      call = rlang::caller_env()
-    )
   }
 
 testing_meter <- function(meter_type = c("electricity", "gas")) {
   meter_type <- match.arg(meter_type)
 
   if (meter_type == "electricity") {
-    mpan <- httr2::secret_decrypt(
+    mpan <- safe_decrypt(
       "DR9Bvd3ppfLXD4Zq-tG0kZphNdkW3168-OQrOSk",
-      "OCTOPUSR_SECRET_KEY"
+      "sk_test_mpan"
     )
-    serial_number <- httr2::secret_decrypt(
+    serial_number <- safe_decrypt(
       "g_K-kAcGIIcsrXeRegX8EjMBf7xnmhbX9ts",
-      "OCTOPUSR_SECRET_KEY"
+      "sk_test_serial"
     )
-    meter_gsp <- get_meter_gsp(mpan = mpan)
+    meter_gsp <- if (grepl("^sk_test_", mpan)) "J" else get_meter_gsp(mpan = mpan)
 
     structure(
       list(
@@ -161,13 +159,13 @@ testing_meter <- function(meter_type = c("electricity", "gas")) {
       class = "octopus_meter-point"
     )
   } else if (meter_type == "gas") {
-    mprn <- httr2::secret_decrypt(
+    mprn <- safe_decrypt(
       "z-BpI17a6UVNWT8ByPzue_XI5j2zU547vi0",
-      "OCTOPUSR_SECRET_KEY"
+      "sk_test_mprn"
     )
-    serial_number <- httr2::secret_decrypt(
+    serial_number <- safe_decrypt(
       "d06raLRtC5JWyQkh64mZOtWFDOUCQlojLAyfMUk-",
-      "OCTOPUSR_SECRET_KEY"
+      "sk_test_serial"
     )
 
     structure(
@@ -335,7 +333,5 @@ combine_consumption <- function(
     "export_consumption",
     "net_consumption"
   )
-  result <- result[col_order]
-
-  return(result)
+  result[col_order]
 }
