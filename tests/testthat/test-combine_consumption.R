@@ -70,7 +70,8 @@ test_that("combine_consumption works with only import data", {
       if (mpan_mprn == "123456789012") {
         mock_consumption_data(c(1.5, 2.0, 1.8))
       } else {
-        stop("No data")
+        # Return NULL to simulate no data available for this MPAN
+        NULL
       }
     },
     {
@@ -96,7 +97,8 @@ test_that("combine_consumption works with only export data", {
       if (mpan_mprn == "987654321098") {
         mock_consumption_data(c(0.5, 0.8, 0.3))
       } else {
-        stop("No data")
+        # Return NULL to simulate no data available for this MPAN
+        NULL
       }
     },
     {

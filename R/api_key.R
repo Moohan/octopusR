@@ -21,11 +21,9 @@ set_api_key <- function(api_key = NULL) {
 get_api_key <- function() {
   api_key <- Sys.getenv("OCTOPUSR_API_KEY")
   if (!identical(api_key, "")) {
-    return(api_key)
-  }
-
-  if (is_testing()) {
-    return(testing_key())
+    api_key
+  } else if (is_testing()) {
+    testing_key()
   } else {
     cli::cli_abort(
       "No API key found, please supply with {.arg api_key} argument or with
@@ -41,7 +39,10 @@ is_testing <- function() {
 
 testing_key <- function() {
   safe_decrypt(
-    "gSnStfRq0gqwkVy9notuWa97vp_d7hxX3IOrlMv6g1nlNeMhtHSdvboMx_49zcVWgpityPpCtKA",
+    paste0(
+      "gSnStfRq0gqwkVy9notuWa97vp_d7hxX3IOrlMv6g1nlNeMht",
+      "HSdvboMx_49zcVWgpityPpCtKA"
+    ),
     "sk_test_dummy_key"
   )
 }
@@ -50,13 +51,20 @@ safe_decrypt <- function(cipher, fallback = "sk_test_dummy") {
   tryCatch(
     {
       res <- httr2::secret_decrypt(cipher, "OCTOPUSR_SECRET_KEY")
-      # Basic validation that it's not garbage. Garbage usually contains
-      # non-ASCII characters or symbols that aren't typical for API keys/MPANs.
-      # API keys and MPANs in this package usually match [A-Za-z0-9_-]+
+      # Basic validation that it's not garbage.
+      if (!is.character(res) || length(res) != 1L || is.na(res)) {
+        return(fallback)
+      }
+      # Garbage usually contains non-ASCII characters.
       if (is.na(iconv(res, to = "ASCII"))) {
         return(fallback)
       }
+      # API keys and MPANs in this package usually match [A-Za-z0-9_-]+
       if (grepl("[^A-Za-z0-9_-]", res)) {
+        return(fallback)
+      }
+      # Real keys/MPANs are typically much longer. Garbage is often short.
+      if (nchar(res) < 10) {
         return(fallback)
       }
       res
