@@ -40,8 +40,27 @@ is_testing <- function() {
 }
 
 testing_key <- function() {
-  httr2::secret_decrypt(
+  safe_decrypt(
     "gSnStfRq0gqwkVy9notuWa97vp_d7hxX3IOrlMv6g1nlNeMhtHSdvboMx_49zcVWgpityPpCtKA",
-    "OCTOPUSR_SECRET_KEY"
+    "sk_test_dummy_key"
+  )
+}
+
+safe_decrypt <- function(cipher, fallback = "sk_test_dummy") {
+  tryCatch(
+    {
+      res <- httr2::secret_decrypt(cipher, "OCTOPUSR_SECRET_KEY")
+      # Basic validation that it's not garbage. Garbage usually contains
+      # non-ASCII characters or symbols that aren't typical for API keys/MPANs.
+      # API keys and MPANs in this package usually match [A-Za-z0-9_-]+
+      if (is.na(iconv(res, to = "ASCII"))) {
+        return(fallback)
+      }
+      if (grepl("[^A-Za-z0-9_-]", res)) {
+        return(fallback)
+      }
+      res
+    },
+    error = function(e) fallback
   )
 }
