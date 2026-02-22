@@ -342,5 +342,5 @@ combine_consumption <- function(
   )
   result <- result[col_order]
 
-  return(result)
+  result
 }
