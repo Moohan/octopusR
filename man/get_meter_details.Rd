@@ -29,5 +29,5 @@ number for a given meter type from environment variables.
 \details{
 \strong{Optimization:} Added \code{include_gsp} to avoid unnecessary API calls.
 Benchmarking showed that skipping GSP fetching provides a significant
-speedup by avoiding a network round-trip.
+speed-up by avoiding a network round-trip.
 }

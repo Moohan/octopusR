@@ -53,11 +53,13 @@ safe_decrypt <- function(cipher, fallback) {
     error = function(e) ""
   )
 
-  # Check if result is valid ASCII and matches expected pattern (alphanumeric)
+  # Check if result is valid ASCII and matches expected pattern (alphanumeric).
+  # We also check for non-printable characters.
   is_invalid <- identical(res, "") ||
     is.na(iconv(res, to = "ASCII")) ||
-    grepl("[^A-Za-z0-9_-]", res) ||
-    nchar(res) < 5
+    grepl("[^[:alnum:]_-]", res) ||
+    grepl("[[:cntrl:]]", res) ||
+    nchar(res, type = "chars") < 5
 
   if (is_invalid) {
     fallback

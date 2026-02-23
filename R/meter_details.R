@@ -91,7 +91,7 @@ set_meter_details <- function(
 #' @details
 #' **Optimization:** Added `include_gsp` to avoid unnecessary API calls.
 #' Benchmarking showed that skipping GSP fetching provides a significant
-#' speedup by avoiding a network round-trip.
+#' speed-up by avoiding a network round-trip.
 get_meter_details <-
   function(
     meter_type = c("electricity", "gas"),
