@@ -2,9 +2,11 @@
 #'
 #' @description Set the details for your gas/electricity meter. These will be
 #' stored as environment variables. You should add:
-#'  * `OCTOPUSR_MPAN = <electric MPAN>` (or `OCTOPUSR_MPAN_IMPORT`/`OCTOPUSR_MPAN_EXPORT`)
+#'  * `OCTOPUSR_MPAN = <electric MPAN>` (or `OCTOPUSR_MPAN_IMPORT`/
+#'    `OCTOPUSR_MPAN_EXPORT`)
 #'  * `OCTOPUSR_MPRN = <gas MPRN>`
-#'  * `OCTOPUSR_ELEC_SERIAL_NUM = <electric serial number>` (or `OCTOPUSR_ELEC_SERIAL_NUM_IMPORT`/`OCTOPUSR_ELEC_SERIAL_NUM_EXPORT`)
+#'  * `OCTOPUSR_ELEC_SERIAL_NUM = <electric serial number>` (or
+#'    `OCTOPUSR_ELEC_SERIAL_NUM_IMPORT`/`OCTOPUSR_ELEC_SERIAL_NUM_EXPORT`)
 #'  * `OCTOPUSR_GAS_SERIAL_NUM = <gas serial number>`
 #' to your `.Renviron` otherwise you will have to call this function every
 #' session. You can find your meter details (MPAN/MPRN and serial number(s)) on
@@ -14,9 +16,9 @@
 #' @param mpan_mprn The electricity meter-point's MPAN or gas meter-point’s
 #' MPRN.
 #' @param serial_number The meter's serial number.
-#' @param direction For electricity meters, specify "import", "export", or NULL (default).
-#' When NULL, uses the legacy single MPAN storage. When specified, stores separate
-#' import/export MPANs.
+#' @param direction For electricity meters, specify "import", "export", or
+#' NULL (default). When NULL, uses the legacy single MPAN storage. When
+#' specified, stores separate import/export MPANs.
 #'
 #' @return No return value, called for side effects.
 #'
@@ -80,8 +82,9 @@ set_meter_details <- function(
 #'
 #' @param meter_type Type of meter, either "electricity" or "gas".
 #' @param direction For electricity meters, "import" or "export".
-#' @param include_gsp Logical. Whether to also fetch the Grid Supply Point (GSP).
-#' Skipping this avoids an extra API call when only meter identifiers are needed.
+#' @param include_gsp Logical. Whether to also fetch the Grid Supply Point
+#' (GSP). Skipping this avoids an extra API call when only meter identifiers
+#' are needed.
 #'
 #' @return An object of class `octopus_meter-point`.
 #'
@@ -107,54 +110,54 @@ get_meter_details <-
     }
 
     if (is_testing()) {
-      return(testing_meter(meter_type, include_gsp = include_gsp))
-    }
-
-    if (meter_type == "electricity") {
-      if (is.null(direction)) {
-        # Try legacy single MPAN first
-        mpan_mprn <- Sys.getenv("OCTOPUSR_MPAN")
-        serial_number <- Sys.getenv("OCTOPUSR_ELEC_SERIAL_NUM")
-      } else {
-        # Use directional MPANs
-        if (direction == "import") {
-          mpan_mprn <- Sys.getenv("OCTOPUSR_MPAN_IMPORT")
-          serial_number <- Sys.getenv("OCTOPUSR_ELEC_SERIAL_NUM_IMPORT")
-        } else if (direction == "export") {
-          mpan_mprn <- Sys.getenv("OCTOPUSR_MPAN_EXPORT")
-          serial_number <- Sys.getenv("OCTOPUSR_ELEC_SERIAL_NUM_EXPORT")
-        }
-      }
-    } else if (meter_type == "gas") {
-      mpan_mprn <- Sys.getenv("OCTOPUSR_MPRN")
-      serial_number <- Sys.getenv("OCTOPUSR_GAS_SERIAL_NUM")
-    }
-
-    if (!identical(mpan_mprn, "") && !identical(serial_number, "")) {
-      meter <- structure(
-        list(
-          type = meter_type,
-          mpan_mprn = mpan_mprn,
-          serial_number = serial_number,
-          direction = direction,
-          gsp = if (include_gsp && meter_type == "electricity") {
-            get_meter_gsp(mpan = mpan_mprn)
-          } else {
-            NA
+      testing_meter(meter_type, include_gsp = include_gsp)
+    } else {
+      if (meter_type == "electricity") {
+        if (is.null(direction)) {
+          # Try legacy single MPAN first
+          mpan_mprn <- Sys.getenv("OCTOPUSR_MPAN")
+          serial_number <- Sys.getenv("OCTOPUSR_ELEC_SERIAL_NUM")
+        } else {
+          # Use directional MPANs
+          if (direction == "import") {
+            mpan_mprn <- Sys.getenv("OCTOPUSR_MPAN_IMPORT")
+            serial_number <- Sys.getenv("OCTOPUSR_ELEC_SERIAL_NUM_IMPORT")
+          } else if (direction == "export") {
+            mpan_mprn <- Sys.getenv("OCTOPUSR_MPAN_EXPORT")
+            serial_number <- Sys.getenv("OCTOPUSR_ELEC_SERIAL_NUM_EXPORT")
           }
-        ),
-        class = "octopus_meter-point"
-      )
+        }
+      } else if (meter_type == "gas") {
+        mpan_mprn <- Sys.getenv("OCTOPUSR_MPRN")
+        serial_number <- Sys.getenv("OCTOPUSR_GAS_SERIAL_NUM")
+      }
 
-      return(meter)
+      if (!identical(mpan_mprn, "") && !identical(serial_number, "")) {
+        meter <- structure(
+          list(
+            type = meter_type,
+            mpan_mprn = mpan_mprn,
+            serial_number = serial_number,
+            direction = direction,
+            gsp = if (include_gsp && meter_type == "electricity") {
+              get_meter_gsp(mpan = mpan_mprn)
+            } else {
+              NA
+            }
+          ),
+          class = "octopus_meter-point"
+        )
+
+        meter
+      } else {
+        cli::cli_abort(
+          "Meter details were missing or incomplete, please supply with
+          {.arg mpan_mprn} and {.arg serial_number} arguments or with
+          {.help [{.fun set_meter_details}](octopusR::set_meter_details)}.",
+          call = rlang::caller_env()
+        )
+      }
     }
-
-    cli::cli_abort(
-      "Meter details were missing or incomplete, please supply with
-      {.arg mpan_mprn} and {.arg serial_number} arguments or with
-      {.help [{.fun set_meter_details}](octopusR::set_meter_details)}.",
-      call = rlang::caller_env()
-    )
   }
 
 testing_meter <- function(
@@ -164,13 +167,13 @@ testing_meter <- function(
   meter_type <- match.arg(meter_type)
 
   if (meter_type == "electricity") {
-    mpan <- httr2::secret_decrypt(
+    mpan <- safe_decrypt(
       "DR9Bvd3ppfLXD4Zq-tG0kZphNdkW3168-OQrOSk",
-      "OCTOPUSR_SECRET_KEY"
+      "sk_test_mpan"
     )
-    serial_number <- httr2::secret_decrypt(
+    serial_number <- safe_decrypt(
       "g_K-kAcGIIcsrXeRegX8EjMBf7xnmhbX9ts",
-      "OCTOPUSR_SECRET_KEY"
+      "sk_test_serial"
     )
     meter_gsp <- if (include_gsp) get_meter_gsp(mpan = mpan) else NA
 
@@ -184,13 +187,13 @@ testing_meter <- function(
       class = "octopus_meter-point"
     )
   } else if (meter_type == "gas") {
-    mprn <- httr2::secret_decrypt(
+    mprn <- safe_decrypt(
       "z-BpI17a6UVNWT8ByPzue_XI5j2zU547vi0",
-      "OCTOPUSR_SECRET_KEY"
+      "sk_test_mprn"
     )
-    serial_number <- httr2::secret_decrypt(
+    serial_number <- safe_decrypt(
       "d06raLRtC5JWyQkh64mZOtWFDOUCQlojLAyfMUk-",
-      "OCTOPUSR_SECRET_KEY"
+      "sk_test_serial"
     )
 
     structure(
@@ -360,5 +363,5 @@ combine_consumption <- function(
   )
   result <- result[col_order]
 
-  return(result)
+  result
 }

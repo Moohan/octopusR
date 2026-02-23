@@ -15,8 +15,9 @@ get_meter_details(
 
 \item{direction}{For electricity meters, "import" or "export".}
 
-\item{include_gsp}{Logical. Whether to also fetch the Grid Supply Point (GSP).
-Skipping this avoids an extra API call when only meter identifiers are needed.}
+\item{include_gsp}{Logical. Whether to also fetch the Grid Supply Point
+(GSP). Skipping this avoids an extra API call when only meter identifiers
+are needed.}
 }
 \value{
 An object of class \code{octopus_meter-point}.
