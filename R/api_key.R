@@ -21,11 +21,9 @@ set_api_key <- function(api_key = NULL) {
 get_api_key <- function() {
   api_key <- Sys.getenv("OCTOPUSR_API_KEY")
   if (!identical(api_key, "")) {
-    return(api_key)
-  }
-
-  if (is_testing()) {
-    return(testing_key())
+    api_key
+  } else if (is_testing()) {
+    testing_key()
   } else {
     cli::cli_abort(
       "No API key found, please supply with {.arg api_key} argument or with
@@ -40,8 +38,32 @@ is_testing <- function() {
 }
 
 testing_key <- function() {
-  httr2::secret_decrypt(
-    "gSnStfRq0gqwkVy9notuWa97vp_d7hxX3IOrlMv6g1nlNeMhtHSdvboMx_49zcVWgpityPpCtKA",
-    "OCTOPUSR_SECRET_KEY"
+  safe_decrypt(
+    paste0(
+      "gSnStfRq0gqwkVy9notuWa97vp_d7hxX3IOrlMv6g1nlNeMhtHSdvboMx_",
+      "49zcVWgpityPpCtKA"
+    ),
+    "sk_test_dummy_key"
   )
+}
+
+safe_decrypt <- function(cipher, fallback) {
+  res <- tryCatch(
+    httr2::secret_decrypt(cipher, "OCTOPUSR_SECRET_KEY"),
+    error = function(e) ""
+  )
+
+  # Check if result is valid ASCII and matches expected pattern (alphanumeric).
+  # We also check for non-printable characters.
+  is_invalid <- identical(res, "") ||
+    is.na(iconv(res, to = "ASCII")) ||
+    grepl("[^[:alnum:]_-]", res) ||
+    grepl("[[:cntrl:]]", res) ||
+    nchar(res, type = "chars") < 5
+
+  if (is_invalid) {
+    fallback
+  } else {
+    res
+  }
 }

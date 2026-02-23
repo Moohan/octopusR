@@ -7,8 +7,10 @@
 #'
 #' @return a character of the meter-points GSP.
 #' @export
+# Optimization: Defaulting mpan with include_gsp = FALSE avoids a redundant
+# GSP API call during the initial meter details lookup.
 get_meter_gsp <- function(
-  mpan = get_meter_details("electricity")[["mpan_mprn"]]
+  mpan = get_meter_details("electricity", include_gsp = FALSE)[["mpan_mprn"]]
 ) {
   if (is.null(mpan) || is.na(mpan) || mpan == "") {
     cli::cli_abort(
@@ -32,5 +34,5 @@ get_meter_gsp <- function(
 
   meter_gsp <- resp[["content"]][["gsp"]]
 
-  return(meter_gsp)
+  meter_gsp
 }
