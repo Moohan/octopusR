@@ -73,8 +73,28 @@ set_meter_details <- function(
   }
 }
 
+#' Get meter details from environment variables
+#'
+#' @description This internal function retrieves the MPAN/MPRN and serial
+#' number for a given meter type from environment variables.
+#'
+#' @param meter_type Type of meter, either "electricity" or "gas".
+#' @param direction For electricity meters, "import" or "export".
+#' @param include_gsp Logical. Whether to also fetch the Grid Supply Point (GSP).
+#' Skipping this avoids an extra API call when only meter identifiers are needed.
+#'
+#' @return An object of class `octopus_meter-point`.
+#'
+#' @details
+#' **Optimization:** Added `include_gsp` to avoid unnecessary API calls.
+#' Benchmarking showed that skipping GSP fetching provides a significant
+#' speedup by avoiding a network round-trip.
 get_meter_details <-
-  function(meter_type = c("electricity", "gas"), direction = NULL) {
+  function(
+    meter_type = c("electricity", "gas"),
+    direction = NULL,
+    include_gsp = TRUE
+  ) {
     meter_type <- match.arg(meter_type)
 
     # Validate direction parameter
@@ -87,7 +107,7 @@ get_meter_details <-
     }
 
     if (is_testing()) {
-      return(testing_meter(meter_type))
+      return(testing_meter(meter_type, include_gsp = include_gsp))
     }
 
     if (meter_type == "electricity") {
@@ -117,11 +137,11 @@ get_meter_details <-
           mpan_mprn = mpan_mprn,
           serial_number = serial_number,
           direction = direction,
-          gsp = ifelse(
-            meter_type == "electricity",
-            get_meter_gsp(mpan = mpan_mprn),
+          gsp = if (include_gsp && meter_type == "electricity") {
+            get_meter_gsp(mpan = mpan_mprn)
+          } else {
             NA
-          )
+          }
         ),
         class = "octopus_meter-point"
       )
@@ -137,7 +157,10 @@ get_meter_details <-
     )
   }
 
-testing_meter <- function(meter_type = c("electricity", "gas")) {
+testing_meter <- function(
+  meter_type = c("electricity", "gas"),
+  include_gsp = TRUE
+) {
   meter_type <- match.arg(meter_type)
 
   if (meter_type == "electricity") {
@@ -149,7 +172,7 @@ testing_meter <- function(meter_type = c("electricity", "gas")) {
       "g_K-kAcGIIcsrXeRegX8EjMBf7xnmhbX9ts",
       "OCTOPUSR_SECRET_KEY"
     )
-    meter_gsp <- get_meter_gsp(mpan = mpan)
+    meter_gsp <- if (include_gsp) get_meter_gsp(mpan = mpan) else NA
 
     structure(
       list(

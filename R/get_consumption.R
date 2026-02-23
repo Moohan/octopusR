@@ -72,9 +72,15 @@ get_consumption <- function(
     direction <- match.arg(direction, c("import", "export"))
   }
 
-  # Get meter details if not provided
+  # Get meter details if not provided.
+  # Optimization: include_gsp = FALSE is used to skip the extra API call for
+  # Grid Supply Point (GSP) data, as it is not required for consumption.
   if (is.null(mpan_mprn) || is.null(serial_number)) {
-    meter_details <- get_meter_details(meter_type, direction)
+    meter_details <- get_meter_details(
+      meter_type = meter_type,
+      direction = direction,
+      include_gsp = FALSE
+    )
     if (is.null(mpan_mprn)) {
       mpan_mprn <- meter_details[["mpan_mprn"]]
     }
