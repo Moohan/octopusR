@@ -2,9 +2,11 @@
 #'
 #' @description Set the details for your gas/electricity meter. These will be
 #' stored as environment variables. You should add:
-#'  * `OCTOPUSR_MPAN = <electric MPAN>` (or `OCTOPUSR_MPAN_IMPORT`/`OCTOPUSR_MPAN_EXPORT`)
+#'  * `OCTOPUSR_MPAN = <electric MPAN>` (or `OCTOPUSR_MPAN_IMPORT`/
+#'    `OCTOPUSR_MPAN_EXPORT`)
 #'  * `OCTOPUSR_MPRN = <gas MPRN>`
-#'  * `OCTOPUSR_ELEC_SERIAL_NUM = <electric serial number>` (or `OCTOPUSR_ELEC_SERIAL_NUM_IMPORT`/`OCTOPUSR_ELEC_SERIAL_NUM_EXPORT`)
+#'  * `OCTOPUSR_ELEC_SERIAL_NUM = <electric serial number>` (or
+#'    `OCTOPUSR_ELEC_SERIAL_NUM_IMPORT`/`OCTOPUSR_ELEC_SERIAL_NUM_EXPORT`)
 #'  * `OCTOPUSR_GAS_SERIAL_NUM = <gas serial number>`
 #' to your `.Renviron` otherwise you will have to call this function every
 #' session. You can find your meter details (MPAN/MPRN and serial number(s)) on
@@ -14,9 +16,9 @@
 #' @param mpan_mprn The electricity meter-point's MPAN or gas meter-point’s
 #' MPRN.
 #' @param serial_number The meter's serial number.
-#' @param direction For electricity meters, specify "import", "export", or NULL (default).
-#' When NULL, uses the legacy single MPAN storage. When specified, stores separate
-#' import/export MPANs.
+#' @param direction For electricity meters, specify "import", "export", or
+#' NULL (default). When NULL, uses the legacy single MPAN storage. When
+#' specified, stores separate import/export MPANs.
 #'
 #' @return No return value, called for side effects.
 #'
@@ -73,8 +75,19 @@ set_meter_details <- function(
   }
 }
 
+#' Get the details for your gas/electricity meter
+#'
+#' @inheritParams set_meter_details
+#' @param include_gsp (boolean, default: TRUE) Whether to include the Grid
+#' Supply Point (GSP) in the returned meter details. Only applicable for
+#' electricity meters.
+#' @noRd
 get_meter_details <-
-  function(meter_type = c("electricity", "gas"), direction = NULL) {
+  function(
+    meter_type = c("electricity", "gas"),
+    direction = NULL,
+    include_gsp = TRUE
+  ) {
     meter_type <- match.arg(meter_type)
 
     # Validate direction parameter
@@ -117,11 +130,11 @@ get_meter_details <-
           mpan_mprn = mpan_mprn,
           serial_number = serial_number,
           direction = direction,
-          gsp = ifelse(
-            meter_type == "electricity",
-            get_meter_gsp(mpan = mpan_mprn),
+          gsp = if (meter_type == "electricity" && include_gsp) {
+            get_meter_gsp(mpan = mpan_mprn)
+          } else {
             NA
-          )
+          }
         ),
         class = "octopus_meter-point"
       )
@@ -141,15 +154,18 @@ testing_meter <- function(meter_type = c("electricity", "gas")) {
   meter_type <- match.arg(meter_type)
 
   if (meter_type == "electricity") {
-    mpan <- httr2::secret_decrypt(
+    mpan <- safe_decrypt(
       "DR9Bvd3ppfLXD4Zq-tG0kZphNdkW3168-OQrOSk",
-      "OCTOPUSR_SECRET_KEY"
+      "sk_test_mpan"
     )
-    serial_number <- httr2::secret_decrypt(
+    serial_number <- safe_decrypt(
       "g_K-kAcGIIcsrXeRegX8EjMBf7xnmhbX9ts",
-      "OCTOPUSR_SECRET_KEY"
+      "sk_test_serial"
     )
-    meter_gsp <- get_meter_gsp(mpan = mpan)
+    meter_gsp <- safe_decrypt(
+      "a_S-kBcGIIdsrXeRegX8EjMBf7xnmhbX9ts",
+      "J"
+    )
 
     structure(
       list(
@@ -161,13 +177,13 @@ testing_meter <- function(meter_type = c("electricity", "gas")) {
       class = "octopus_meter-point"
     )
   } else if (meter_type == "gas") {
-    mprn <- httr2::secret_decrypt(
+    mprn <- safe_decrypt(
       "z-BpI17a6UVNWT8ByPzue_XI5j2zU547vi0",
-      "OCTOPUSR_SECRET_KEY"
+      "sk_test_mprn"
     )
-    serial_number <- httr2::secret_decrypt(
+    serial_number <- safe_decrypt(
       "d06raLRtC5JWyQkh64mZOtWFDOUCQlojLAyfMUk-",
-      "OCTOPUSR_SECRET_KEY"
+      "sk_test_serial"
     )
 
     structure(
@@ -309,17 +325,12 @@ combine_consumption <- function(
     )
 
     # Rename consumption columns
-    result$import_consumption <- ifelse(
-      is.na(result$consumption_import),
-      0,
-      result$consumption_import
-    )
-    result$export_consumption <- ifelse(
-      is.na(result$consumption_export),
-      0,
-      result$consumption_export
-    )
+    result$import_consumption <- result$consumption_import
+    result$import_consumption[is.na(result$import_consumption)] <- 0
     result$consumption_import <- NULL
+
+    result$export_consumption <- result$consumption_export
+    result$export_consumption[is.na(result$export_consumption)] <- 0
     result$consumption_export <- NULL
 
     # Calculate net consumption (import - export)
@@ -337,5 +348,5 @@ combine_consumption <- function(
   )
   result <- result[col_order]
 
-  return(result)
+  result
 }
