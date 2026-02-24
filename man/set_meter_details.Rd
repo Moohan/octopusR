@@ -22,6 +22,9 @@ MPRN.}
 \item{direction}{For electricity meters, specify "import", "export", or NULL (default).
 When NULL, uses the legacy single MPAN storage. When specified, stores separate
 import/export MPANs.}
+
+\item{include_gsp}{(boolean, default: TRUE) Whether to include the Grid Supply Point (GSP)
+in the returned meter details. Only applicable for electricity meters.}
 }
 \value{
 No return value, called for side effects.

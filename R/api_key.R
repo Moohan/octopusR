@@ -40,8 +40,25 @@ is_testing <- function() {
 }
 
 testing_key <- function() {
-  httr2::secret_decrypt(
+  safe_decrypt(
     "gSnStfRq0gqwkVy9notuWa97vp_d7hxX3IOrlMv6g1nlNeMhtHSdvboMx_49zcVWgpityPpCtKA",
-    "OCTOPUSR_SECRET_KEY"
+    "sk_test_mpan"
   )
+}
+
+safe_decrypt <- function(cipher, fallback) {
+  res <- tryCatch(
+    httr2::secret_decrypt(cipher, "OCTOPUSR_SECRET_KEY"),
+    error = function(e) fallback
+  )
+
+  is_garbage <- is.na(iconv(res, to = "ASCII")) ||
+    grepl("[^A-Za-z0-9_-]", res) ||
+    nchar(res) < 5
+
+  if (is_garbage) {
+    fallback
+  } else {
+    res
+  }
 }
