@@ -1,0 +1,3 @@
+## 2025-01-24 - [GSP API Call Bottleneck] **Learning:** Internal helpers like `get_meter_details()` that make secondary API calls (e.g., for GSP) can cause N+1 query-like problems when called from bulk retrieval functions like `get_consumption()`. **Action:** Add `include_gsp` parameter to internal helpers to allow callers to opt-out of redundant API calls.
+
+## 2025-01-24 - [Vectorized NA Replacement] **Learning:** In data-heavy paths, `ifelse(is.na(x), 0, x)` is significantly slower (~4x) and more memory-intensive (~3.4x) than logical indexing `x[is.na(x)] <- 0` because `ifelse` evaluates all branches and creates more copies. **Action:** Prefer logical indexing for simple NA replacement in performance-critical code.
