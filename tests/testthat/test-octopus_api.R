@@ -13,7 +13,7 @@ test_that("Octopus API fails when not authenticated", {
 
   expect_error(
     octopus_api(path = "v1/accounts/", api_key = "incorrect_api_key"),
-    "Unauthorized|permission|Invalid API key"
+    "Invalid API key\\.$"
   )
 })
 

@@ -25,11 +25,13 @@ get_api_key <- function() {
   } else if (is_testing()) {
     testing_key()
   } else {
-    msg <- paste0(
-      "No API key found, please supply with {.arg api_key} argument or ",
-      "with {.help [{.fun set_api_key}](octopusR::set_api_key)}"
+    cli::cli_abort(
+      paste0(
+        "No API key found, please supply with {.arg api_key} argument or with ",
+        "{.help [{.fun set_api_key}](octopusR::set_api_key)}"
+      ),
+      call = rlang::caller_env()
     )
-    cli::cli_abort(msg, call = rlang::caller_env())
   }
 }
 
@@ -39,32 +41,24 @@ is_testing <- function() {
 
 testing_key <- function() {
   safe_decrypt(
-    paste0(
-      "gSnStfRq0gqwkVy9notuWa97vp_d7hxX3IOrlMv6g1nlNeMhtHSdvboMx_49zcVW",
-      "gpityPpCtKA"
-    ),
-    "sk_test_key"
+    "gSnStfRq0gqwkVy9notuWa97vp_d7hxX3IOrlMv6g1nlNeMhtHSdvboMx_49zcVWgpityPpCtKA",
+    "sk_test_dummy_key"
   )
 }
 
 safe_decrypt <- function(cipher, fallback) {
   res <- tryCatch(
-    {
-      httr2::secret_decrypt(cipher, "OCTOPUSR_SECRET_KEY")
-    },
-    error = function(e) {
-      fallback
-    }
+    httr2::secret_decrypt(cipher, "OCTOPUSR_SECRET_KEY"),
+    error = function(e) fallback
   )
 
-  # Validate that the result is valid ASCII and matches expected pattern
-  # to prevent garbage output from breaking downstream functions
-  # Use local variable to avoid indentation issues in multi-line if
-  is_invalid <- (
+  # Robustness check: if decryption returned garbage (e.g. wrong key)
+  # Garbage often contains non-ASCII or very short/weird strings.
+  # Real Octopus keys/MPANs are ASCII and have certain lengths.
+  is_invalid <- is.null(res) ||
     is.na(iconv(res, to = "ASCII")) ||
-      nchar(res) < 5 ||
-      grepl("[^A-Za-z0-9_-]", res)
-  )
+    nchar(res) < 5 ||
+    grepl("[^A-Za-z0-9_-]", res)
 
   if (is_invalid) {
     fallback

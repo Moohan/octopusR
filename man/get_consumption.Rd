@@ -26,8 +26,8 @@ MPRN.}
 
 \item{serial_number}{The meter's serial number.}
 
-\item{direction}{For electricity meters, specify "import", "export",
-or NULL (default). When NULL, uses the legacy single MPAN storage.}
+\item{direction}{For electricity meters, specify "import", "export", or NULL (default).
+When NULL, uses the legacy single MPAN storage.}
 
 \item{api_key}{Your API key. If you are an Octopus Energy customer,
 you can generate an API key on the
@@ -44,20 +44,19 @@ to create a range.}
 must be a time zone that is recognized by the user's OS.}
 
 \item{order_by}{Ordering of results returned. Default is that results are
-returned in reverse order from latest available figure. Valid values:
+returned in reverse order from latest available figure.
+Valid values:
 \itemize{
 \item \code{period}, to give results ordered forward.
-\item \code{-period}, (default), to give results ordered from most recent
-backwards.
+\item \code{-period}, (default), to give results ordered from most recent backwards.
 }}
 
-\item{page_size}{The number of results to return per page. This is intended
-for internal testing and may be removed in a future release.}
+\item{page_size}{The number of results to return per page. This is intended for internal testing and may be removed in a future release.}
 
 \item{group_by}{Aggregates consumption over a specified time period.
-A day is considered to start and end at midnight in the server's time
-zone. The default is that consumption is returned in half-hour
-periods. Accepted values are:
+A day is considered to start and end at midnight in the server's time zone.
+The default is that consumption is returned in half-hour periods.
+Accepted values are:
 \itemize{
 \item \code{hour}
 \item \code{day}

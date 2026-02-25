@@ -21,23 +21,22 @@
 #' This parameter also requires providing the `period_from` parameter
 #' to create a range.
 #' @param order_by Ordering of results returned. Default is that results are
-#' returned in reverse order from latest available figure. Valid values:
+#' returned in reverse order from latest available figure.
+#' Valid values:
 #' * `period`, to give results ordered forward.
-#' * `-period`, (default), to give results ordered from most recent
-#' backwards.
+#' * `-period`, (default), to give results ordered from most recent backwards.
 #' @param group_by Aggregates consumption over a specified time period.
-#' A day is considered to start and end at midnight in the server's time
-#' zone. The default is that consumption is returned in half-hour
-#' periods. Accepted values are:
+#' A day is considered to start and end at midnight in the server's time zone.
+#' The default is that consumption is returned in half-hour periods.
+#' Accepted values are:
 #' * `hour`
 #' * `day`
 #' * `week`
 #' * `month`
 #' * `quarter`
-#' @param direction For electricity meters, specify "import", "export",
-#' or NULL (default). When NULL, uses the legacy single MPAN storage.
-#' @param page_size The number of results to return per page. This is intended
-#' for internal testing and may be removed in a future release.
+#' @param direction For electricity meters, specify "import", "export", or NULL (default).
+#' When NULL, uses the legacy single MPAN storage.
+#' @param page_size The number of results to return per page. This is intended for internal testing and may be removed in a future release.
 #'
 #' @return a [tibble][tibble::tibble-package] of the requested consumption data.
 #' @note For the fastest data aggregation, it is recommended to have either
@@ -75,9 +74,10 @@ get_consumption <- function(
 
   # Get meter details if not provided
   if (is.null(mpan_mprn) || is.null(serial_number)) {
+    # Optimization: skip GSP lookup as it's not needed for consumption
     meter_details <- get_meter_details(
-      meter_type = meter_type,
-      direction = direction,
+      meter_type,
+      direction,
       include_gsp = FALSE
     )
     if (is.null(mpan_mprn)) {
@@ -124,10 +124,7 @@ get_consumption <- function(
       page_size <- 100L
       cli::cli_inform(c(
         "i" = "Returning 100 rows only as a date range wasn't provided.",
-        "v" = paste0(
-          "Specify a date range with {.arg period_to} and ",
-          "{.arg period_from}."
-        )
+        "v" = "Specify a date range with {.arg period_to} and {.arg period_from}."
       ))
     } else {
       check_datetime_format(period_from)
@@ -159,6 +156,7 @@ get_consumption <- function(
     query = query
   )
 
+  page <- 1L
   total_rows <- resp[["content"]][["count"]]
   total_pages <- ceiling(total_rows / page_size)
   if (total_pages == 0) {
@@ -211,13 +209,13 @@ get_consumption <- function(
         reason = "to parse dates, use `tz = NULL` to return characters.",
         version = "0.2.1"
       )
-    } else if (!rlang::is_installed(pkg = "lubridate", version = "0.2.1")) {
-      cli::cli_abort(
-        paste0(
-          "{.pkg lubridate} must be installed to parse dates, ",
-          "use `tz = NULL` to return characters."
+    } else {
+      if (!rlang::is_installed(pkg = "lubridate", version = "0.2.1")) {
+        cli::cli_abort(
+          "{.pkg lubridate} must be installed to parse dates,
+                       use `tz = NULL` to return characters."
         )
-      )
+      }
     }
     consumption_data[["interval_start"]] <- lubridate::ymd_hms(
       consumption_data[["interval_start"]],

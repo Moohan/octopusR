@@ -75,7 +75,10 @@ test_that("errors properly with incorrect params", {
   )
   expect_error(
     get_consumption("electricity", period_to = Sys.Date()),
-    "To use `period_to` you must also provide the `period_from` parameter"
+    paste0(
+      "To use `period_to` you must also provide ",
+      "the `period_from` parameter"
+    )
   )
 })
 
