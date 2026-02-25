@@ -17,3 +17,6 @@
 ^revdep$
 ^\.pre-commit-config\.yaml$
 ^codemeta\.json$
+^\.claude$
+^\.desloppify$
+^scorecard\.png$

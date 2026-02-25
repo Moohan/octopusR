@@ -21,11 +21,9 @@ set_api_key <- function(api_key = NULL) {
 get_api_key <- function() {
   api_key <- Sys.getenv("OCTOPUSR_API_KEY")
   if (!identical(api_key, "")) {
-    return(api_key)
-  }
-
-  if (is_testing()) {
-    return(testing_key())
+    api_key
+  } else if (is_testing()) {
+    testing_key()
   } else {
     cli::cli_abort(
       "No API key found, please supply with {.arg api_key} argument or with
@@ -50,25 +48,28 @@ safe_decrypt <- function(cipher, fallback) {
   )
 
   if (is.null(res)) {
-    return(fallback)
+    fallback
+  } else {
+    # Validate result: must be ASCII and only contain expected characters
+    # This prevents 'input string 1 is invalid' errors when garbage is returned
+    is_invalid <- is.na(iconv(res, to = "ASCII")) ||
+      nchar(res) < 5 ||
+      !grepl("^[A-Za-z0-9_-]+$", res)
+
+    if (is_invalid) {
+      fallback
+    } else {
+      res
+    }
   }
-
-  # Validate result: must be ASCII and only contain expected characters
-  # This prevents 'input string 1 is invalid' errors when garbage is returned
-  is_invalid <- is.na(iconv(res, to = "ASCII")) ||
-    nchar(res) < 5 ||
-    !grepl("^[A-Za-z0-9_-]+$", res)
-
-  if (is_invalid) {
-    return(fallback)
-  }
-
-  res
 }
 
 testing_key <- function() {
   safe_decrypt(
-    "gSnStfRq0gqwkVy9notuWa97vp_d7hxX3IOrlMv6g1nlNeMhtHSdvboMx_49zcVWgpityPpCtKA",
+    paste0(
+      "gSnStfRq0gqwkVy9notuWa97vp_d7hxX3IOrlMv6g1nlNeMhtHSdvboMx_49zcVWgpityP",
+      "pCtKA"
+    ),
     "sk_test_dummy_key"
   )
 }

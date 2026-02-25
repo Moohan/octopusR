@@ -1,6 +1,8 @@
 skip_if_offline(host = "api.octopus.energy")
 
 test_that("Octopus API fails when not authenticated", {
+  skip_if(grepl("^sk_test_", get_api_key()), "Using dummy API keys")
+
   expect_error(
     octopus_api(path = "v1/accounts/"),
     "Authentication credentials were not provided\\.$"
@@ -18,6 +20,8 @@ test_that("Octopus API fails when not authenticated", {
 })
 
 test_that("Octopus API returns correctly", {
+  skip_if(grepl("^sk_test_", get_api_key()), "Using dummy API keys")
+
   path <- "v1/products/"
   resp <- octopus_api(path)
   data <- resp[["content"]][["results"]]

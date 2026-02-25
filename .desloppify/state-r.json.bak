@@ -1,8 +1,8 @@
 {
   "version": 1,
   "created": "2026-02-25T19:00:59+00:00",
-  "last_scan": "2026-02-25T19:07:11+00:00",
-  "scan_count": 3,
+  "last_scan": "2026-02-25T19:31:05+00:00",
+  "scan_count": 4,
   "overall_score": 97.3,
   "objective_score": 93.2,
   "strict_score": 97.3,
@@ -100,7 +100,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-02-25T19:07:05+00:00",
-      "last_seen": "2026-02-25T19:07:11+00:00",
+      "last_seen": "2026-02-25T19:31:05+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "lang": "r",
@@ -139,7 +139,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-02-25T19:07:05+00:00",
-      "last_seen": "2026-02-25T19:07:11+00:00",
+      "last_seen": "2026-02-25T19:31:05+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "lang": "r",
@@ -178,7 +178,7 @@
       "status": "open",
       "note": null,
       "first_seen": "2026-02-25T19:07:05+00:00",
-      "last_seen": "2026-02-25T19:07:11+00:00",
+      "last_seen": "2026-02-25T19:31:05+00:00",
       "resolved_at": null,
       "reopen_count": 0,
       "lang": "r",
@@ -600,6 +600,125 @@
           "strict": 100.0
         }
       }
+    },
+    {
+      "timestamp": "2026-02-25T19:31:05+00:00",
+      "lang": "r",
+      "strict_score": 97.3,
+      "verified_strict_score": 93.2,
+      "objective_score": 93.2,
+      "overall_score": 97.3,
+      "open": 3,
+      "diff_new": 0,
+      "diff_resolved": 0,
+      "ignored": 0,
+      "raw_findings": 3,
+      "suppressed_pct": 0.0,
+      "ignore_patterns": 0,
+      "subjective_integrity": {
+        "status": "pass",
+        "matched_count": 0,
+        "reset_count": 0,
+        "target_score": 95.0
+      },
+      "dimension_scores": {
+        "File health": {
+          "score": 100.0,
+          "strict": 100.0
+        },
+        "Code quality": {
+          "score": 100.0,
+          "strict": 100.0
+        },
+        "Duplication": {
+          "score": 47.5,
+          "strict": 47.5
+        },
+        "Security": {
+          "score": 100.0,
+          "strict": 100.0
+        },
+        "Naming Quality": {
+          "score": 100.0,
+          "strict": 100.0
+        },
+        "Logic Clarity": {
+          "score": 100.0,
+          "strict": 100.0
+        },
+        "Type Safety": {
+          "score": 100.0,
+          "strict": 100.0
+        },
+        "Contracts": {
+          "score": 100.0,
+          "strict": 100.0
+        },
+        "Error Consistency": {
+          "score": 100.0,
+          "strict": 100.0
+        },
+        "Abstraction Fit": {
+          "score": 100.0,
+          "strict": 100.0
+        },
+        "AI Generated Debt": {
+          "score": 100.0,
+          "strict": 100.0
+        },
+        "High Elegance": {
+          "score": 100.0,
+          "strict": 100.0
+        },
+        "Mid Elegance": {
+          "score": 100.0,
+          "strict": 100.0
+        },
+        "Low Elegance": {
+          "score": 100.0,
+          "strict": 100.0
+        },
+        "Cross-Module Arch": {
+          "score": 100.0,
+          "strict": 100.0
+        },
+        "Init Coupling": {
+          "score": 100.0,
+          "strict": 100.0
+        },
+        "Convention Drift": {
+          "score": 100.0,
+          "strict": 100.0
+        },
+        "Dep Health": {
+          "score": 100.0,
+          "strict": 100.0
+        },
+        "Test Strategy": {
+          "score": 100.0,
+          "strict": 100.0
+        },
+        "API Coherence": {
+          "score": 100.0,
+          "strict": 100.0
+        },
+        "Auth Consistency": {
+          "score": 100.0,
+          "strict": 100.0
+        },
+        "Stale Migration": {
+          "score": 100.0,
+          "strict": 100.0
+        },
+        "Structure Nav": {
+          "score": 100.0,
+          "strict": 100.0
+        },
+        "Design Coherence": {
+          "score": 100.0,
+          "strict": 100.0
+        }
+      }
     }
   ],
   "tool_hash": "c8e8b32df435",
@@ -620,7 +739,7 @@
   "codebase_metrics": {
     "r": {
       "total_files": 17,
-      "total_loc": 1397,
+      "total_loc": 1436,
       "total_directories": 3
     }
   },
@@ -1135,10 +1254,11 @@
     }
   },
   "reminder_history": {
-    "zone_classification": 2,
-    "badge_recommendation": 2,
-    "report_scores": 2,
-    "review_not_run": 2,
-    "feedback_nudge": 1
+    "zone_classification": 3,
+    "badge_recommendation": 3,
+    "report_scores": 3,
+    "review_not_run": 3,
+    "feedback_nudge": 2,
+    "stagnant_nudge": 23
   }
 }

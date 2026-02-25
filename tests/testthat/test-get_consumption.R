@@ -27,6 +27,11 @@ test_consumption_sample <- function(meter_type) {
       )
     )
   }
+  mock_meter <- structure(
+    list(mpan_mprn = "123", serial_number = "456"),
+    class = "octopus_meter-point"
+  )
+  mockery::stub(get_consumption, "get_meter_details", mock_meter)
   mockery::stub(get_consumption, "octopus_api", mock_api)
 
   expect_message(
@@ -62,7 +67,8 @@ test_that("errors properly with incorrect params", {
 })
 
 test_that("Correctly handles multi-page parallel requests", {
-  # This mock handles the two ways octopus_api is called in the multi-page scenario
+  # This mock handles the two ways octopus_api is called in the multi-page
+  # scenario
   mock_api_multi_page <- function(path, query, ..., perform = TRUE) {
     if (perform) {
       # The first call to get page count
@@ -97,6 +103,11 @@ test_that("Correctly handles multi-page parallel requests", {
   }
 
   # Stub the two external functions
+  mock_meter <- structure(
+    list(mpan_mprn = "123", serial_number = "456"),
+    class = "octopus_meter-point"
+  )
+  mockery::stub(get_consumption, "get_meter_details", mock_meter)
   mockery::stub(get_consumption, "octopus_api", mock_api_multi_page)
   mockery::stub(
     get_consumption,
