@@ -51,7 +51,8 @@ Valid values:
 \item \code{-period}, (default), to give results ordered from most recent backwards.
 }}
 
-\item{page_size}{The number of results to return per page. This is intended for internal testing and may be removed in a future release.}
+\item{page_size}{The number of results to return per page. This is intended
+for internal testing and may be removed in a future release.}
 
 \item{group_by}{Aggregates consumption over a specified time period.
 A day is considered to start and end at midnight in the server's time zone.

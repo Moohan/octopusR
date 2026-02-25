@@ -33,7 +33,6 @@ stored as environment variables. You should add:
 \item \verb{OCTOPUSR_MPAN = <electric MPAN>}
 \item \verb{OCTOPUSR_MPRN = <gas MPRN>}
 \item \verb{OCTOPUSR_ELEC_SERIAL_NUM = <electric serial number>}
-\item \verb{OCTOPUSR_GAS_SERIAL_NUM = <gas serial number>}
 to your \code{.Renviron} otherwise you will have to call this function every
 session. You can find your meter details (MPAN/MPRN and serial number(s)) on
 the \href{https://octopus.energy/dashboard/developer/}{developer dashboard}.
