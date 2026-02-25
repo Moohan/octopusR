@@ -5,3 +5,7 @@
 ## 2026-02-25 - Robust decryption in tests
 **Learning:** `httr2::secret_decrypt` returns garbage if the key is wrong or missing (common in CI). This causes "input string 1 is invalid" errors in regex or path functions.
 **Action:** Centralize decryption in a `safe_decrypt` helper that validates output (ASCII check, length, regex) and returns a dummy fallback if invalid. Use `skip_if(grepl("^sk_test_", key))` in tests that require real API calls.
+
+## 2026-02-25 - Mocking Internal Package Calls
+**Learning:** `testthat::with_mocked_bindings` may not reliably intercept calls between functions in the same package namespace during tests, especially when the package is loaded. `mockery::stub` is more robust as it explicitly stubs the function in the target namespace.
+**Action:** Prefer `mockery::stub` for mocking internal package functions to ensure reliable test isolation.
