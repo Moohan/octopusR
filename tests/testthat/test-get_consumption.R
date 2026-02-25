@@ -34,39 +34,39 @@ test_consumption_sample <- function(meter_type) {
   mockery::stub(get_consumption, "get_meter_details", mock_meter)
   mockery::stub(get_consumption, "octopus_api", mock_api)
 
-  expect_message(
+  testthat::expect_message(
     consumption_data <- get_consumption(meter_type),
     "Returning 100 rows"
   )
 
-  expect_s3_class(consumption_data, "tbl_df")
-  expect_named(
+  testthat::expect_s3_class(consumption_data, "tbl_df")
+  testthat::expect_named(
     consumption_data,
     c("consumption", "interval_start", "interval_end")
   )
-  expect_equal(nrow(consumption_data), 100L)
+  testthat::expect_equal(nrow(consumption_data), 100L)
 }
 
-test_that("Can return electric consumption data sample", {
+testthat::test_that("Can return electric consumption data sample", {
   test_consumption_sample("electricity")
 })
 
-test_that("Can return gas consumption data sample", {
+testthat::test_that("Can return gas consumption data sample", {
   test_consumption_sample("gas")
 })
 
-test_that("errors properly with incorrect params", {
-  expect_error(
+testthat::test_that("errors properly with incorrect params", {
+  testthat::expect_error(
     get_consumption(),
     "You must specify \"electricity\" or \"gas\" for `meter_type`"
   )
-  expect_error(
+  testthat::expect_error(
     get_consumption("electricity", period_to = Sys.Date()),
     "To use `period_to` you must also provide the `period_from` parameter"
   )
 })
 
-test_that("Correctly handles multi-page parallel requests", {
+testthat::test_that("Correctly handles multi-page parallel requests", {
   # This mock handles the two ways octopus_api is called in the multi-page
   # scenario
   mock_api_multi_page <- function(path, query, ..., perform = TRUE) {
@@ -123,10 +123,10 @@ test_that("Correctly handles multi-page parallel requests", {
   )
 
   # Verify the result
-  expect_equal(nrow(consumption_data), 30)
-  expect_s3_class(consumption_data, "tbl_df")
+  testthat::expect_equal(nrow(consumption_data), 30)
+  testthat::expect_s3_class(consumption_data, "tbl_df")
   # Page 1 results are 1:10
   # Page 2 results are 11:20
   # Page 3 results are 21:30
-  expect_equal(consumption_data$consumption, 1:30)
+  testthat::expect_equal(consumption_data$consumption, 1:30)
 })

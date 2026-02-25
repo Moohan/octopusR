@@ -21,8 +21,10 @@ set_api_key <- function(api_key = NULL) {
 get_api_key <- function() {
   api_key <- Sys.getenv("OCTOPUSR_API_KEY")
   if (!identical(api_key, "")) {
-    api_key
-  } else if (is_testing()) {
+    return(api_key)
+  }
+
+  if (is_testing()) {
     testing_key()
   } else {
     cli::cli_abort(
@@ -48,20 +50,20 @@ safe_decrypt <- function(cipher, fallback) {
   )
 
   if (is.null(res)) {
-    fallback
-  } else {
-    # Validate result: must be ASCII and only contain expected characters
-    # This prevents 'input string 1 is invalid' errors when garbage is returned
-    is_invalid <- is.na(iconv(res, to = "ASCII")) ||
-      nchar(res) < 5 ||
-      !grepl("^[A-Za-z0-9_-]+$", res)
-
-    if (is_invalid) {
-      fallback
-    } else {
-      res
-    }
+    return(fallback)
   }
+
+  # Validate result: must be ASCII and only contain expected characters
+  # This prevents 'input string 1 is invalid' errors when garbage is returned
+  is_invalid <- is.na(iconv(res, to = "ASCII")) ||
+    nchar(res) < 5 ||
+    !grepl("^[A-Za-z0-9_-]+$", res)
+
+  if (is_invalid) {
+    return(fallback)
+  }
+
+  res
 }
 
 testing_key <- function() {
