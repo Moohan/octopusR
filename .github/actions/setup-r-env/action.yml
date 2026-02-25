@@ -1,5 +1,5 @@
 name: 'Setup R Environment'
-description: 'Standard setup for R package workflows'
+description: 'Standard setup for R package workflows (requires checkout first)'
 inputs:
   extra-packages:
     description: 'Extra packages to install'
@@ -20,16 +20,6 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Harden the runner (Audit all outbound calls)
-      uses: step-security/harden-runner@e3f713f2d8f53843e71c69a996d56f51aa9adfb9 # v2.14.1
-      with:
-        egress-policy: audit
-
-    - name: Checkout repo
-      uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-      with:
-        fetch-depth: 0
-
     - uses: r-lib/actions/setup-pandoc@6f6e5bc62fba3a704f74e7ad7ef7676c5c6a2590 # v2.11.4
 
     - uses: r-lib/actions/setup-r@6f6e5bc62fba3a704f74e7ad7ef7676c5c6a2590 # v2.11.4

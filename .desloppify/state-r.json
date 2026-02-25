@@ -1,22 +1,234 @@
 {
   "version": 1,
   "created": "2026-02-25T19:00:59+00:00",
-  "last_scan": "2026-02-25T19:01:02+00:00",
-  "scan_count": 1,
-  "overall_score": 100.0,
-  "objective_score": 100.0,
-  "strict_score": 100.0,
-  "verified_strict_score": 100.0,
+  "last_scan": "2026-02-25T19:07:11+00:00",
+  "scan_count": 3,
+  "overall_score": 97.3,
+  "objective_score": 93.2,
+  "strict_score": 97.3,
+  "verified_strict_score": 93.2,
   "stats": {
-    "total": 0,
-    "open": 0,
+    "total": 5,
+    "open": 3,
     "fixed": 0,
-    "auto_resolved": 0,
+    "auto_resolved": 2,
     "wontfix": 0,
     "false_positive": 0,
-    "by_tier": {}
+    "by_tier": {
+      "3": {
+        "open": 3,
+        "fixed": 0,
+        "auto_resolved": 2,
+        "wontfix": 0,
+        "false_positive": 0
+      }
+    }
   },
-  "findings": {},
+  "findings": {
+    "boilerplate_duplication::.desloppify/query.json::5161f65223b08e1c": {
+      "id": "boilerplate_duplication::.desloppify/query.json::5161f65223b08e1c",
+      "detector": "boilerplate_duplication",
+      "file": ".desloppify/query.json",
+      "tier": 3,
+      "confidence": "medium",
+      "summary": "Boilerplate block repeated across 2 files (window 495 lines): .desloppify/query.json:39, .desloppify/state-r.json:176",
+      "detail": {
+        "distinct_files": 2,
+        "window_size": 495,
+        "locations": [
+          {
+            "file": ".desloppify/query.json",
+            "line": 39
+          },
+          {
+            "file": ".desloppify/state-r.json",
+            "line": 176
+          }
+        ],
+        "sample": [
+          ",",
+          "  \"dimension_scores\": {",
+          "    \"File health\": {",
+          "      \"score\": 100.0,"
+        ]
+      },
+      "status": "auto_resolved",
+      "note": "Disappeared from scan \u2014 likely fixed",
+      "first_seen": "2026-02-25T19:07:05+00:00",
+      "last_seen": "2026-02-25T19:07:05+00:00",
+      "resolved_at": "2026-02-25T19:07:11+00:00",
+      "reopen_count": 0,
+      "lang": "r",
+      "zone": "production",
+      "suppressed": false,
+      "suppressed_at": null,
+      "suppression_pattern": null,
+      "resolution_attestation": {
+        "kind": "scan_verified",
+        "text": "Disappeared from detector output",
+        "attested_at": "2026-02-25T19:07:11+00:00",
+        "scan_verified": true
+      }
+    },
+    "boilerplate_duplication::.github/workflows/document.yaml::b5c63587dee7462c": {
+      "id": "boilerplate_duplication::.github/workflows/document.yaml::b5c63587dee7462c",
+      "detector": "boilerplate_duplication",
+      "file": ".github/workflows/document.yaml",
+      "tier": 3,
+      "confidence": "medium",
+      "summary": "Boilerplate block repeated across 2 files (window 14 lines): .github/workflows/document.yaml:18, .github/workflows/style.yaml:18",
+      "detail": {
+        "distinct_files": 2,
+        "window_size": 14,
+        "locations": [
+          {
+            "file": ".github/workflows/document.yaml",
+            "line": 18
+          },
+          {
+            "file": ".github/workflows/style.yaml",
+            "line": 18
+          }
+        ],
+        "sample": [
+          "steps:",
+          "      - name: Harden the runner (Audit all outbound calls)",
+          "        uses: step-security/harden-runner@e3f713f2d8f53843e71c69a996d56f51aa9adfb9 # v2.14.1",
+          "        with:"
+        ]
+      },
+      "status": "open",
+      "note": null,
+      "first_seen": "2026-02-25T19:07:05+00:00",
+      "last_seen": "2026-02-25T19:07:11+00:00",
+      "resolved_at": null,
+      "reopen_count": 0,
+      "lang": "r",
+      "zone": "production",
+      "suppressed": false,
+      "suppressed_at": null,
+      "suppression_pattern": null
+    },
+    "boilerplate_duplication::.github/workflows/render-rmarkdown.yaml::c65fa59976f2a15d": {
+      "id": "boilerplate_duplication::.github/workflows/render-rmarkdown.yaml::c65fa59976f2a15d",
+      "detector": "boilerplate_duplication",
+      "file": ".github/workflows/render-rmarkdown.yaml",
+      "tier": 3,
+      "confidence": "medium",
+      "summary": "Boilerplate block repeated across 2 files (window 12 lines): .github/workflows/render-rmarkdown.yaml:11, .github/workflows/test-coverage.yaml:13",
+      "detail": {
+        "distinct_files": 2,
+        "window_size": 12,
+        "locations": [
+          {
+            "file": ".github/workflows/render-rmarkdown.yaml",
+            "line": 11
+          },
+          {
+            "file": ".github/workflows/test-coverage.yaml",
+            "line": 13
+          }
+        ],
+        "sample": [
+          ":",
+          "    runs-on: ubuntu-latest",
+          "    env:",
+          "      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}"
+        ]
+      },
+      "status": "open",
+      "note": null,
+      "first_seen": "2026-02-25T19:07:05+00:00",
+      "last_seen": "2026-02-25T19:07:11+00:00",
+      "resolved_at": null,
+      "reopen_count": 0,
+      "lang": "r",
+      "zone": "production",
+      "suppressed": false,
+      "suppressed_at": null,
+      "suppression_pattern": null
+    },
+    "boilerplate_duplication::.github/workflows/render-rmarkdown.yaml::f57df129682f2b4f": {
+      "id": "boilerplate_duplication::.github/workflows/render-rmarkdown.yaml::f57df129682f2b4f",
+      "detector": "boilerplate_duplication",
+      "file": ".github/workflows/render-rmarkdown.yaml",
+      "tier": 3,
+      "confidence": "medium",
+      "summary": "Boilerplate block repeated across 2 files (window 15 lines): .github/workflows/render-rmarkdown.yaml:15, .github/workflows/style.yaml:17",
+      "detail": {
+        "distinct_files": 2,
+        "window_size": 15,
+        "locations": [
+          {
+            "file": ".github/workflows/render-rmarkdown.yaml",
+            "line": 15
+          },
+          {
+            "file": ".github/workflows/style.yaml",
+            "line": 17
+          }
+        ],
+        "sample": [
+          "}}",
+          "    steps:",
+          "      - name: Harden the runner (Audit all outbound calls)",
+          "        uses: step-security/harden-runner@e3f713f2d8f53843e71c69a996d56f51aa9adfb9 # v2.14.1"
+        ]
+      },
+      "status": "open",
+      "note": null,
+      "first_seen": "2026-02-25T19:07:05+00:00",
+      "last_seen": "2026-02-25T19:07:11+00:00",
+      "resolved_at": null,
+      "reopen_count": 0,
+      "lang": "r",
+      "zone": "production",
+      "suppressed": false,
+      "suppressed_at": null,
+      "suppression_pattern": null
+    },
+    "boilerplate_duplication::.desloppify/state-r.json::598d45e1bb78f86c": {
+      "id": "boilerplate_duplication::.desloppify/state-r.json::598d45e1bb78f86c",
+      "detector": "boilerplate_duplication",
+      "file": ".desloppify/state-r.json",
+      "tier": 3,
+      "confidence": "medium",
+      "summary": "Boilerplate block repeated across 1 files (window 16 lines): .desloppify/state-r.json:251",
+      "detail": {
+        "distinct_files": 1,
+        "window_size": 16,
+        "locations": [
+          {
+            "file": ".desloppify/state-r.json",
+            "line": 251
+          }
+        ],
+        "sample": [
+          ": {",
+          "      \"score\": 100.0,",
+          "      \"strict_score\": 100.0,",
+          "      \"verified_strict_score\": 100.0,"
+        ]
+      },
+      "status": "auto_resolved",
+      "note": "Disappeared from scan \u2014 likely fixed",
+      "first_seen": "2026-02-25T19:07:05+00:00",
+      "last_seen": "2026-02-25T19:07:05+00:00",
+      "resolved_at": "2026-02-25T19:07:11+00:00",
+      "reopen_count": 0,
+      "lang": "r",
+      "zone": "production",
+      "suppressed": false,
+      "suppressed_at": null,
+      "suppression_pattern": null,
+      "resolution_attestation": {
+        "kind": "scan_verified",
+        "text": "Disappeared from detector output",
+        "attested_at": "2026-02-25T19:07:11+00:00",
+        "scan_verified": true
+      }
+    }
+  },
   "subjective_integrity": {
     "status": "pass",
     "target_score": 95.0,
@@ -150,6 +362,244 @@
           "strict": 100.0
         }
       }
+    },
+    {
+      "timestamp": "2026-02-25T19:07:05+00:00",
+      "lang": "r",
+      "strict_score": 95.8,
+      "verified_strict_score": 89.4,
+      "objective_score": 89.4,
+      "overall_score": 95.8,
+      "open": 5,
+      "diff_new": 5,
+      "diff_resolved": 0,
+      "ignored": 0,
+      "raw_findings": 5,
+      "suppressed_pct": 0.0,
+      "ignore_patterns": 0,
+      "subjective_integrity": {
+        "status": "pass",
+        "matched_count": 0,
+        "reset_count": 0,
+        "target_score": 95.0
+      },
+      "dimension_scores": {
+        "File health": {
+          "score": 100.0,
+          "strict": 100.0
+        },
+        "Code quality": {
+          "score": 100.0,
+          "strict": 100.0
+        },
+        "Duplication": {
+          "score": 41.7,
+          "strict": 41.7
+        },
+        "Security": {
+          "score": 100.0,
+          "strict": 100.0
+        },
+        "Naming Quality": {
+          "score": 100.0,
+          "strict": 100.0
+        },
+        "Logic Clarity": {
+          "score": 100.0,
+          "strict": 100.0
+        },
+        "Type Safety": {
+          "score": 100.0,
+          "strict": 100.0
+        },
+        "Contracts": {
+          "score": 100.0,
+          "strict": 100.0
+        },
+        "Error Consistency": {
+          "score": 100.0,
+          "strict": 100.0
+        },
+        "Abstraction Fit": {
+          "score": 100.0,
+          "strict": 100.0
+        },
+        "AI Generated Debt": {
+          "score": 100.0,
+          "strict": 100.0
+        },
+        "High Elegance": {
+          "score": 100.0,
+          "strict": 100.0
+        },
+        "Mid Elegance": {
+          "score": 100.0,
+          "strict": 100.0
+        },
+        "Low Elegance": {
+          "score": 100.0,
+          "strict": 100.0
+        },
+        "Cross-Module Arch": {
+          "score": 100.0,
+          "strict": 100.0
+        },
+        "Init Coupling": {
+          "score": 100.0,
+          "strict": 100.0
+        },
+        "Convention Drift": {
+          "score": 100.0,
+          "strict": 100.0
+        },
+        "Dep Health": {
+          "score": 100.0,
+          "strict": 100.0
+        },
+        "Test Strategy": {
+          "score": 100.0,
+          "strict": 100.0
+        },
+        "API Coherence": {
+          "score": 100.0,
+          "strict": 100.0
+        },
+        "Auth Consistency": {
+          "score": 100.0,
+          "strict": 100.0
+        },
+        "Stale Migration": {
+          "score": 100.0,
+          "strict": 100.0
+        },
+        "Structure Nav": {
+          "score": 100.0,
+          "strict": 100.0
+        },
+        "Design Coherence": {
+          "score": 100.0,
+          "strict": 100.0
+        }
+      }
+    },
+    {
+      "timestamp": "2026-02-25T19:07:11+00:00",
+      "lang": "r",
+      "strict_score": 97.3,
+      "verified_strict_score": 93.2,
+      "objective_score": 93.2,
+      "overall_score": 97.3,
+      "open": 3,
+      "diff_new": 0,
+      "diff_resolved": 2,
+      "ignored": 0,
+      "raw_findings": 3,
+      "suppressed_pct": 0.0,
+      "ignore_patterns": 0,
+      "subjective_integrity": {
+        "status": "pass",
+        "matched_count": 0,
+        "reset_count": 0,
+        "target_score": 95.0
+      },
+      "dimension_scores": {
+        "File health": {
+          "score": 100.0,
+          "strict": 100.0
+        },
+        "Code quality": {
+          "score": 100.0,
+          "strict": 100.0
+        },
+        "Duplication": {
+          "score": 47.5,
+          "strict": 47.5
+        },
+        "Security": {
+          "score": 100.0,
+          "strict": 100.0
+        },
+        "Naming Quality": {
+          "score": 100.0,
+          "strict": 100.0
+        },
+        "Logic Clarity": {
+          "score": 100.0,
+          "strict": 100.0
+        },
+        "Type Safety": {
+          "score": 100.0,
+          "strict": 100.0
+        },
+        "Contracts": {
+          "score": 100.0,
+          "strict": 100.0
+        },
+        "Error Consistency": {
+          "score": 100.0,
+          "strict": 100.0
+        },
+        "Abstraction Fit": {
+          "score": 100.0,
+          "strict": 100.0
+        },
+        "AI Generated Debt": {
+          "score": 100.0,
+          "strict": 100.0
+        },
+        "High Elegance": {
+          "score": 100.0,
+          "strict": 100.0
+        },
+        "Mid Elegance": {
+          "score": 100.0,
+          "strict": 100.0
+        },
+        "Low Elegance": {
+          "score": 100.0,
+          "strict": 100.0
+        },
+        "Cross-Module Arch": {
+          "score": 100.0,
+          "strict": 100.0
+        },
+        "Init Coupling": {
+          "score": 100.0,
+          "strict": 100.0
+        },
+        "Convention Drift": {
+          "score": 100.0,
+          "strict": 100.0
+        },
+        "Dep Health": {
+          "score": 100.0,
+          "strict": 100.0
+        },
+        "Test Strategy": {
+          "score": 100.0,
+          "strict": 100.0
+        },
+        "API Coherence": {
+          "score": 100.0,
+          "strict": 100.0
+        },
+        "Auth Consistency": {
+          "score": 100.0,
+          "strict": 100.0
+        },
+        "Stale Migration": {
+          "score": 100.0,
+          "strict": 100.0
+        },
+        "Structure Nav": {
+          "score": 100.0,
+          "strict": 100.0
+        },
+        "Design Coherence": {
+          "score": 100.0,
+          "strict": 100.0
+        }
+      }
     }
   ],
   "tool_hash": "c8e8b32df435",
@@ -162,7 +612,7 @@
       "structural": 8,
       "flat_dirs": 3,
       "security": 8,
-      "boilerplate_duplication": 0,
+      "boilerplate_duplication": 4,
       "dupes": 0,
       "stale_wontfix": 0
     }
@@ -208,6 +658,23 @@
         }
       },
       "strict": 100.0
+    },
+    "Duplication": {
+      "score": 47.5,
+      "strict_score": 47.5,
+      "verified_strict_score": 47.5,
+      "checks": 4,
+      "issues": 3,
+      "tier": 3,
+      "detectors": {
+        "boilerplate_duplication": {
+          "potential": 4,
+          "pass_rate": 0.4750000000000001,
+          "issues": 3,
+          "weighted_failures": 2.0999999999999996
+        }
+      },
+      "strict": 47.5
     },
     "Security": {
       "score": 100.0,
@@ -668,9 +1135,11 @@
     }
   },
   "reminder_history": {
-    "zone_classification": 1,
-    "badge_recommendation": 1,
-    "report_scores": 1,
-    "review_not_run": 1
+    "zone_classification": 3,
+    "badge_recommendation": 3,
+    "report_scores": 3,
+    "review_not_run": 3,
+    "feedback_nudge": 2,
+    "stagnant_nudge": 23
   }
 }
