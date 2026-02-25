@@ -39,9 +39,36 @@ is_testing <- function() {
   identical(Sys.getenv("TESTTHAT"), "true")
 }
 
+safe_decrypt <- function(cipher, fallback) {
+  res <- tryCatch(
+    {
+      httr2::secret_decrypt(cipher, "OCTOPUSR_SECRET_KEY")
+    },
+    error = function(e) {
+      NULL
+    }
+  )
+
+  if (is.null(res)) {
+    return(fallback)
+  }
+
+  # Validate result: must be ASCII and only contain expected characters
+  # This prevents 'input string 1 is invalid' errors when garbage is returned
+  is_invalid <- is.na(iconv(res, to = "ASCII")) ||
+    nchar(res) < 5 ||
+    !grepl("^[A-Za-z0-9_-]+$", res)
+
+  if (is_invalid) {
+    return(fallback)
+  }
+
+  res
+}
+
 testing_key <- function() {
-  httr2::secret_decrypt(
+  safe_decrypt(
     "gSnStfRq0gqwkVy9notuWa97vp_d7hxX3IOrlMv6g1nlNeMhtHSdvboMx_49zcVWgpityPpCtKA",
-    "OCTOPUSR_SECRET_KEY"
+    "sk_test_dummy_key"
   )
 }

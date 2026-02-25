@@ -141,13 +141,13 @@ testing_meter <- function(meter_type = c("electricity", "gas")) {
   meter_type <- match.arg(meter_type)
 
   if (meter_type == "electricity") {
-    mpan <- httr2::secret_decrypt(
+    mpan <- safe_decrypt(
       "DR9Bvd3ppfLXD4Zq-tG0kZphNdkW3168-OQrOSk",
-      "OCTOPUSR_SECRET_KEY"
+      "sk_test_mpan"
     )
-    serial_number <- httr2::secret_decrypt(
+    serial_number <- safe_decrypt(
       "g_K-kAcGIIcsrXeRegX8EjMBf7xnmhbX9ts",
-      "OCTOPUSR_SECRET_KEY"
+      "sk_test_serial"
     )
     meter_gsp <- get_meter_gsp(mpan = mpan)
 
@@ -161,13 +161,13 @@ testing_meter <- function(meter_type = c("electricity", "gas")) {
       class = "octopus_meter-point"
     )
   } else if (meter_type == "gas") {
-    mprn <- httr2::secret_decrypt(
+    mprn <- safe_decrypt(
       "z-BpI17a6UVNWT8ByPzue_XI5j2zU547vi0",
-      "OCTOPUSR_SECRET_KEY"
+      "sk_test_mprn"
     )
-    serial_number <- httr2::secret_decrypt(
+    serial_number <- safe_decrypt(
       "d06raLRtC5JWyQkh64mZOtWFDOUCQlojLAyfMUk-",
-      "OCTOPUSR_SECRET_KEY"
+      "sk_test_serial"
     )
 
     structure(

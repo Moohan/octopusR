@@ -16,7 +16,7 @@ create_mock_httr2_response <- function(results) {
   )
 }
 
-test_that("Can return electric consumption data sample", {
+test_consumption_sample <- function(meter_type) {
   mock_api <- function(...) {
     create_mock_api_response(
       count = 100,
@@ -30,7 +30,7 @@ test_that("Can return electric consumption data sample", {
   mockery::stub(get_consumption, "octopus_api", mock_api)
 
   expect_message(
-    consumption_data <- get_consumption("electricity"),
+    consumption_data <- get_consumption(meter_type),
     "Returning 100 rows"
   )
 
@@ -40,32 +40,14 @@ test_that("Can return electric consumption data sample", {
     c("consumption", "interval_start", "interval_end")
   )
   expect_equal(nrow(consumption_data), 100L)
+}
+
+test_that("Can return electric consumption data sample", {
+  test_consumption_sample("electricity")
 })
 
 test_that("Can return gas consumption data sample", {
-  mock_api <- function(...) {
-    create_mock_api_response(
-      count = 100,
-      results = tibble::tibble(
-        consumption = 1:100,
-        interval_start = "a",
-        interval_end = "b"
-      )
-    )
-  }
-  mockery::stub(get_consumption, "octopus_api", mock_api)
-
-  expect_message(
-    consumption_data <- get_consumption("gas"),
-    "Returning 100 rows"
-  )
-
-  expect_s3_class(consumption_data, "tbl_df")
-  expect_named(
-    consumption_data,
-    c("consumption", "interval_start", "interval_end")
-  )
-  expect_equal(nrow(consumption_data), 100L)
+  test_consumption_sample("gas")
 })
 
 test_that("errors properly with incorrect params", {

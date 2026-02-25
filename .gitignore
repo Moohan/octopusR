@@ -7,3 +7,5 @@ docs
 octopusR.Rcheck/
 octopusR*.tar.gz
 octopusR*.tgz
+.desloppify/
+scorecard.png
