@@ -21,7 +21,7 @@ get_consumption(
 \arguments{
 \item{meter_type}{Type of meter-point, electricity or gas}
 
-\item{mpan_mprn}{The electricity meter-point's MPAN or gas meter-point’s
+\item{mpan_mprn}{The electricity meter-point's MPAN or gas meter-point's
 MPRN.}
 
 \item{serial_number}{The meter's serial number.}
