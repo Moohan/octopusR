@@ -111,35 +111,35 @@ get_meter_details <- function(
       serial_number <- Sys.getenv("OCTOPUSR_GAS_SERIAL_NUM")
     }
 
-      if (!identical(mpan_mprn, "") && !identical(serial_number, "")) {
-        meter_gsp <- if (include_gsp && meter_type == "electricity") {
-          get_meter_gsp(mpan = mpan_mprn)
-        } else {
-          NA
-        }
-
-        structure(
-          list(
-            type = meter_type,
-            mpan_mprn = mpan_mprn,
-            serial_number = serial_number,
-            direction = direction,
-            gsp = meter_gsp
-          ),
-          class = "octopus_meter-point"
-        )
+    if (!identical(mpan_mprn, "") && !identical(serial_number, "")) {
+      meter_gsp <- if (include_gsp && meter_type == "electricity") {
+        get_meter_gsp(mpan = mpan_mprn)
       } else {
-        cli::cli_abort(
-          paste0(
-            "Meter details were missing or incomplete, please supply with ",
-            "{.arg mpan_mprn} and {.arg serial_number} arguments or with ",
-            "{.help [{.fun set_meter_details}](octopusR::set_meter_details)}."
-          ),
-          call = rlang::caller_env()
-        )
+        NA
       }
+
+      structure(
+        list(
+          type = meter_type,
+          mpan_mprn = mpan_mprn,
+          serial_number = serial_number,
+          direction = direction,
+          gsp = meter_gsp
+        ),
+        class = "octopus_meter-point"
+      )
+    } else {
+      cli::cli_abort(
+        paste0(
+          "Meter details were missing or incomplete, please supply with ",
+          "{.arg mpan_mprn} and {.arg serial_number} arguments or with ",
+          "{.help [{.fun set_meter_details}](octopusR::set_meter_details)}."
+        ),
+        call = rlang::caller_env()
+      )
     }
   }
+}
 
 testing_meter <- function(
   meter_type = c("electricity", "gas"),

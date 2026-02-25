@@ -8,13 +8,15 @@
 #' @return a character of the meter-points GSP.
 #' @export
 get_meter_gsp <- function(
-  mpan = get_meter_details("electricity")[["mpan_mprn"]]
+  mpan = get_meter_details("electricity", include_gsp = FALSE)[["mpan_mprn"]]
 ) {
   if (is.null(mpan) || is.na(mpan) || mpan == "") {
     cli::cli_abort(
-      "Meter details were missing or incomplete, please supply with
-      {.arg mpan_mprn} and {.arg serial_number} arguments or with
-      {.help [{.fun set_meter_details}](octopusR::set_meter_details)}",
+      paste0(
+        "Meter details were missing or incomplete, please supply with ",
+        "{.arg mpan_mprn} and {.arg serial_number} arguments or with ",
+        "{.help [{.fun set_meter_details}](octopusR::set_meter_details)}"
+      ),
       call = rlang::caller_env()
     )
   }
@@ -30,7 +32,5 @@ get_meter_gsp <- function(
     path = path
   )
 
-  meter_gsp <- resp[["content"]][["gsp"]]
-
-  return(meter_gsp)
+  resp[["content"]][["gsp"]]
 }

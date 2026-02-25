@@ -26,8 +26,8 @@ MPRN.}
 
 \item{serial_number}{The meter's serial number.}
 
-\item{direction}{For electricity meters, specify "import", "export", or NULL (default).
-When NULL, uses the legacy single MPAN storage.}
+\item{direction}{For electricity meters, specify "import", "export",
+or NULL (default). When NULL, uses the legacy single MPAN storage.}
 
 \item{api_key}{Your API key. If you are an Octopus Energy customer,
 you can generate an API key on the

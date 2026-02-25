@@ -41,7 +41,10 @@ is_testing <- function() {
 
 testing_key <- function() {
   safe_decrypt(
-    "gSnStfRq0gqwkVy9notuWa97vp_d7hxX3IOrlMv6g1nlNeMhtHSdvboMx_49zcVWgpityPpCtKA",
+    paste0(
+      "gSnStfRq0gqwkVy9notuWa97vp_d7hxX3IOrlMv6g1nlNeMhtHS",
+      "dvboMx_49zcVWgpityPpCtKA"
+    ),
     "sk_test_dummy_key"
   )
 }
