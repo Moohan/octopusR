@@ -26,7 +26,8 @@ jobs:
         with:
           fetch-depth: 0
 
-      - uses: ./.github/actions/setup-r-env
+      - name: Setup R environment
+        uses: ./.github/actions/setup-r-env
         with:
           extra-packages: any::roxygen2
           needs: roxygen2
