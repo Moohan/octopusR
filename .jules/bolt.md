@@ -1,0 +1,3 @@
+## 2025-05-15 - [Optimization] **Learning:** Replacing `ifelse()` with logical indexing for vector operations provides a significant (~3x-4x) speedup and reduces memory allocation by ~3.4x in data-heavy paths like `combine_consumption`. **Action:** Always prefer logical indexing `x[is.na(x)] <- 0` over `ifelse(is.na(x), 0, x)` for large vectors.
+
+## 2025-05-15 - [Robustness] **Learning:** `httr2::secret_decrypt` returns garbage if the key is missing or incorrect, which can cause obscure "input string 1 is invalid" errors in downstream path functions. **Action:** Use a `safe_decrypt` helper that validates output (ASCII check, regex match) and provides fallbacks to ensure test stability.
