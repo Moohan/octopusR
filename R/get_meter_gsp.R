@@ -8,7 +8,7 @@
 #' @return a character of the meter-points GSP.
 #' @export
 get_meter_gsp <- function(
-  mpan = get_meter_details("electricity")[["mpan_mprn"]]
+  mpan = get_meter_details("electricity", include_gsp = FALSE)[["mpan_mprn"]]
 ) {
   if (is.null(mpan) || is.na(mpan) || mpan == "") {
     cli::cli_abort(
