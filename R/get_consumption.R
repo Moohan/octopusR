@@ -34,9 +34,10 @@
 #' * `week`
 #' * `month`
 #' * `quarter`
-#' @param direction For electricity meters, specify "import", "export", or NULL (default).
-#' When NULL, uses the legacy single MPAN storage.
-#' @param page_size The number of results to return per page. This is intended for internal testing and may be removed in a future release.
+#' @param direction For electricity meters, specify "import", "export", or NULL
+#' (default). When NULL, uses the legacy single MPAN storage.
+#' @param page_size The number of results to return per page. This is intended
+#' for internal testing and may be removed in a future release.
 #'
 #' @return a [tibble][tibble::tibble-package] of the requested consumption data.
 #' @note For the fastest data aggregation, it is recommended to have either
@@ -119,7 +120,10 @@ get_consumption <- function(
       page_size <- 100L
       cli::cli_inform(c(
         "i" = "Returning 100 rows only as a date range wasn't provided.",
-        "v" = "Specify a date range with {.arg period_to} and {.arg period_from}."
+        "v" = paste0(
+          "Specify a date range with {.arg period_to} and ",
+          "{.arg period_from}."
+        )
       ))
     } else {
       check_datetime_format(period_from)
@@ -151,21 +155,21 @@ get_consumption <- function(
     query = query
   )
 
-  page <- 1L
   total_rows <- resp[["content"]][["count"]]
   total_pages <- ceiling(total_rows / page_size)
   if (total_pages == 0) {
     return(tibble::tibble())
   }
+
   consumption_data_list <- vector("list", total_pages)
   consumption_data_list[[1L]] <- resp[["content"]][["results"]]
 
   if (total_pages > 1) {
-    reqs <- lapply(2:total_pages, function(page) {
+    reqs <- lapply(2:total_pages, function(p) {
       octopus_api(
         path = path,
         api_key = api_key,
-        query = append(query, list(page = page)),
+        query = append(query, list(page = p)),
         perform = FALSE
       )
     })
@@ -181,8 +185,7 @@ get_consumption <- function(
       }
     })
   }
-  # Filter out NULL elements from any failed API calls before binding. This
-  # prevents `do.call(rbind, ...)` from failing.
+  # Filter out NULL elements from failed API calls before binding.
   consumption_data_list <- Filter(Negate(is.null), consumption_data_list)
 
   # Using data.table::rbindlist() or vctrs::vec_rbind() provides a significant
@@ -208,7 +211,7 @@ get_consumption <- function(
       if (!rlang::is_installed(pkg = "lubridate", version = "0.2.1")) {
         cli::cli_abort(
           "{.pkg lubridate} must be installed to parse dates,
-                       use `tz = NULL` to return characters."
+          use `tz = NULL` to return characters."
         )
       }
     }
@@ -222,5 +225,5 @@ get_consumption <- function(
     )
   }
 
-  return(consumption_data)
+  consumption_data
 }

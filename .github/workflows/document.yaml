@@ -26,13 +26,8 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Setup R
-        uses: r-lib/actions/setup-r@6f6e5bc62fba3a704f74e7ad7ef7676c5c6a2590 # v2.11.4
-        with:
-          use-public-rspm: true
-
-      - name: Install dependencies
-        uses: r-lib/actions/setup-r-dependencies@6f6e5bc62fba3a704f74e7ad7ef7676c5c6a2590 # v2.11.4
+      - name: Setup R environment
+        uses: ./.github/actions/setup-r-env
         with:
           extra-packages: any::roxygen2
           needs: roxygen2
