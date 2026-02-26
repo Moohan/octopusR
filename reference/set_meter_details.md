@@ -3,8 +3,8 @@
 Set the details for your gas/electricity meter. These will be stored as
 environment variables. You should add:
 
-- `OCTOPUSR_MPAN = <electric MPAN>` (or
-  `OCTOPUSR_MPAN_IMPORT`/`OCTOPUSR_MPAN_EXPORT`)
+- `OCTOPUSR_MPAN = <electric MPAN>` (or `OCTOPUSR_MPAN_IMPORT`/
+  `OCTOPUSR_MPAN_EXPORT`)
 
 - `OCTOPUSR_MPRN = <gas MPRN>`
 

@@ -79,6 +79,6 @@ get_products(is_green = TRUE)
 #>  9 OUTGOING-S… EXPORT    Octopus … Octopus Out… Outgoing S… FALSE       TRUE    
 #> 10 OUTGOING-V… EXPORT    Outgoing… Outgoing Oc… Outgoing O… TRUE        TRUE    
 #> # ℹ 9 more variables: is_tracker <lgl>, is_prepay <lgl>, is_business <lgl>,
-#> #   is_restricted <lgl>, term <int>, available_from <chr>, available_to <chr>,
+#> #   is_restricted <lgl>, term <int>, available_from <chr>, available_to <lgl>,
 #> #   links <list>, brand <chr>
 ```
