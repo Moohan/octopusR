@@ -75,7 +75,13 @@ get_consumption <- function(
 
   # Get meter details if not provided
   if (is.null(mpan_mprn) || is.null(serial_number)) {
-    meter_details <- get_meter_details(meter_type, direction)
+    # include_gsp = FALSE avoids a redundant API call as the GSP
+    # is not needed for consumption data retrieval.
+    meter_details <- get_meter_details(
+      meter_type = meter_type,
+      direction = direction,
+      include_gsp = FALSE
+    )
     if (is.null(mpan_mprn)) {
       mpan_mprn <- meter_details[["mpan_mprn"]]
     }
