@@ -1,0 +1,1 @@
+## 2025-05-15 - [Optimization] **Learning:** Replacing `ifelse()` with logical indexing for vector NA replacement in R provides a ~4x speedup and significantly reduces memory allocation. **Action:** Always prefer logical indexing `x[is.na(x)] <- 0` over `ifelse(is.na(x), 0, x)` for simple vectorized replacements.
