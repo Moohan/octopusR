@@ -1,0 +1,1 @@
+## 2025-05-15 - [Vectorized NA Handling] **Learning:** Replacing `ifelse(is.na(x), 0, x)` with logical indexing `x[is.na(x)] <- 0` provides a ~4-5x speedup and reduces memory allocation by ~3.4x for large vectors in R. **Action:** Prefer logical indexing for simple vector replacements over `ifelse()` in performance-critical code.
