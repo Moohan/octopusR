@@ -1,0 +1,3 @@
+## 2025-05-14 - Redundant GSP lookups in get_consumption **Learning:** The `get_meter_details` function was performing a GSP lookup (via an API call) by default, which is redundant when called from `get_consumption` since that function only needs the MPAN and serial number to build its own API path. **Action:** Introduced `include_gsp` parameter to `get_meter_details` to allow skipping this lookup in hot paths.
+
+## 2025-05-14 - Vectorized NA replacement in combine_consumption **Learning:** `ifelse(is.na(x), 0, x)` is significantly slower (~4.4x) and more memory-intensive (~3x) than logical indexing `x[is.na(x)] <- 0` for large vectors. **Action:** Replaced `ifelse` with logical indexing in `combine_consumption`.
