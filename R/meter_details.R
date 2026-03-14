@@ -318,8 +318,9 @@ combine_consumption <- function(
     )
 
     # Rename consumption columns
-    # Optimization: Replacing ifelse() with logical indexing for faster execution
-    # and reduced memory allocation in this data-heavy path (~4-6x speedup).
+    # Optimization: Replacing ifelse() with logical indexing for faster
+    # execution and reduced memory allocation in this data-heavy path
+    # (~4-6x speedup).
     result$import_consumption <- result$consumption_import
     result$import_consumption[is.na(result$import_consumption)] <- 0
     result$export_consumption <- result$consumption_export
