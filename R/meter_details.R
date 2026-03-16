@@ -76,9 +76,18 @@ set_meter_details <- function(
   }
 }
 
+#' @param include_gsp (boolean, default: TRUE) Whether to include the GSP in the
+#' meter details. This is only applicable for electricity meters and involves
+#' an additional API call.
 get_meter_details <-
-  function(meter_type = c("electricity", "gas"), direction = NULL) {
+  function(
+    meter_type = c("electricity", "gas"),
+    direction = NULL,
+    include_gsp = TRUE
+  ) {
     meter_type <- match.arg(meter_type)
+
+    check_logical(include_gsp)
 
     # Validate direction parameter
     if (!is.null(direction) && meter_type != "electricity") {
@@ -113,17 +122,18 @@ get_meter_details <-
       }
 
       if (!identical(mpan_mprn, "") && !identical(serial_number, "")) {
+        meter_gsp <- NA_character_
+        if (meter_type == "electricity" && include_gsp) {
+          meter_gsp <- get_meter_gsp(mpan = mpan_mprn)
+        }
+
         meter <- structure(
           list(
             type = meter_type,
             mpan_mprn = mpan_mprn,
             serial_number = serial_number,
             direction = direction,
-            gsp = ifelse(
-              meter_type == "electricity",
-              get_meter_gsp(mpan = mpan_mprn),
-              NA
-            )
+            gsp = meter_gsp
           ),
           class = "octopus_meter-point"
         )
@@ -316,16 +326,10 @@ combine_consumption <- function(
     )
 
     # Rename consumption columns
-    result$import_consumption <- ifelse(
-      is.na(result$consumption_import),
-      0,
-      result$consumption_import
-    )
-    result$export_consumption <- ifelse(
-      is.na(result$consumption_export),
-      0,
-      result$consumption_export
-    )
+    result$import_consumption <- result$consumption_import
+    result$import_consumption[is.na(result$import_consumption)] <- 0
+    result$export_consumption <- result$consumption_export
+    result$export_consumption[is.na(result$export_consumption)] <- 0
     result$consumption_import <- NULL
     result$consumption_export <- NULL
 
