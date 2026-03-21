@@ -47,9 +47,3 @@ Combine consumption data from import and export meters into a
 single tibble with separate columns for import and export consumption.
 This is useful for users with solar panels or other export generation.
 }
-\note{
-Replacing NAs in vectors using logical indexing (e.g., x\link{is.na(x)} <- 0)
-provides a significant performance boost (~9x speedup and ~70\% memory
-reduction) compared to ifelse(is.na(x), 0, x) in this context,
-as verified by bench::mark().
-}
