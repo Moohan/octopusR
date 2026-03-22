@@ -18,5 +18,6 @@
 ^\.pre-commit-config\.yaml$
 ^codemeta\.json$
 ^\.claude$
+^\.jules$
 ^\.desloppify$
 ^scorecard\.png$
