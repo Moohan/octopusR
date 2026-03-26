@@ -4,10 +4,11 @@
 \alias{get_meter_gsp}
 \title{Get the GSP of a meter-point.}
 \usage{
-get_meter_gsp(mpan = get_meter_details("electricity")[["mpan_mprn"]])
+get_meter_gsp(mpan = NULL)
 }
 \arguments{
-\item{mpan}{The electricity meter-point's MPAN}
+\item{mpan}{The electricity meter-point's MPAN. If \code{NULL} (default) it will
+try to use the MPAN stored in the \code{OCTOPUSR_MPAN} environment variable.}
 }
 \value{
 a character of the meter-points GSP.
