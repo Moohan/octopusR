@@ -32,11 +32,3 @@ runs:
       with:
         extra-packages: ${{ inputs.extra-packages }}
         needs: ${{ inputs.needs }}
-
-    - name: Reinstall lazyeval from source on R-devel
-      if: inputs.r-version == 'devel'
-      shell: Rscript {0}
-      run: |
-        if (getRversion() >= '4.4.0') {
-          install.packages('lazyeval', type = 'source')
-        }

@@ -26,6 +26,7 @@ Suggests:
     covr,
     data.table,
     jsonlite,
+    lazyeval,
     lubridate (>= 0.2.1),
     mockery,
     spelling,
