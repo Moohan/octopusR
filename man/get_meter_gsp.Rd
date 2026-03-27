@@ -4,7 +4,9 @@
 \alias{get_meter_gsp}
 \title{Get the GSP of a meter-point.}
 \usage{
-get_meter_gsp(mpan = get_meter_details("electricity")[["mpan_mprn"]])
+get_meter_gsp(
+  mpan = get_meter_details("electricity", include_gsp = FALSE)[["mpan_mprn"]]
+)
 }
 \arguments{
 \item{mpan}{The electricity meter-point's MPAN}
@@ -15,4 +17,8 @@ a character of the meter-points GSP.
 \description{
 This endpoint can be used to get the GSP
 of a given meter-point.
+}
+\note{
+Redundant API calls are avoided by using
+\code{get_meter_details(include_gsp = FALSE)} internally.
 }
