@@ -1,0 +1,3 @@
+## 2025-05-15 - Redundant API calls in get_meter_details
+**Learning:** The internal helper `get_meter_details` was automatically fetching Grid Supply Point (GSP) data via a network request every time it was called. This caused redundant API calls in `get_consumption` and `get_meter_gsp` (when called without arguments) because these functions either don't need the GSP or fetch it themselves.
+**Action:** Added an `include_gsp` parameter to `get_meter_details` (defaulting to `TRUE` for backward compatibility) and set it to `FALSE` for internal calls where the data is redundant. This saves 1 network request per call in these hot paths.
