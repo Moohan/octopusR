@@ -76,8 +76,21 @@ set_meter_details <- function(
   }
 }
 
+#' Get meter details from environment variables
+#'
+#' @param meter_type Type of meter-point, electricity or gas
+#' @param direction For electricity meters, specify "import", "export", or NULL
+#' @param include_gsp Logical. If TRUE, will attempt to retrieve the GSP for
+#' electricity meters.
+#'
+#' @return an object of class `octopus_meter-point`
+#' @noRd
 get_meter_details <-
-  function(meter_type = c("electricity", "gas"), direction = NULL) {
+  function(
+    meter_type = c("electricity", "gas"),
+    direction = NULL,
+    include_gsp = TRUE
+  ) {
     meter_type <- match.arg(meter_type)
 
     # Validate direction parameter
@@ -90,7 +103,7 @@ get_meter_details <-
     }
 
     if (is_testing()) {
-      testing_meter(meter_type)
+      testing_meter(meter_type, include_gsp)
     } else {
       if (meter_type == "electricity") {
         if (is.null(direction)) {
@@ -113,17 +126,19 @@ get_meter_details <-
       }
 
       if (!identical(mpan_mprn, "") && !identical(serial_number, "")) {
+        meter_gsp <- if (include_gsp && meter_type == "electricity") {
+          get_meter_gsp(mpan = mpan_mprn)
+        } else {
+          NA_character_
+        }
+
         meter <- structure(
           list(
             type = meter_type,
             mpan_mprn = mpan_mprn,
             serial_number = serial_number,
             direction = direction,
-            gsp = ifelse(
-              meter_type == "electricity",
-              get_meter_gsp(mpan = mpan_mprn),
-              NA
-            )
+            gsp = meter_gsp
           ),
           class = "octopus_meter-point"
         )
@@ -140,7 +155,10 @@ get_meter_details <-
     }
   }
 
-testing_meter <- function(meter_type = c("electricity", "gas")) {
+testing_meter <- function(
+  meter_type = c("electricity", "gas"),
+  include_gsp = TRUE
+) {
   meter_type <- match.arg(meter_type)
 
   if (meter_type == "electricity") {
@@ -152,10 +170,14 @@ testing_meter <- function(meter_type = c("electricity", "gas")) {
       "g_K-kAcGIIcsrXeRegX8EjMBf7xnmhbX9ts",
       "sk_test_serial"
     )
-    meter_gsp <- if (identical(mpan, "sk_test_mpan")) {
-      "J"
+    meter_gsp <- if (include_gsp) {
+      if (identical(mpan, "sk_test_mpan")) {
+        "J"
+      } else {
+        get_meter_gsp(mpan = mpan)
+      }
     } else {
-      get_meter_gsp(mpan = mpan)
+      NA_character_
     }
 
     structure(
@@ -315,17 +337,14 @@ combine_consumption <- function(
       suffixes = c("_import", "_export")
     )
 
-    # Rename consumption columns
-    result$import_consumption <- ifelse(
-      is.na(result$consumption_import),
-      0,
-      result$consumption_import
-    )
-    result$export_consumption <- ifelse(
-      is.na(result$consumption_export),
-      0,
-      result$consumption_export
-    )
+    # Rename consumption columns. Using logical indexing is significantly
+    # faster and more memory-efficient than ifelse() for large datasets.
+    result$import_consumption <- result$consumption_import
+    result$import_consumption[is.na(result$import_consumption)] <- 0
+
+    result$export_consumption <- result$consumption_export
+    result$export_consumption[is.na(result$export_consumption)] <- 0
+
     result$consumption_import <- NULL
     result$consumption_export <- NULL
 
