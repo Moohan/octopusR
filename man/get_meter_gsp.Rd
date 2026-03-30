@@ -4,7 +4,7 @@
 \alias{get_meter_gsp}
 \title{Get the GSP of a meter-point.}
 \usage{
-get_meter_gsp(mpan = get_meter_details("electricity")[["mpan_mprn"]])
+get_meter_gsp(mpan = NULL)
 }
 \arguments{
 \item{mpan}{The electricity meter-point's MPAN}
