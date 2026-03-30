@@ -7,9 +7,13 @@
 #'
 #' @return a character of the meter-points GSP.
 #' @export
-get_meter_gsp <- function(
-  mpan = get_meter_details("electricity")[["mpan_mprn"]]
-) {
+get_meter_gsp <- function(mpan = NULL) {
+  # Optimization: If mpan is not provided, we retrieve it from the stored
+  # meter details without triggering a recursive GSP lookup.
+  if (is.null(mpan)) {
+    mpan <- get_meter_details("electricity", include_gsp = FALSE)[["mpan_mprn"]]
+  }
+
   if (is.null(mpan) || is.na(mpan) || mpan == "") {
     cli::cli_abort(
       "Meter details were missing or incomplete, please supply with
