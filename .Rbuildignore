@@ -19,4 +19,5 @@
 ^codemeta\.json$
 ^\.claude$
 ^\.desloppify$
+^\.jules$
 ^scorecard\.png$
