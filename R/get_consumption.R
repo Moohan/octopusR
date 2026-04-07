@@ -9,8 +9,8 @@
 #'
 #' ## Parsing dates
 #' To return dates properly parsed [lubridate][lubridate::lubridate-package] is
-#' required. Use the \`tz\` parameter to specify a time zone
-#' e.g. \`tz = "UTC"\`, the default (\`tz = NULL\`) will return the dates
+#' required. Use the 'tz' parameter to specify a time zone
+#' e.g. `tz = "UTC"`, the default (`tz = NULL`) will return the dates
 #' unparsed, as characters.
 #'
 #' @inheritParams set_api_key
@@ -19,22 +19,22 @@
 #' @param period_from Show consumption from the given datetime (inclusive).
 #' This parameter can be provided on its own.
 #' @param period_to Show consumption to the given datetime (exclusive).
-#' This parameter also requires providing the \`period_from\` parameter
+#' This parameter also requires providing the 'period_from' parameter
 #' to create a range.
 #' @param order_by Ordering of results returned. Default is that results are
 #' returned in reverse order from latest available figure.
 #' Valid values:
-#' * \`period\`, to give results ordered forward.
-#' * \`-period\`, (default), to give results ordered from most recent backwards.
+#' * 'period', to give results ordered forward.
+#' * '-period', (default), to give results ordered from most recent backwards.
 #' @param group_by Aggregates consumption over a specified time period.
 #' A day is considered to start and end at midnight in the server's time zone.
 #' The default is that consumption is returned in half-hour periods.
 #' Accepted values are:
-#' * \`hour\`
-#' * \`day\`
-#' * \`week\`
-#' * \`month\`
-#' * \`quarter\`
+#' * 'hour'
+#' * 'day'
+#' * 'week'
+#' * 'month'
+#' * 'quarter'
 #' @param direction For electricity meters, specify "import", "export", or NULL
 #' (default). When NULL, uses the legacy single MPAN storage.
 #' @param page_size The number of results to return per page. This is intended
