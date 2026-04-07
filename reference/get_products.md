@@ -72,7 +72,7 @@ get_products(is_green = TRUE)
 #>  2 AGILE-OUTG… EXPORT    Agile Ou… Agile Outgo… Outgoing O… TRUE        TRUE    
 #>  3 COOP-SEG-E… EXPORT    Co-op Sm… Co-op Smart… This is ou… FALSE       TRUE    
 #>  4 COOP-SEG-F… EXPORT    Co-op Sm… Co-op Smart… This is ou… FALSE       TRUE    
-#>  5 CP-12M-26-… IMPORT    Co-op Co… Co-op Commu… This fixed… FALSE       TRUE    
+#>  5 CP-10M-26-… IMPORT    Co-op Co… Co-op Commu… This fixed… FALSE       TRUE    
 #>  6 LP-SEG-EO-… EXPORT    my londo… my london s… This is ou… FALSE       TRUE    
 #>  7 LP-SEG-FIX… EXPORT    my londo… my london s… This is ou… FALSE       TRUE    
 #>  8 OUTGOING-S… EXPORT    Octopus … Octopus Out… Outgoing S… FALSE       TRUE    
