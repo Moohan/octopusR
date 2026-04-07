@@ -26,49 +26,56 @@ Three phases, repeated as a cycle.
 
 If the workspace contains multiple programs (e.g., frontend + backend in sibling folders), scan each one separately — do not scan the parent directory:
 
-```bash
+```text
 desloppify --lang typescript scan --path ./frontend
 desloppify --lang python scan --path ./backend
+
 ```
 
 Each `--path` target should be a single coherent project. Scanning a parent that contains multiple programs mixes state and path context, producing unreliable results.
 
 ### Phase 1: Scan and review — understand the codebase
 
-```bash
+```text
 desloppify scan --path .       # analyse the codebase
 desloppify status              # check scores — are we at target?
+
 ```
 
 After scanning, **always run `desloppify next`** — it tells you exactly what to do, in order. Don't interpret the scan output yourself or ask the user what to do. Just run `next` and follow its instructions.
 
 The scan will tell you if subjective dimensions need review. Follow its instructions. To trigger a review manually:
-```bash
+
+```text
 desloppify review --prepare    # then follow your runner's review workflow
+
 ```
 
 ### Phase 2: Plan — decide what to work on
 
 After reviews, triage stages and plan creation appear in the execution queue surfaced by `next`. Complete them in order — `next` tells you what each stage expects in the `--report`:
-```bash
+
+```text
 desloppify next                                        # shows the next execution workflow step
 desloppify plan triage --stage observe --report "themes and root causes..."
 desloppify plan triage --stage reflect --report "comparison against completed work..."
 desloppify plan triage --stage organize --report "summary of priorities..."
 desloppify plan triage --complete --strategy "execution plan..."
+
 ```
 
 For automated triage: `desloppify plan triage --run-stages --runner codex` (Codex) or `--runner claude` (Claude). Options: `--only-stages`, `--dry-run`, `--stage-timeout-seconds`.
 
 Then shape the queue. **The plan shapes everything `next` gives you** — `next` is the execution queue, not the full backlog. Don't skip this step.
 
-```bash
+```text
 desloppify plan                          # see the living plan details
 desloppify plan queue                    # compact execution queue view
 desloppify plan reorder <pat> top        # reorder — what unblocks the most?
 desloppify plan cluster create <name>    # group related issues to batch-fix
 desloppify plan focus <cluster>          # scope next to one cluster
 desloppify plan skip <pat>              # defer — hide from next
+
 ```
 
 ### Phase 3: Execute — grind the queue to completion
@@ -76,13 +83,16 @@ desloppify plan skip <pat>              # defer — hide from next
 Trust the plan and execute. Don't rescan mid-queue — finish the queue first.
 
 **Branch first.** Create a dedicated branch — never commit health work directly to main:
-```bash
+
+```text
 git checkout -b desloppify/code-health    # or desloppify/<focus-area>
 desloppify config set commit_pr 42        # link a PR for auto-updated descriptions
+
 ```
 
 **The loop:**
-```bash
+
+```text
 # 1. Get the next item from the execution queue
 desloppify next
 
@@ -98,6 +108,7 @@ desloppify plan commit-log record      # moves findings uncommitted → committe
 git push -u origin desloppify/code-health
 
 # 6. Repeat until the queue is empty
+
 ```
 
 Score may temporarily drop after fixes — cascade effects are normal, keep going.
@@ -127,7 +138,7 @@ Overall score = **25% mechanical** + **75% subjective**.
 
 Four paths to get subjective scores:
 
-- **Local runner (Codex)**: `desloppify review --run-batches --runner codex --parallel --scan-after-import` — automated end-to-end.
+- **Local runner (Codex)**: `desloppify review --run-batches --runner codex --parallel --scan-after-import` — automated end-to-end. (Note: Claude users are subject to the [Claude Code Overlay](#claude-code-overlay) restrictions which may prohibit using the codex runner) (Note: Claude users are subject to the [Claude Code Overlay](#claude-code-overlay) restrictions which may prohibit using the codex runner) (Note: Claude users are subject to the [Claude Code Overlay](#claude-code-overlay) restrictions which may prohibit using the codex runner)
 - **Local runner (Claude)**: `desloppify review --prepare` → launch parallel subagents → `desloppify review --import merged.json` — see skill doc overlay for details.
 - **Cloud/external**: `desloppify review --external-start --external-runner claude` → follow session template → `--external-submit`.
 - **Manual path**: `desloppify review --prepare` → review per dimension → `desloppify review --import file.json`.
@@ -149,7 +160,7 @@ Return machine-readable JSON for review imports. For `--external-submit`, includ
 {
   "session": {
     "id": "<session_id_from_template>",
-    "token": "<session_hmac_from_template>"
+    "session_hmac": "<session_hmac_from_template>"
   },
   "assessments": {
     "<dimension_from_query>": 0
@@ -166,6 +177,7 @@ Return machine-readable JSON for review imports. For `--external-submit`, includ
     }
   ]
 }
+
 ```
 
 `findings` MUST match `query.system_prompt` exactly (including `related_files`, `evidence`, and `suggestion`). Use `"findings": []` when no defects found. Import is fail-closed: invalid findings abort unless `--allow-partial` is passed. Assessment scores are auto-applied from trusted internal or cloud session imports. Legacy `--attested-external` remains supported.
@@ -181,18 +193,20 @@ Return machine-readable JSON for review imports. For `--external-submit`, includ
 Runners that support agent definitions (Cursor, Copilot, Gemini) can create a dedicated reviewer agent. Use this system prompt:
 
 ```
+
 You are a code quality reviewer. You will be given a codebase path, a set of
 dimensions to score, and what each dimension means. Read the code, score each
 dimension 0-100 from evidence only, and return JSON in the required format.
 Do not anchor to target thresholds. When evidence is mixed, score lower and
 explain uncertainty.
+
 ```
 
 See your editor's overlay section below for the agent config format.
 
 ### Plan commands
 
-```bash
+```text
 desloppify plan reorder <cluster> top       # move all cluster members at once
 desloppify plan reorder <a> <b> top        # mix clusters + findings in one reorder
 desloppify plan reorder <pat> before -t X  # position relative to another item/cluster
@@ -200,11 +214,12 @@ desloppify plan cluster reorder a,b top    # reorder multiple clusters as one bl
 desloppify plan resolve <pat>              # mark complete
 desloppify plan reopen <pat>               # reopen
 desloppify backlog                          # broader non-execution backlog
+
 ```
 
 ### Commit tracking
 
-```bash
+```text
 desloppify plan commit-log                      # see uncommitted + committed status
 desloppify plan commit-log record               # record HEAD commit, update PR description
 desloppify plan commit-log record --note "why"  # with rationale
@@ -212,6 +227,7 @@ desloppify plan commit-log record --only "smells::*"  # record specific findings
 desloppify plan commit-log history              # show commit records
 desloppify plan commit-log pr                   # preview PR body markdown
 desloppify config set commit_tracking_enabled false  # disable guidance
+
 ```
 
 After resolving findings as `fixed`, the tool shows uncommitted work, committed history, and a suggested commit message. After committing externally, run `record` to move findings from uncommitted to committed and auto-update the linked PR description.
@@ -220,19 +236,20 @@ After resolving findings as `fixed`, the tool shows uncommitted work, committed 
 
 Directives are messages shown to agents at lifecycle phase transitions — use them to switch models, set constraints, or give context-specific instructions.
 
-```bash
+```text
 desloppify directives                     # show all configured directives
 desloppify directives set execute "Switch to claude-sonnet-4-6. Focus on speed."
 desloppify directives set triage "Switch to claude-opus-4-6. Read carefully."
 desloppify directives set review "Use blind packet. Do not anchor on previous scores."
 desloppify directives unset execute       # remove a directive
+
 ```
 
 Available phases: `execute`, `review`, `triage`, `workflow`, `scan` (and fine-grained variants like `review_initial`, `triage_postflight`, etc.).
 
 ### Quick reference
 
-```bash
+```text
 desloppify next --count 5                         # top 5 execution items
 desloppify next --cluster <name>                  # drill into a cluster
 desloppify backlog --count 5                      # top 5 backlog items outside execution
@@ -242,6 +259,7 @@ desloppify plan skip --permanent "<id>" --note "reason" --attest "..." # accept 
 desloppify exclude <path>                         # exclude a directory from scanning
 desloppify config show                            # show all config including excludes
 desloppify scan --path . --reset-subjective       # reset subjective baseline to 0
+
 ```
 
 ## 4. Fix Tool Issues Upstream
@@ -252,22 +270,24 @@ When desloppify itself appears wrong or inconsistent — a bug, a bad detection,
 
 Clone the tool repo to a temp directory, make the fix there, and verify it works against the project you're scanning before pushing.
 
-```bash
+```text
 git clone https://github.com/peteromallet/desloppify.git /tmp/desloppify-fix
 cd /tmp/desloppify-fix
 git checkout -b fix/<short-description>
+
 ```
 
 Make your changes, then run the test suite and verify the fix against the original project:
 
-```bash
+```text
 python -m pytest desloppify/tests/ -q
 python -m desloppify scan --path <project-root>   # the project you were scanning
+
 ```
 
 Once it looks good, push and open a PR:
 
-```bash
+```text
 git add <files> && git commit -m "fix: <what and why>"
 git push -u origin fix/<short-description>
 gh pr create --title "fix: <short description>" --body "$(cat <<'EOF'
@@ -278,6 +298,7 @@ gh pr create --title "fix: <short description>" --body "$(cat <<'EOF'
 <what you changed and why>
 EOF
 )"
+
 ```
 
 Clean up after: `rm -rf /tmp/desloppify-fix`

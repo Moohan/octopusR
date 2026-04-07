@@ -89,5 +89,5 @@ unparsed, as characters.
 }
 \note{
 For the fastest data aggregation, it is recommended to have either
-the {data.table} or {vctrs} packages installed.
+the \pkg{data.table} or \pkg{vctrs} packages installed.
 }

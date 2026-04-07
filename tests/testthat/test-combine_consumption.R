@@ -1,7 +1,7 @@
 skip_if_offline(host = "api.octopus.energy")
 
 test_that("combine_consumption handles missing data gracefully", {
-  # Mock get_consumption to throw error for both calls to ensure we hit
+  # Mock get_consumption to throw error for both calls to ensure
   # the final stop()
   with_mocked_bindings(
     get_consumption = function(...) stop("API Error"),

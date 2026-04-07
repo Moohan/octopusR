@@ -42,7 +42,7 @@
 #'
 #' @return a [tibble][tibble::tibble-package] of the requested consumption data.
 #' @note For the fastest data aggregation, it is recommended to have either
-#' the {data.table} or {vctrs} packages installed.
+#' the \pkg{data.table} or \pkg{vctrs} packages installed.
 #' @export
 get_consumption <- function(
   meter_type = c("electricity", "gas"),
@@ -68,12 +68,8 @@ get_consumption <- function(
   # 1. Resolve meter details (Direct call for mockery stubbing)
   if (is.null(mpan_mprn) || is.null(serial_number)) {
     meter_details <- get_meter_details(meter_type, direction)
-    mpan_mprn <- if (is.null(mpan_mprn)) meter_details$mpan_mprn else mpan_mprn
-    serial_number <- if (is.null(serial_number)) {
-      meter_details$serial_number
-    } else {
-      serial_number
-    }
+    mpan_mprn <- mpan_mprn %||% meter_details$mpan_mprn
+    serial_number <- serial_number %||% meter_details$serial_number
   }
 
   # 2. Validate and prepare parameters
@@ -89,8 +85,7 @@ get_consumption <- function(
 
   path <- glue::glue(
     "/v1", "{meter_type}-meter-points", mpan_mprn, "meters",
-    serial_number, "consumption",
-    .sep = "/"
+    serial_number, "consumption", .sep = "/"
   )
 
   query <- list(
@@ -104,9 +99,7 @@ get_consumption <- function(
   total_rows <- resp[["content"]][["count"]]
   total_pages <- ceiling(total_rows / page_size)
 
-  if (total_pages == 0) {
-    return(tibble::tibble())
-  }
+  if (total_pages == 0) return(tibble::tibble())
 
   data_list <- vector("list", total_pages)
   data_list[[1L]] <- resp[["content"]][["results"]]
@@ -125,7 +118,11 @@ get_consumption <- function(
   }
 
   # 5. Final processing
-  data_list <- Filter(Negate(is.null), data_list)
+  # Filter out error records
+  is_valid_data <- function(x) {
+    !is.null(x) && !(is.list(x) && "error" %in% names(x))
+  }
+  data_list <- Filter(is_valid_data, data_list)
   consumption_data <- combine_consumption_results(data_list)
   parse_consumption_dates(consumption_data, tz)
 }
@@ -141,16 +138,15 @@ prepare_consumption_opts <- function(
     )
   }
 
-  order_by <- if (missing(order_by) || is.null(order_by)) {
-    NULL
-  } else {
-    match.arg(order_by, c("-period", "period"))
+  if (!is.null(order_by)) {
+    order_by <- match.arg(order_by, c("-period", "period"))
   }
 
-  group_by <- if (missing(group_by) || is.null(group_by)) {
-    NULL
-  } else {
-    match.arg(group_by, c("hour", "day", "week", "month", "quarter"))
+  if (!is.null(group_by)) {
+    group_by <- match.arg(
+      group_by,
+      c("hour", "day", "week", "month", "quarter")
+    )
   }
 
   if (!is.null(period_to)) check_datetime_format(period_to)
@@ -160,9 +156,7 @@ prepare_consumption_opts <- function(
 
 #' @noRd
 validate_page_size <- function(page_size, period_from) {
-  if (!is.null(page_size)) {
-    return(page_size)
-  }
+  if (!is.null(page_size)) return(page_size)
 
   if (is.null(period_from)) {
     cli::cli_inform(c(
@@ -181,10 +175,9 @@ extract_parallel_results <- function(resps) {
   lapply(resps, function(r) {
     if (inherits(r, "httr2_response")) {
       httr2::resp_body_json(r, simplifyVector = TRUE)[["results"]]
-    } else if (is.list(r) && "content" %in% names(r)) {
-      r[["content"]][["results"]]
-    } else if (inherits(r, "octopus_api")) {
-      r[["content"]][["results"]]
+    } else if (inherits(r, "condition")) {
+      cli::cli_warn("Request failed: {conditionMessage(r)}")
+      list(error = conditionMessage(r))
     } else {
       NULL
     }
@@ -205,9 +198,7 @@ combine_consumption_results <- function(data_list) {
 
 #' @noRd
 parse_consumption_dates <- function(data, tz) {
-  if (is.null(tz)) {
-    return(data)
-  }
+  if (is.null(tz)) return(data)
 
   if (rlang::is_interactive()) {
     rlang::check_installed(
@@ -232,6 +223,3 @@ parse_consumption_dates <- function(data, tz) {
   )
   data
 }
-
-# Helper for null coalescing
-`%||%` <- function(x, y) if (is.null(x)) y else x
