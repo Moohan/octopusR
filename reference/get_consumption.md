@@ -15,7 +15,7 @@ Unit of measurement:
 
 To return dates properly parsed
 [lubridate](https://lubridate.tidyverse.org/reference/lubridate-package.html)
-is required. Use the `tz` parameter to specify a time zone e.g.
+is required. Use the 'tz' parameter to specify a time zone e.g.
 `tz = "UTC"`, the default (`tz = NULL`) will return the dates unparsed,
 as characters.
 
@@ -70,7 +70,7 @@ get_consumption(
 - period_to:
 
   Show consumption to the given datetime (exclusive). This parameter
-  also requires providing the `period_from` parameter to create a range.
+  also requires providing the 'period_from' parameter to create a range.
 
 - tz:
 
@@ -83,9 +83,9 @@ get_consumption(
   Ordering of results returned. Default is that results are returned in
   reverse order from latest available figure. Valid values:
 
-  - `period`, to give results ordered forward.
+  - 'period', to give results ordered forward.
 
-  - `-period`, (default), to give results ordered from most recent
+  - '-period', (default), to give results ordered from most recent
     backwards.
 
 - page_size:
@@ -100,15 +100,15 @@ get_consumption(
   default is that consumption is returned in half-hour periods. Accepted
   values are:
 
-  - `hour`
+  - 'hour'
 
-  - `day`
+  - 'day'
 
-  - `week`
+  - 'week'
 
-  - `month`
+  - 'month'
 
-  - `quarter`
+  - 'quarter'
 
 ## Value
 
@@ -118,4 +118,4 @@ of the requested consumption data.
 ## Note
 
 For the fastest data aggregation, it is recommended to have either the
-`{data.table}` or `{vctrs}` packages installed.
+data.table or vctrs packages installed.
