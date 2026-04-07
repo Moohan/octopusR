@@ -37,7 +37,7 @@ you can generate an API key on the
 This parameter can be provided on its own.}
 
 \item{period_to}{Show consumption to the given datetime (exclusive).
-This parameter also requires providing the \\verb{period_from\\} parameter
+This parameter also requires providing the 'period_from' parameter
 to create a range.}
 
 \item{tz}{a character string that specifies which time zone to parse the date with. The string
@@ -47,8 +47,8 @@ must be a time zone that is recognized by the user's OS.}
 returned in reverse order from latest available figure.
 Valid values:
 \itemize{
-\item \\verb{period\\}, to give results ordered forward.
-\item \\verb{-period\\}, (default), to give results ordered from most recent backwards.
+\item 'period', to give results ordered forward.
+\item '-period', (default), to give results ordered from most recent backwards.
 }}
 
 \item{page_size}{The number of results to return per page. This is intended
@@ -59,11 +59,11 @@ A day is considered to start and end at midnight in the server's time zone.
 The default is that consumption is returned in half-hour periods.
 Accepted values are:
 \itemize{
-\item \\verb{hour\\}
-\item \\verb{day\\}
-\item \\verb{week\\}
-\item \\verb{month\\}
-\item \\verb{quarter\\}
+\item 'hour'
+\item 'day'
+\item 'week'
+\item 'month'
+\item 'quarter'
 }}
 }
 \value{
@@ -82,8 +82,8 @@ Unit of measurement:
 \subsection{Parsing dates}{
 
 To return dates properly parsed \link[lubridate:lubridate-package]{lubridate} is
-required. Use the \\verb{tz\\} parameter to specify a time zone
-e.g. \\verb{tz = "UTC"\\}, the default (\\verb{tz = NULL\\}) will return the dates
+required. Use the 'tz' parameter to specify a time zone
+e.g. \code{tz = "UTC"}, the default (\code{tz = NULL}) will return the dates
 unparsed, as characters.
 }
 }
