@@ -85,7 +85,8 @@ get_consumption <- function(
 
   path <- glue::glue(
     "/v1", "{meter_type}-meter-points", mpan_mprn, "meters",
-    serial_number, "consumption", .sep = "/"
+    serial_number, "consumption",
+    .sep = "/"
   )
 
   query <- list(
@@ -99,7 +100,9 @@ get_consumption <- function(
   total_rows <- resp[["content"]][["count"]]
   total_pages <- ceiling(total_rows / page_size)
 
-  if (total_pages == 0) return(tibble::tibble())
+  if (total_pages == 0) {
+    return(tibble::tibble())
+  }
 
   data_list <- vector("list", total_pages)
   data_list[[1L]] <- resp[["content"]][["results"]]
@@ -156,7 +159,9 @@ prepare_consumption_opts <- function(
 
 #' @noRd
 validate_page_size <- function(page_size, period_from) {
-  if (!is.null(page_size)) return(page_size)
+  if (!is.null(page_size)) {
+    return(page_size)
+  }
 
   if (is.null(period_from)) {
     cli::cli_inform(c(
@@ -198,7 +203,9 @@ combine_consumption_results <- function(data_list) {
 
 #' @noRd
 parse_consumption_dates <- function(data, tz) {
-  if (is.null(tz)) return(data)
+  if (is.null(tz)) {
+    return(data)
+  }
 
   if (rlang::is_interactive()) {
     rlang::check_installed(
