@@ -1,226 +1,162 @@
-<!-- desloppify-begin -->
-<!-- desloppify-skill-version: 1 -->
 ---
 name: desloppify
 description: >
-  Codebase health scanner and technical debt tracker. Use when the user asks
-  about code quality, technical debt, dead code, large files, god classes,
-  duplicate functions, code smells, naming issues, import cycles, or coupling
-  problems. Also use when asked for a health score, what to fix next, or to
-  create a cleanup plan. Supports 28 languages.
-allowed-tools: Bash(desloppify *)
+  Multi-language codebase health scanner. Use when the user explicitly asks
+  to run desloppify, scan for technical debt, get a health score, or create
+  a cleanup plan. Do NOT trigger for general code review, renaming, or
+  fixing individual bugs.
 ---
+
+<!-- desloppify-begin -->
+<!-- desloppify-skill-version: 6 -->
 
 # Desloppify
 
 ## 1. Your Job
 
-**Improve code quality by fixing findings and maximizing strict score honestly.**
-Never hide debt with suppression patterns just to improve lenient score. After
-every scan, show the user ALL scores:
+Maximise the **strict score** honestly. Your main cycle: **scan → plan → execute → rescan**. Follow the scan output's **INSTRUCTIONS FOR AGENTS** — don't substitute your own analysis.
 
-| What | How |
-|------|-----|
-| Overall health | lenient + strict |
-| 5 mechanical dimensions | File health, Code quality, Duplication, Test health, Security |
-| 7 subjective dimensions | Naming Quality, Error Consistency, Abstraction Fit, Logic Clarity, AI Generated Debt, Type Safety, Contract Coherence |
+**Don't be lazy.** Do large refactors and small detailed fixes with equal energy. If it takes touching 20 files, touch 20 files. If it's a one-line change, make it. No task is too big or too small — fix things properly, not minimally.
 
-Never skip scores. The user tracks progress through them.
+## 2. The Workflow
 
-## 2. Core Loop
+Three phases, repeated as a cycle.
 
-```
-scan → follow the tool's strategy → fix or wontfix → rescan
-```
+### Monorepos and multi-project directories
 
-1. `desloppify scan --path .` — the scan output ends with **INSTRUCTIONS FOR AGENTS**. Follow them. Don't substitute your own analysis.
-2. Fix the issue the tool recommends.
-3. `desloppify resolve fixed "<id>"` — or if it's intentional/acceptable:
-   `desloppify resolve wontfix "<id>" --note "reason why"`
-4. Rescan to verify.
-
-**Wontfix is not free.** It lowers the strict score. The gap between lenient and strict IS wontfix debt. Call it out when:
-- Wontfix count is growing — challenge whether past decisions still hold
-- A dimension is stuck 3+ scans — suggest a different approach
-- Auto-fixers exist for open findings — ask why they haven't been run
-
-## 3. Commands
+If the workspace contains multiple programs (e.g., frontend + backend in sibling folders), scan each one separately — do not scan the parent directory:
 
 ```bash
-desloppify scan --path src/               # full scan
-desloppify scan --path src/ --reset-subjective  # reset subjective baseline to 0, then scan
-desloppify next --count 5                  # top priorities
-desloppify show <pattern>                  # filter by file/detector/ID
-desloppify plan                            # prioritized plan
-desloppify fix <fixer> --dry-run           # auto-fix (dry-run first!)
-desloppify move <src> <dst> --dry-run      # move + update imports
-desloppify resolve open|fixed|wontfix|false_positive "<pat>"   # classify/reopen findings
-desloppify review --run-batches --runner codex --parallel --scan-after-import  # preferred blind review path
-desloppify review --run-batches --runner codex --parallel --scan-after-import --retrospective  # include historical issue context for root-cause loop
-desloppify review --prepare                # generate subjective review data (cloud/manual path)
-desloppify review --external-start --external-runner claude  # recommended cloud durable path
-desloppify review --external-submit --session-id <id> --import review_result.json  # submit cloud session output with canonical provenance
-desloppify review --import file.json       # import review results
-desloppify review --validate-import file.json  # validate payload/mode without mutating state
+desloppify --lang typescript scan --path ./frontend
+desloppify --lang python scan --path ./backend
 ```
 
-## 4. Subjective Reviews (biggest score lever)
+Each `--path` target should be a single coherent project. Scanning a parent that contains multiple programs mixes state and path context, producing unreliable results.
 
-Score = 40% mechanical + 60% subjective. Subjective starts at 0% until reviewed.
+### Phase 1: Scan and review — understand the codebase
 
-1. Preferred local path: `desloppify review --run-batches --runner codex --parallel --scan-after-import`.
-   This prepares blind packets, runs isolated subagent batches, merges, imports, and rescans in one flow.
+```bash
+desloppify scan --path .       # analyse the codebase
+desloppify status              # check scores — are we at target?
+```
 
-2. **Review each dimension independently.** For best results, review dimensions in
-   isolation so scores don't bleed across concerns. If your agent supports parallel
-   execution, use it — your agent-specific overlay (appended below, if installed)
-   has the optimal approach. Each reviewer needs:
-   - The codebase path and the dimensions to score
-   - What each dimension means (from `query.json`'s `dimension_prompts`)
-   - The output format (below)
-   - Nothing else — let them decide what to read and how
+After scanning, **always run `desloppify next`** — it tells you exactly what to do, in order. Don't interpret the scan output yourself or ask the user what to do. Just run `next` and follow its instructions.
 
-3. Cloud/manual path: run `desloppify review --prepare`, perform isolated reviews,
-   merge assessments (average scores if multiple reviewers cover the same dimension)
-   and findings, then import:
-   ```bash
-   desloppify review --import findings.json
-   ```
-   Import is fail-closed by default: if any finding is invalid/skipped, import aborts.
-   Use `--allow-partial` only for explicit exceptions.
-   External imports ingest findings by default. For durable cloud-subagent scores,
-   prefer the session flow:
-   `desloppify review --external-start --external-runner claude` then use the generated
-   `claude_launch_prompt.md` + `review_result.template.json`, and run the printed
-   `desloppify review --external-submit --session-id <id> --import <file>` command.
-   Legacy durable import remains available via
-   `--attested-external --attest "I validated this review was completed without awareness of overall score and is unbiased."`
-   (with valid blind packet provenance in the payload).
-   Use `desloppify review --validate-import findings.json ...` to preflight schema
-   and import mode before mutating state.
-   Manual override cannot be combined with `--allow-partial`, and those manual
-   assessment scores are provisional: they expire on the next `scan` unless
-   replaced by trusted internal or attested-external imports.
+The scan will tell you if subjective dimensions need review. Follow its instructions. To trigger a review manually:
+```bash
+desloppify review --prepare    # then follow your runner's review workflow
+```
 
-   Required output format per reviewer:
-   ```json
-   {
-     "session": { "id": "<session_id_from_template>", "token": "<session_token_from_template>" },
-     "assessments": { "naming_quality": 75.0, "logic_clarity": 82.0 },
-     "findings": [{
-       "dimension": "naming_quality",
-       "identifier": "short_id",
-       "summary": "one line",
-       "related_files": ["path/to/file.py"],
-       "evidence": ["specific observation"],
-       "suggestion": "concrete action",
-       "confidence": "high|medium|low"
-     }]
-   }
-   ```
-   For non-session legacy imports (`review --import ... --attested-external`), `session` may be omitted.
+### Phase 2: Plan — decide what to work on
 
-4. **Fix findings via the core loop.** After importing, findings become tracked state
-   entries. Fix each one in code, then resolve:
-   ```bash
-   desloppify issues                    # see the work queue
-   # ... fix the code ...
-   desloppify resolve fixed "<id>"      # mark as fixed
-   desloppify scan --path .             # verify
-   ```
+After reviews, triage stages and plan creation appear in the execution queue surfaced by `next`. Complete them in order — `next` tells you what each stage expects in the `--report`:
+```bash
+desloppify next                                        # shows the next execution workflow step
+desloppify plan triage --stage observe --report "themes and root causes..."
+desloppify plan triage --stage reflect --report "comparison against completed work..."
+desloppify plan triage --stage organize --report "summary of priorities..."
+desloppify plan triage --complete --strategy "execution plan..."
+```
 
-**Do NOT fix findings before importing.** Import creates tracked state entries that
-let desloppify correlate fixes to findings, track resolution history, and verify fixes
-on rescan. If you fix code first and then import, the findings arrive as orphan issues
-with no connection to the work already done.
+For automated triage: `desloppify plan triage --run-stages --runner codex` (Codex) or `--runner claude` (Claude). Options: `--only-stages`, `--dry-run`, `--stage-timeout-seconds`.
 
-Need a clean subjective rerun from zero? Run `desloppify scan --path src/ --reset-subjective` before preparing/importing fresh review data.
+Then shape the queue. **The plan shapes everything `next` gives you** — `next` is the execution queue, not the full backlog. Don't skip this step.
 
-Even moderate scores (60-80) dramatically improve overall health.
+```bash
+desloppify plan                          # see the living plan details
+desloppify plan queue                    # compact execution queue view
+desloppify plan reorder <pat> top        # reorder — what unblocks the most?
+desloppify plan cluster create <name>    # group related issues to batch-fix
+desloppify plan focus <cluster>          # scope next to one cluster
+desloppify plan skip <pat>              # defer — hide from next
+```
 
-Integrity safeguard:
-- If one subjective dimension lands exactly on the strict target, the scanner warns and asks for re-review.
-- If two or more subjective dimensions land on the strict target in the same scan, those dimensions are auto-reset to 0 for that scan and must be re-reviewed/imported.
-- Reviewers should score from evidence only (not from target-seeking).
+### Phase 3: Execute — grind the queue to completion
 
-## 5. Quick Reference
+Trust the plan and execute. Don't rescan mid-queue — finish the queue first.
 
-- **Tiers**: T1 auto-fix, T2 quick manual, T3 judgment call, T4 major refactor
+**Branch first.** Create a dedicated branch — never commit health work directly to main:
+```bash
+git checkout -b desloppify/code-health    # or desloppify/<focus-area>
+desloppify config set commit_pr 42        # link a PR for auto-updated descriptions
+```
+
+**The loop:**
+```bash
+# 1. Get the next item from the execution queue
+desloppify next
+
+# 2. Fix the issue in code
+
+# 3. Resolve it (next shows the exact command including required attestation)
+
+# 4. When you have a logical batch, commit and record
+git add <files> && git commit -m "desloppify: fix 3 deferred_import findings"
+desloppify plan commit-log record      # moves findings uncommitted → committed, updates PR
+
+# 5. Push periodically
+git push -u origin desloppify/code-health
+
+# 6. Repeat until the queue is empty
+```
+
+Score may temporarily drop after fixes — cascade effects are normal, keep going.
+If `next` suggests an auto-fixer, run `desloppify autofix <fixer> --dry-run` to preview, then apply.
+
+**When the queue is clear, go back to Phase 1.** New issues will surface, cascades will have resolved, priorities will have shifted. This is the cycle.
+
+## 3. Reference
+
+### Key concepts
+
+- **Tiers**: T1 auto-fix → T2 quick manual → T3 judgment call → T4 major refactor.
+- **Auto-clusters**: related findings are auto-grouped in `next`. Drill in with `next --cluster <name>`.
 - **Zones**: production/script (scored), test/config/generated/vendor (not scored). Fix with `zone set`.
-- **Auto-fixers** (TS only): `unused-imports`, `unused-vars`, `debug-logs`, `dead-exports`, etc.
-- **query.json**: After any command, has `narrative.actions` with prioritized next steps.
-- `--skip-slow` skips duplicate detection for faster iteration.
-- `--lang python`, `--lang typescript`, or `--lang csharp` to force language.
-- C# defaults to `--profile objective`; use `--profile full` to include subjective review.
-- Score can temporarily drop after fixes (cascade effects are normal).
+- **Wontfix cost**: widens the lenient↔strict gap. Challenge past decisions when the gap grows.
 
-## 6. Escalate Tool Issues Upstream
+### Scoring
 
-When desloppify itself appears wrong or inconsistent:
+Overall score = **25% mechanical** + **75% subjective**.
 
-1. Capture a minimal repro (`command`, `path`, `expected`, `actual`).
-2. Open a GitHub issue in `peteromallet/desloppify`.
-3. If you can fix it safely, open a PR linked to that issue.
-4. If unsure whether it is tool bug vs user workflow, issue first, PR second.
+- **Mechanical (25%)**: auto-detected issues — duplication, dead code, smells, unused imports, security. Fixed by changing code and rescanning.
+- **Subjective (75%)**: design quality review — naming, error handling, abstractions, clarity. Starts at **0%** until reviewed. The scan will prompt you when a review is needed.
+- **Strict score** is the north star: wontfix items count as open. The gap between overall and strict is your wontfix debt.
+- **Score types**: overall (lenient), strict (wontfix counts), objective (mechanical only), verified (confirmed fixes only).
 
-## Prerequisite
+### Reviews
 
-`command -v desloppify >/dev/null 2>&1 && echo "desloppify: installed" || echo "NOT INSTALLED — run: pip install --upgrade git+https://github.com/peteromallet/desloppify.git"`
+Four paths to get subjective scores:
 
-<!-- desloppify-end -->
+- **Local runner (Codex)**: `desloppify review --run-batches --runner codex --parallel --scan-after-import` — automated end-to-end.
+- **Local runner (Claude)**: `desloppify review --prepare` → launch parallel subagents → `desloppify review --import merged.json` — see skill doc overlay for details.
+- **Cloud/external**: `desloppify review --external-start --external-runner claude` → follow session template → `--external-submit`.
+- **Manual path**: `desloppify review --prepare` → review per dimension → `desloppify review --import file.json`.
 
-## Claude Code Overlay
+**Batch output vs import filenames:** Individual batch outputs from subagents must be named `batch-N.raw.txt` (plain text/JSON content, `.raw.txt` extension). The `.json` filenames in `--import merged.json` or `--import findings.json` refer to the final merged import file, not individual batch outputs. Do not name batch outputs with a `.json` extension.
 
-Use Claude subagents for subjective scoring work that should be context-isolated.
+- Import first, fix after — import creates tracked state entries for correlation.
+- Target-matching scores trigger auto-reset to prevent gaming. Use the blind-review workflow described in your agent overlay doc (e.g. `docs/CLAUDE.md`, `docs/HERMES.md`).
+- Even moderate scores (60-80) dramatically improve overall health.
+- Stale dimensions auto-surface in `next` — just follow the queue.
 
-### Parallel review (required)
+**Integrity rules:** Score from evidence only — no prior chat context, score history, or target-threshold anchoring. When evidence is mixed, score lower and explain uncertainty. Assess every requested dimension; never drop one.
 
-Always run reviews in parallel — one message with multiple Task calls. Split dimensions
-across agents however makes sense. Give each agent the codebase path, the dimensions to
-score, what those dimensions mean, and the output format. Let agents decide what to read.
-Do NOT prescribe file lists or tell agents whether to zoom in or out.
+#### Review output format
 
-Workflow:
-1. Read `dimension_prompts` from `query.json` for dimension definitions.
-2. Split dimensions across N agents, send all Task calls in one message.
-3. Each agent writes its output to a separate file.
-4. Merge assessments (average where dimensions overlap) and findings.
-5. Import findings — do NOT fix code before this step. Import creates tracked state
-   entries that let desloppify correlate fixes to findings.
-6. Fix imported findings via the core loop: `desloppify issues` → fix code →
-   `desloppify resolve fixed "<id>"` → rescan.
-7. Preferred local path (Codex runner): `desloppify review --run-batches --runner codex --parallel --scan-after-import`.
-8. Claude/cloud path:
-   - robust session flow (recommended): `desloppify review --external-start --external-runner claude`; use the generated `claude_launch_prompt.md` and `review_result.template.json`, then run the printed `desloppify review --external-submit --session-id <id> --import <file>` command
-   - preflight validation (optional legacy): `desloppify review --validate-import findings.json --attested-external --attest "I validated this review was completed without awareness of overall score and is unbiased."`
-   - durable scored import (legacy): `desloppify review --import findings.json --attested-external --attest "I validated this review was completed without awareness of overall score and is unbiased."`
-   - findings-only fallback: `desloppify review --import findings.json`
-
-### General subagent rules
-
-1. Prefer delegating subjective review tasks to a project subagent in `.claude/agents/`.
-2. If a skill-based reviewer is used, set `context: fork` so prior chat context does not leak into scoring.
-3. For blind reviews, consume `.desloppify/review_packet_blind.json` instead of full `query.json`.
-4. Score from evidence only; do not anchor scores to target thresholds like 95.
-5. When evidence is mixed, score lower and explain uncertainty rather than rounding up.
-6. Return machine-readable JSON only for review imports. For `--external-submit`, include `session` from the generated template:
+Return machine-readable JSON for review imports. For `--external-submit`, include `session` from the generated template:
 
 ```json
 {
   "session": {
     "id": "<session_id_from_template>",
-    "token": "<session_token_from_template>"
+    "token": "<session_hmac_from_template>"
   },
   "assessments": {
-    "naming_quality": 0,
-    "error_consistency": 0,
-    "abstraction_fit": 0,
-    "logic_clarity": 0,
-    "ai_generated_debt": 0
+    "<dimension_from_query>": 0
   },
   "findings": [
     {
-      "dimension": "naming_quality",
+      "dimension": "<dimension_from_query>",
       "identifier": "short_id",
       "summary": "one-line defect summary",
       "related_files": ["relative/path/to/file.py"],
@@ -231,10 +167,171 @@ Workflow:
   ]
 }
 ```
-7. `findings` MUST match `query.system_prompt` exactly. Use `"findings": []` only when no defects are found.
-8. Import is fail-closed by default: if any finding is invalid/skipped, `desloppify review --import` aborts unless `--allow-partial` is explicitly passed.
-9. Assessment scores are auto-applied from trusted internal run-batches imports, or from Claude cloud session imports via `--external-start` + `--external-submit` (recommended). Legacy attested external import via `--attested-external` remains supported.
-10. Manual override remains emergency-only: it cannot be combined with `--allow-partial`, and provisional manual scores expire on the next `scan` unless replaced by trusted internal or attested-external imports.
+
+`findings` MUST match `query.system_prompt` exactly (including `related_files`, `evidence`, and `suggestion`). Use `"findings": []` when no defects found. Import is fail-closed: invalid findings abort unless `--allow-partial` is passed. Assessment scores are auto-applied from trusted internal or cloud session imports. Legacy `--attested-external` remains supported.
+
+#### Import paths
+
+- Robust session flow (recommended): `desloppify review --external-start --external-runner claude` → use generated prompt/template → run printed `--external-submit` command.
+- Durable scored import (legacy): `desloppify review --import findings.json --attested-external --attest "I validated this review was completed without awareness of overall score and is unbiased."`
+- Findings-only fallback: `desloppify review --import findings.json`
+
+#### Reviewer agent prompt
+
+Runners that support agent definitions (Cursor, Copilot, Gemini) can create a dedicated reviewer agent. Use this system prompt:
+
+```
+You are a code quality reviewer. You will be given a codebase path, a set of
+dimensions to score, and what each dimension means. Read the code, score each
+dimension 0-100 from evidence only, and return JSON in the required format.
+Do not anchor to target thresholds. When evidence is mixed, score lower and
+explain uncertainty.
+```
+
+See your editor's overlay section below for the agent config format.
+
+### Plan commands
+
+```bash
+desloppify plan reorder <cluster> top       # move all cluster members at once
+desloppify plan reorder <a> <b> top        # mix clusters + findings in one reorder
+desloppify plan reorder <pat> before -t X  # position relative to another item/cluster
+desloppify plan cluster reorder a,b top    # reorder multiple clusters as one block
+desloppify plan resolve <pat>              # mark complete
+desloppify plan reopen <pat>               # reopen
+desloppify backlog                          # broader non-execution backlog
+```
+
+### Commit tracking
+
+```bash
+desloppify plan commit-log                      # see uncommitted + committed status
+desloppify plan commit-log record               # record HEAD commit, update PR description
+desloppify plan commit-log record --note "why"  # with rationale
+desloppify plan commit-log record --only "smells::*"  # record specific findings only
+desloppify plan commit-log history              # show commit records
+desloppify plan commit-log pr                   # preview PR body markdown
+desloppify config set commit_tracking_enabled false  # disable guidance
+```
+
+After resolving findings as `fixed`, the tool shows uncommitted work, committed history, and a suggested commit message. After committing externally, run `record` to move findings from uncommitted to committed and auto-update the linked PR description.
+
+### Agent directives
+
+Directives are messages shown to agents at lifecycle phase transitions — use them to switch models, set constraints, or give context-specific instructions.
+
+```bash
+desloppify directives                     # show all configured directives
+desloppify directives set execute "Switch to claude-sonnet-4-6. Focus on speed."
+desloppify directives set triage "Switch to claude-opus-4-6. Read carefully."
+desloppify directives set review "Use blind packet. Do not anchor on previous scores."
+desloppify directives unset execute       # remove a directive
+```
+
+Available phases: `execute`, `review`, `triage`, `workflow`, `scan` (and fine-grained variants like `review_initial`, `triage_postflight`, etc.).
+
+### Quick reference
+
+```bash
+desloppify next --count 5                         # top 5 execution items
+desloppify next --cluster <name>                  # drill into a cluster
+desloppify backlog --count 5                      # top 5 backlog items outside execution
+desloppify show <pattern>                         # filter by file/detector/ID
+desloppify show --status open                     # all open findings
+desloppify plan skip --permanent "<id>" --note "reason" --attest "..." # accept debt
+desloppify exclude <path>                         # exclude a directory from scanning
+desloppify config show                            # show all config including excludes
+desloppify scan --path . --reset-subjective       # reset subjective baseline to 0
+```
+
+## 4. Fix Tool Issues Upstream
+
+When desloppify itself appears wrong or inconsistent — a bug, a bad detection, a crash, confusing output — **fix it and open a PR**. If you can't confidently fix it, file an issue instead.
+
+### Fix and PR (preferred)
+
+Clone the tool repo to a temp directory, make the fix there, and verify it works against the project you're scanning before pushing.
+
+```bash
+git clone https://github.com/peteromallet/desloppify.git /tmp/desloppify-fix
+cd /tmp/desloppify-fix
+git checkout -b fix/<short-description>
+```
+
+Make your changes, then run the test suite and verify the fix against the original project:
+
+```bash
+python -m pytest desloppify/tests/ -q
+python -m desloppify scan --path <project-root>   # the project you were scanning
+```
+
+Once it looks good, push and open a PR:
+
+```bash
+git add <files> && git commit -m "fix: <what and why>"
+git push -u origin fix/<short-description>
+gh pr create --title "fix: <short description>" --body "$(cat <<'EOF'
+## Problem
+<what went wrong — include the command and output>
+
+## Fix
+<what you changed and why>
+EOF
+)"
+```
+
+Clean up after: `rm -rf /tmp/desloppify-fix`
+
+### File an issue (fallback)
+
+If the fix is unclear or the change needs discussion, open an issue at `https://github.com/peteromallet/desloppify/issues` with a minimal repro: command, path, expected output, actual output.
+
+## Prerequisite
+
+`command -v desloppify >/dev/null 2>&1 && echo "desloppify: installed" || echo "NOT INSTALLED — run: uvx --from git+https://github.com/peteromallet/desloppify.git desloppify"`
+
+If `uvx` is not available: `pip install desloppify[full] && desloppify setup`
+
+<!-- desloppify-end -->
+
+## Claude Code Overlay
+
+Use Claude subagents for subjective scoring work. **Do not use `--runner codex`** — use Claude subagents exclusively.
+
+### Review workflow
+
+Run `desloppify review --prepare` first to generate review data, then use Claude subagents:
+
+1. **Prepare**: `desloppify review --prepare` — writes `query.json` and `.desloppify/review_packet_blind.json`.
+2. **Launch subagents**: Split the review across N parallel Claude subagents (one message, multiple Task calls). Each agent reviews a subset of dimensions.
+3. **Merge & import**: Merge agent outputs, then `desloppify review --import merged.json --manual-override --attest "Claude subagents ran blind reviews against review_packet_blind.json" --scan-after-import`.
+
+#### How to split dimensions across subagents
+
+- Read `dimension_prompts` from `query.json` for dimensions with definitions and seed files.
+- Read `.desloppify/review_packet_blind.json` for the blind packet (no score targets, no anchoring data).
+- Group dimensions into 3-4 batches by theme (e.g., architecture, code quality, testing, conventions).
+- Launch one Task agent per batch with `subagent_type: "general-purpose"`. Each agent gets:
+  - The codebase path and list of dimensions to score
+  - The blind packet path to read
+  - Instruction to score from code evidence only, not from targets
+- Each agent writes output to `results/batch-N.raw.txt` (matching the batch index). Merge assessments (average overlapping dimension scores) and concatenate findings.
+
+### Subagent rules
+
+1. Each agent must be context-isolated — do not pass conversation history or score targets.
+2. Agents must consume `.desloppify/review_packet_blind.json` (not full `query.json`) to avoid score anchoring.
+
+### Triage workflow
+
+Orchestrate triage with per-stage subagents:
+1. `desloppify plan triage --run-stages --runner claude` — prints orchestrator instructions
+2. For each stage (observe → reflect → organize → enrich):
+   - Get prompt: `desloppify plan triage --stage-prompt <stage>`
+   - Launch a subagent with that prompt
+   - Verify: `desloppify plan triage` (check dashboard)
+   - Confirm: `desloppify plan triage --confirm <stage> --attestation "..."`
+3. Complete: `desloppify plan triage --complete --strategy "..." --attestation "..."`
 
 <!-- desloppify-overlay: claude -->
 <!-- desloppify-end -->

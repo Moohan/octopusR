@@ -1,0 +1,35 @@
+[
+  {
+    "dimension": "abstraction_fitness",
+    "kind": "wide_options_context_bag",
+    "identifier": "abstraction::R/get_consumption.R::wide_params",
+    "summary": "Wide parameter set in get_consumption",
+    "confidence": "high",
+    "description": "get_consumption uses a wide variety of parameters and internal state resolution logic that makes it harder to test and maintain.",
+    "suggestion": "Encapsulate consumption parameters into a specific data class or use the refactored validation functions to provide a cleaner boundary.",
+    "related_files": ["R/get_consumption.R"],
+    "evidence": ["The function signature has 11 parameters, many with complex default logic involving environment variables."]
+  },
+  {
+    "dimension": "logic_clarity",
+    "kind": "complexity_hotspot",
+    "identifier": "logic::R/get_consumption.R::pagination_density",
+    "summary": "High pagination logic density",
+    "confidence": "medium",
+    "description": "The pagination logic in get_consumption and combine_consumption_results is still relatively dense despite refactoring.",
+    "suggestion": "Further extract pagination into a generic 'fetch_all_results' pattern if other endpoints require it.",
+    "related_files": ["R/get_consumption.R"],
+    "evidence": ["fetch_all_pages contains manual loop and parallel execution logic that is specific to the consumption endpoint structure."]
+  },
+  {
+    "dimension": "error_consistency",
+    "kind": "implicit_error_handling",
+    "identifier": "error::R/octopus_api.R::scattered_errors",
+    "summary": "Scattered API error handling",
+    "confidence": "medium",
+    "description": "API errors are handled via httr2 but the conversion to user-friendly messages is scattered.",
+    "suggestion": "Centralize error mapping and providing clearer context for common Octopus API errors (like 401 Unauthorized).",
+    "related_files": ["R/octopus_api.R"],
+    "evidence": ["octopus_error_body only extracts 'detail' field but doesn't handle different HTTP status codes with specific user guidance."]
+  }
+]
