@@ -53,17 +53,13 @@ octopus_error_body <- function(resp) {
   detail <- body[["detail"]] %||% "No further details provided by API."
 
   if (status == 401) {
-    return(paste0(
-      "Authentication failed: ", detail,
-      " Please check your API key with set_api_key()."
-    ))
+    return(paste0("Authentication failed: ", detail,
+                  " Please check your API key with set_api_key()."))
   }
 
   if (status == 404) {
-    return(paste0(
-      "Resource not found: ", detail,
-      " Please verify your meter details (MPAN/MPRN)."
-    ))
+    return(paste0("Resource not found: ", detail,
+                  " Please verify your meter details (MPAN/MPRN)."))
   }
 
   detail
