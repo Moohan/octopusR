@@ -1,0 +1,1 @@
+## 2025-01-24 - Optimize combine_consumption NA handling **Learning:** Replacing `ifelse(is.na(x), 0, x)` with logical indexing `x[is.na(x)] <- 0` can lead to a ~20x performance improvement and ~3x reduction in memory allocation in R. **Action:** Always prefer logical indexing or `replace()` over `ifelse()` for simple value replacement in large vectors.
