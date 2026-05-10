@@ -13,9 +13,6 @@ concurrency:
 
 permissions: read-all
 
-env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-
 jobs:
   prereq:
     runs-on: ubuntu-latest
@@ -26,20 +23,21 @@ jobs:
       OCTOPUSR_SECRET_KEY: ${{ secrets.OCTOPUSR_SECRET_KEY }}
     steps:
       - name: Harden the runner
-        uses: step-security/harden-runner@8d3c67de8e2fe68ef647c8db1e6a09f647780f40 # v2.19.0
+        uses: step-security/harden-runner@915b120a271939d116035024da5a6671b2691ac9 # v2.10.1
         with:
           egress-policy: audit
 
       - name: Checkout repo
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
           fetch-depth: 0
-          token: ${{ secrets.ACTIONS_TOKEN || secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.ACTIONS_TOKEN || github.token }}
+          ref: ${{ github.head_ref || github.ref_name }}
 
       - name: Setup R
         uses: ./.github/actions/setup-r-env
         with:
-          extra-packages: any::roxygen2, any::devtools, any::desc, any::rmarkdown, any::codemetar, any::knitr, any::spelling, any::vctrs, any::jsonlite, any::data.table, any::lubridate
+          extra-packages: any::roxygen2, any::devtools, any::desc, any::rmarkdown, any::codemetar, any::knitr, local::.
           needs: check
 
       - name: Install Air
@@ -72,7 +70,7 @@ jobs:
           git add .
           if ! git diff --cached --quiet; then
             git commit -m "chore: style, document, and normalize"
-            git_push_cmd="push"
+            git_p="push"
             git push
           fi
 
@@ -93,10 +91,10 @@ jobs:
       OCTOPUSR_SECRET_KEY: ${{ secrets.OCTOPUSR_SECRET_KEY }}
     steps:
       - name: Harden the runner
-        uses: step-security/harden-runner@8d3c67de8e2fe68ef647c8db1e6a09f647780f40 # v2.19.0
+        uses: step-security/harden-runner@915b120a271939d116035024da5a6671b2691ac9 # v2.10.1
         with:
           egress-policy: audit
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
       - uses: ./.github/actions/setup-r-env
         with:
           extra-packages: any::rcmdcheck
@@ -116,10 +114,10 @@ jobs:
       OCTOPUSR_SECRET_KEY: ${{ secrets.OCTOPUSR_SECRET_KEY }}
     steps:
       - name: Harden the runner
-        uses: step-security/harden-runner@8d3c67de8e2fe68ef647c8db1e6a09f647780f40 # v2.19.0
+        uses: step-security/harden-runner@915b120a271939d116035024da5a6671b2691ac9 # v2.10.1
         with:
           egress-policy: audit
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
       - uses: ./.github/actions/setup-r-env
         with:
           extra-packages: any::covr, any::xml2
@@ -133,7 +131,7 @@ jobs:
           )
           covr::to_cobertura(cov)
         shell: Rscript {0}
-      - uses: codecov/codecov-action@b9fd7d16f6d7d1b5d2bec1a2887e65ceed900238 # v4.6.0
+      - uses: codecov/codecov-action@57e3a136b779b570ffcdbf80b3bdc90e7fab3de2 # v6.0.0
         with:
           fail_ci_if_error: ${{ github.event_name != 'pull_request' || secrets.CODECOV_TOKEN }}
           files: ./cobertura.xml
@@ -149,10 +147,10 @@ jobs:
       contents: write
     steps:
       - name: Harden the runner
-        uses: step-security/harden-runner@8d3c67de8e2fe68ef647c8db1e6a09f647780f40 # v2.19.0
+        uses: step-security/harden-runner@915b120a271939d116035024da5a6671b2691ac9 # v2.10.1
         with:
           egress-policy: audit
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
       - uses: ./.github/actions/setup-r-env
         with:
           extra-packages: any::pkgdown, local::.
@@ -161,7 +159,7 @@ jobs:
         run: pkgdown::build_site_github_pages(new_process = FALSE, install = FALSE)
         shell: Rscript {0}
       - name: Deploy to GitHub pages
-        uses: JamesIves/github-pages-deploy-action@d92aa235d04922e8f08b40ce78cc5442fcfbfa2f # v4.8.0
+        uses: JamesIves/github-pages-deploy-action@6c2d9db40f9296374acc17b90404b6e8864128c8 # v4.7.3
         with:
           clean: false
           branch: gh-pages
