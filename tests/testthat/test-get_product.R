@@ -44,7 +44,13 @@ test_that("get_product returns expected data structure", {
   expect_s3_class(product_data, "tbl_df")
 
   # Check for expected main fields
-  expected_fields <- c("code", "direction", "full_name", "display_name", "description")
+  expected_fields <- c(
+    "code",
+    "direction",
+    "full_name",
+    "display_name",
+    "description"
+  )
   expect_true(all(expected_fields %in% names(product_data)))
 
   # Check that code matches what we requested
@@ -82,13 +88,22 @@ test_that("get_product works with different datetime formats", {
   test_product_code <- products$code[1]
 
   # Test with Date object
-  expect_no_error(get_product(test_product_code, tariffs_active_at = Sys.Date()))
+  expect_no_error(get_product(
+    test_product_code,
+    tariffs_active_at = Sys.Date()
+  ))
 
   # Test with character datetime
-  expect_no_error(get_product(test_product_code, tariffs_active_at = "2023-01-01T00:00:00Z"))
+  expect_no_error(get_product(
+    test_product_code,
+    tariffs_active_at = "2023-01-01T00:00:00Z"
+  ))
 
   # Test with POSIXct
-  expect_no_error(get_product(test_product_code, tariffs_active_at = Sys.time()))
+  expect_no_error(get_product(
+    test_product_code,
+    tariffs_active_at = Sys.time()
+  ))
 })
 
 test_that("get_product handles authentication parameters", {

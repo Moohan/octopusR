@@ -23,12 +23,18 @@
 #' # Get product with tariffs active at a specific date
 #' get_product("AGILE-FLEX-22-11-25", tariffs_active_at = "2023-01-01")
 #' }
-get_product <- function(product_code,
-                        tariffs_active_at = Sys.time(),
-                        authenticate = FALSE,
-                        api_key = NULL) {
+get_product <- function(
+  product_code,
+  tariffs_active_at = Sys.time(),
+  authenticate = FALSE,
+  api_key = NULL
+) {
   # Validate inputs
-  if (missing(product_code) || !is.character(product_code) || length(product_code) != 1) {
+  if (
+    missing(product_code) ||
+      !is.character(product_code) ||
+      length(product_code) != 1
+  ) {
     cli::cli_abort(
       "{.arg product_code} must be a single character string containing the product code."
     )
@@ -71,15 +77,18 @@ get_product <- function(product_code,
     if (is.null(rates_data) || length(rates_data) == 0) {
       return(NULL)
     }
-    do.call(rbind, lapply(rates_data, function(rate) {
-      data.frame(
-        value_exc_vat = rate[["value_exc_vat"]],
-        value_inc_vat = rate[["value_inc_vat"]],
-        valid_from = rate[["valid_from"]],
-        valid_to = rate[["valid_to"]],
-        stringsAsFactors = FALSE
-      )
-    }))
+    do.call(
+      rbind,
+      lapply(rates_data, function(rate) {
+        data.frame(
+          value_exc_vat = rate[["value_exc_vat"]],
+          value_inc_vat = rate[["value_inc_vat"]],
+          valid_from = rate[["valid_from"]],
+          valid_to = rate[["valid_to"]],
+          stringsAsFactors = FALSE
+        )
+      })
+    )
   }
 
   # Process electricity tariffs
@@ -89,32 +98,42 @@ get_product <- function(product_code,
 
     if (length(electricity_tariffs) > 0) {
       # Extract basic tariff information
-      electricity_data <- lapply(names(electricity_tariffs), function(tariff_code) {
-        tariff <- electricity_tariffs[[tariff_code]]
-        list(
-          tariff_code = tariff_code,
-          standing_charge_exc_vat = tariff[["standing_charge_exc_vat"]],
-          standing_charge_inc_vat = tariff[["standing_charge_inc_vat"]],
-          online_discount_exc_vat = tariff[["online_discount_exc_vat"]],
-          online_discount_inc_vat = tariff[["online_discount_inc_vat"]],
-          dual_fuel_discount_exc_vat = tariff[["dual_fuel_discount_exc_vat"]],
-          dual_fuel_discount_inc_vat = tariff[["dual_fuel_discount_inc_vat"]],
-          exit_fees_exc_vat = tariff[["exit_fees_exc_vat"]],
-          exit_fees_inc_vat = tariff[["exit_fees_inc_vat"]],
-          standard_unit_rates = process_unit_rates(tariff[["standard_unit_rates"]]),
-          day_unit_rates = process_unit_rates(tariff[["day_unit_rates"]]),
-          night_unit_rates = process_unit_rates(tariff[["night_unit_rates"]]),
-          links = tariff[["links"]]
-        )
+      electricity_data <- lapply(
+        names(electricity_tariffs),
+        function(tariff_code) {
+          tariff <- electricity_tariffs[[tariff_code]]
+          list(
+            tariff_code = tariff_code,
+            standing_charge_exc_vat = tariff[["standing_charge_exc_vat"]],
+            standing_charge_inc_vat = tariff[["standing_charge_inc_vat"]],
+            online_discount_exc_vat = tariff[["online_discount_exc_vat"]],
+            online_discount_inc_vat = tariff[["online_discount_inc_vat"]],
+            dual_fuel_discount_exc_vat = tariff[["dual_fuel_discount_exc_vat"]],
+            dual_fuel_discount_inc_vat = tariff[["dual_fuel_discount_inc_vat"]],
+            exit_fees_exc_vat = tariff[["exit_fees_exc_vat"]],
+            exit_fees_inc_vat = tariff[["exit_fees_inc_vat"]],
+            standard_unit_rates = process_unit_rates(tariff[[
+              "standard_unit_rates"
+            ]]),
+            day_unit_rates = process_unit_rates(tariff[["day_unit_rates"]]),
+            night_unit_rates = process_unit_rates(tariff[["night_unit_rates"]]),
+            links = tariff[["links"]]
+          )
+        }
+      )
+      names(electricity_data) <- sapply(electricity_data, function(x) {
+        x[["tariff_code"]]
       })
-      names(electricity_data) <- sapply(electricity_data, function(x) x[["tariff_code"]])
 
       # Store detailed tariff data as attribute
       attr(product_data, "electricity_tariffs") <- electricity_data
 
       # Add summary to main product data
       product_data[["num_electricity_tariffs"]] <- length(electricity_data)
-      product_data[["electricity_tariff_codes"]] <- paste(names(electricity_data), collapse = ", ")
+      product_data[["electricity_tariff_codes"]] <- paste(
+        names(electricity_data),
+        collapse = ", "
+      )
     }
   }
 
@@ -136,7 +155,9 @@ get_product <- function(product_code,
           dual_fuel_discount_inc_vat = tariff[["dual_fuel_discount_inc_vat"]],
           exit_fees_exc_vat = tariff[["exit_fees_exc_vat"]],
           exit_fees_inc_vat = tariff[["exit_fees_inc_vat"]],
-          standard_unit_rates = process_unit_rates(tariff[["standard_unit_rates"]]),
+          standard_unit_rates = process_unit_rates(tariff[[
+            "standard_unit_rates"
+          ]]),
           links = tariff[["links"]]
         )
       })
@@ -147,25 +168,48 @@ get_product <- function(product_code,
 
       # Add summary to main product data
       product_data[["num_gas_tariffs"]] <- length(gas_data)
-      product_data[["gas_tariff_codes"]] <- paste(names(gas_data), collapse = ", ")
+      product_data[["gas_tariff_codes"]] <- paste(
+        names(gas_data),
+        collapse = ", "
+      )
     }
   }
 
   # Convert main product data to tibble
   main_fields <- c(
-    "code", "direction", "full_name", "display_name", "description",
-    "is_variable", "is_green", "is_tracker", "is_prepay", "is_business",
-    "is_restricted", "term", "available_from", "available_to", "brand",
-    "num_electricity_tariffs", "electricity_tariff_codes",
-    "num_gas_tariffs", "gas_tariff_codes"
+    "code",
+    "direction",
+    "full_name",
+    "display_name",
+    "description",
+    "is_variable",
+    "is_green",
+    "is_tracker",
+    "is_prepay",
+    "is_business",
+    "is_restricted",
+    "term",
+    "available_from",
+    "available_to",
+    "brand",
+    "num_electricity_tariffs",
+    "electricity_tariff_codes",
+    "num_gas_tariffs",
+    "gas_tariff_codes"
   )
 
   result_data <- product_data[names(product_data) %in% main_fields]
-  result_tibble <- tibble::as_tibble(data.frame(result_data, stringsAsFactors = FALSE))
+  result_tibble <- tibble::as_tibble(data.frame(
+    result_data,
+    stringsAsFactors = FALSE
+  ))
 
   # Attach detailed tariff data as attributes for advanced users
   if (!is.null(attr(product_data, "electricity_tariffs"))) {
-    attr(result_tibble, "electricity_tariffs") <- attr(product_data, "electricity_tariffs")
+    attr(result_tibble, "electricity_tariffs") <- attr(
+      product_data,
+      "electricity_tariffs"
+    )
   }
   if (!is.null(attr(product_data, "gas_tariffs"))) {
     attr(result_tibble, "gas_tariffs") <- attr(product_data, "gas_tariffs")
