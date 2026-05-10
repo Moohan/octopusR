@@ -1,0 +1,161 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+  merge_group:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  prereq:
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Harden the runner
+        uses: step-security/harden-runner@v2
+        with:
+          egress-policy: audit
+
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.OCTOPUSR_PAT || secrets.GITHUB_TOKEN }}
+
+      - name: Setup R
+        uses: ./.github/actions/setup-r-env
+        with:
+          extra-packages: any::roxygen2, any::devtools, any::desc, any::rmarkdown, any::codemetar
+          needs: check
+
+      - name: Style code
+        uses: posit-dev/air-action@v1
+        with:
+          commit: false
+
+      - name: Document package
+        run: roxygen2::roxygenise()
+        shell: Rscript {0}
+
+      - name: Rebuild README
+        run: devtools::build_readme()
+        shell: Rscript {0}
+
+      - name: Normalize DESCRIPTION
+        run: desc::desc_normalize()
+        shell: Rscript {0}
+
+      - name: Render codemeta
+        run: codemetar::write_codemeta()
+        shell: Rscript {0}
+
+      - name: Commit and push changes
+        run: |
+          git config --local user.name "github-actions[bot]"
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git add .
+          if ! git diff --cached --quiet; then
+            git commit -m "chore: style, document, and normalize"
+            git_push_cmd="push"
+            git push
+          fi
+
+  check:
+    needs: prereq
+    runs-on: ${{ matrix.config.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+          - {os: macos-latest,   r: 'release'}
+          - {os: windows-latest, r: 'release'}
+          - {os: ubuntu-latest,   r: 'devel', http-user-agent: 'release'}
+          - {os: ubuntu-latest,   r: 'release'}
+          - {os: ubuntu-latest,   r: 'oldrel-1'}
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      OCTOPUSR_SECRET_KEY: ${{ secrets.OCTOPUSR_SECRET_KEY }}
+    steps:
+      - name: Harden the runner
+        uses: step-security/harden-runner@v2
+        with:
+          egress-policy: audit
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup-r-env
+        with:
+          extra-packages: any::rcmdcheck
+          needs: check
+          r-version: ${{ matrix.config.r }}
+          http-user-agent: ${{ matrix.config.http-user-agent }}
+      - uses: r-lib/actions/check-r-package@v2
+        with:
+          upload-snapshots: true
+          build_args: 'c("--no-manual","--compact-vignettes=gs+qpdf")'
+
+  coverage:
+    needs: prereq
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      OCTOPUSR_SECRET_KEY: ${{ secrets.OCTOPUSR_SECRET_KEY }}
+    steps:
+      - name: Harden the runner
+        uses: step-security/harden-runner@v2
+        with:
+          egress-policy: audit
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup-r-env
+        with:
+          extra-packages: any::covr, any::xml2
+          needs: coverage
+      - name: Test coverage
+        run: |
+          cov <- covr::package_coverage(
+            quiet = FALSE,
+            clean = FALSE,
+            install_path = file.path(normalizePath(Sys.getenv("RUNNER_TEMP"), winslash = "/"), "package")
+          )
+          covr::to_cobertura(cov)
+        shell: Rscript {0}
+      - uses: codecov/codecov-action@v4
+        with:
+          fail_ci_if_error: ${{ github.event_name != 'pull_request' || secrets.CODECOV_TOKEN }}
+          files: ./cobertura.xml
+          token: ${{ secrets.CODECOV_TOKEN }}
+
+  pkgdown:
+    needs: [check, coverage]
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+    permissions:
+      contents: write
+    steps:
+      - name: Harden the runner
+        uses: step-security/harden-runner@v2
+        with:
+          egress-policy: audit
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup-r-env
+        with:
+          extra-packages: any::pkgdown, local::.
+          needs: website
+      - name: Build site
+        run: pkgdown::build_site_github_pages(new_process = FALSE, install = FALSE)
+        shell: Rscript {0}
+      - name: Deploy to GitHub pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          clean: false
+          branch: gh-pages
+          folder: docs
