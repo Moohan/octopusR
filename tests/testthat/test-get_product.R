@@ -102,7 +102,8 @@ test_that("get_product handles authentication parameters", {
 
   # Test with authentication flag but no API key (should use stored key)
   # This will fail if no API key is stored, but that's expected behavior
-  if (!is.null(try(get_api_key(), silent = TRUE))) {
+  api_key_result <- try(get_api_key(), silent = TRUE)
+  if (!inherits(api_key_result, "try-error")) {
     expect_no_error(get_product(test_product_code, authenticate = TRUE))
   }
 })
