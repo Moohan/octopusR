@@ -44,7 +44,7 @@ get_product <- function(product_code,
   )
 
   if (authenticate) {
-    if (missing(api_key)) {
+    if (is.null(api_key)) {
       api_key <- get_api_key()
     }
     resp <- octopus_api(
