@@ -84,21 +84,14 @@ get_consumption <- function(
   page_size <- validate_page_size(page_size, period_from)
 
   path <- glue::glue(
-    "/v1",
-    "{meter_type}-meter-points",
-    mpan_mprn,
-    "meters",
-    serial_number,
-    "consumption",
+    "/v1", "{meter_type}-meter-points", mpan_mprn, "meters",
+    serial_number, "consumption",
     .sep = "/"
   )
 
   query <- list(
-    period_from = period_from,
-    period_to = period_to,
-    page_size = page_size,
-    order_by = opts$order_by,
-    group_by = opts$group_by
+    period_from = period_from, period_to = period_to, page_size = page_size,
+    order_by = opts$order_by, group_by = opts$group_by
   )
 
   # 3. Initial API call (Direct call for mockery stubbing)
@@ -118,8 +111,7 @@ get_consumption <- function(
   if (total_pages > 1) {
     reqs <- lapply(2:total_pages, function(p) {
       octopus_api(
-        path = path,
-        api_key = api_key,
+        path = path, api_key = api_key,
         query = append(query, list(page = p)),
         perform = FALSE
       )
@@ -140,10 +132,7 @@ get_consumption <- function(
 
 #' @noRd
 prepare_consumption_opts <- function(
-  period_from,
-  period_to,
-  order_by,
-  group_by
+  period_from, period_to, order_by, group_by
 ) {
   if (!is.null(period_to) && is.null(period_from)) {
     cli::cli_abort(
@@ -163,9 +152,7 @@ prepare_consumption_opts <- function(
     )
   }
 
-  if (!is.null(period_to)) {
-    check_datetime_format(period_to)
-  }
+  if (!is.null(period_to)) check_datetime_format(period_to)
 
   list(order_by = order_by, group_by = group_by)
 }

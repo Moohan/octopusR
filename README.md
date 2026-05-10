@@ -71,7 +71,35 @@ set_meter_details(meter_type = "electricity")
 
 # Set details for your gas meter
 set_meter_details(meter_type = "gas")
+
+# For users with solar panels or export generation:
+# Set separate import and export electricity meters
+set_meter_details(meter_type = "electricity", direction = "import")
+set_meter_details(meter_type = "electricity", direction = "export")
 ```
+
+## Import and Export Meters
+
+octopusR supports distinguishing between import and export meters for users with solar panels or other generation sources:
+
+``` r
+# Get import consumption (energy from grid)
+import_data <- get_consumption(meter_type = "electricity", direction = "import")
+
+# Get export consumption (energy to grid)
+export_data <- get_consumption(meter_type = "electricity", direction = "export")
+
+# Combine import and export data with net consumption
+combined_data <- combine_consumption(
+  period_from = "2023-01-01",
+  period_to = "2023-01-31"
+)
+```
+
+The `combine_consumption()` function provides columns for:
+- `import_consumption`: Energy imported from the grid
+- `export_consumption`: Energy exported to the grid
+- `net_consumption`: Net energy consumption (import - export)
 
 You can use the other functions in the package to interact with the API.
 For example, you can use the `get_consumption()` function to retrieve
@@ -85,15 +113,7 @@ energy_usage <- get_consumption(meter_type = "elec")
 
 # View the data
 head(energy_usage)
-#> # A tibble: 6 × 3
-#>   consumption interval_start            interval_end             
-#>         <dbl> <chr>                     <chr>                    
-#> 1       2.45  2026-05-10T00:00:00+01:00 2026-05-10T01:00:00+01:00
-#> 2       2.36  2026-05-09T23:00:00+01:00 2026-05-10T00:00:00+01:00
-#> 3       0.022 2026-05-09T22:00:00+01:00 2026-05-09T23:00:00+01:00
-#> 4       0.021 2026-05-09T21:00:00+01:00 2026-05-09T22:00:00+01:00
-#> 5       0.022 2026-05-09T20:00:00+01:00 2026-05-09T21:00:00+01:00
-#> 6       0.019 2026-05-09T19:00:00+01:00 2026-05-09T20:00:00+01:00
+#> # A tibble: 0 × 0
 ```
 
 For more information and examples, see the [package
