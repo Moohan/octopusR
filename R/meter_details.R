@@ -107,20 +107,13 @@ get_meter_details <- function(
     }
 
     if (!identical(mpan_mprn, "") && !identical(serial_number, "")) {
-      # Use if/else instead of ifelse for lazy evaluation and to skip
-      # GSP call when not required or for gas meters.
-      meter_gsp <- NA_character_
-      if (include_gsp && meter_type == "electricity") {
-        meter_gsp <- get_meter_gsp(mpan = mpan_mprn)
-      }
-
       meter <- structure(
         list(
           type = meter_type,
           mpan_mprn = mpan_mprn,
           serial_number = serial_number,
           direction = direction,
-          gsp = meter_gsp
+          gsp = resolve_meter_gsp(meter_type, mpan_mprn, include_gsp)
         ),
         class = "octopus_meter-point"
       )
@@ -135,6 +128,21 @@ get_meter_details <- function(
       )
     }
   }
+}
+
+#' @noRd
+resolve_meter_gsp <- function(meter_type, mpan, include_gsp) {
+  if (!include_gsp || meter_type != "electricity") {
+    return(NA_character_)
+  }
+
+  if (is_testing()) {
+    if (identical(mpan, "sk_test_mpan")) {
+      return("J")
+    }
+  }
+
+  get_meter_gsp(mpan = mpan)
 }
 
 testing_meter <- function(
@@ -153,21 +161,12 @@ testing_meter <- function(
       "sk_test_serial"
     )
 
-    meter_gsp <- NA_character_
-    if (include_gsp) {
-      meter_gsp <- if (identical(mpan, "sk_test_mpan")) {
-        "J"
-      } else {
-        get_meter_gsp(mpan = mpan)
-      }
-    }
-
     structure(
       list(
         type = "electricity",
         mpan_mprn = mpan,
         serial_number = serial_number,
-        gsp = meter_gsp
+        gsp = resolve_meter_gsp("electricity", mpan, include_gsp)
       ),
       class = "octopus_meter-point"
     )
