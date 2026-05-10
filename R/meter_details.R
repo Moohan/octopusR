@@ -184,7 +184,8 @@ testing_meter <- function(
       list(
         type = "gas",
         mpan_mprn = mprn,
-        serial_number = serial_number
+        serial_number = serial_number,
+        gsp = resolve_meter_gsp("gas", mprn, include_gsp)
       ),
       class = "octopus_meter-point"
     )
