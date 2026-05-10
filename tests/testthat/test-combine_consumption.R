@@ -1,10 +1,16 @@
 skip_if_offline(host = "api.octopus.energy")
 
 test_that("combine_consumption handles missing data gracefully", {
-  # Test with no import or export data available
-  expect_error(
-    combine_consumption(),
-    "No import or export consumption data could be retrieved"
+  # Mock get_consumption to throw error for both calls to ensure
+  # the final stop()
+  with_mocked_bindings(
+    get_consumption = function(...) stop("API Error"),
+    {
+      expect_error(
+        combine_consumption(),
+        "No import or export consumption data could be retrieved"
+      )
+    }
   )
 })
 
