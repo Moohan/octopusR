@@ -23,12 +23,12 @@ jobs:
       OCTOPUSR_SECRET_KEY: ${{ secrets.OCTOPUSR_SECRET_KEY }}
     steps:
       - name: Harden the runner
-        uses: step-security/harden-runner@915b120a271939d116035024da5a6671b2691ac9 # v2.10.1
+        uses: step-security/harden-runner@v2
         with:
           egress-policy: audit
 
       - name: Checkout repo
-        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
           token: ${{ secrets.ACTIONS_TOKEN || github.token }}
@@ -41,7 +41,7 @@ jobs:
           needs: check
 
       - name: Install Air
-        uses: posit-dev/setup-air@cf390573ff4fe0f198f35df3a642b1409328d859 # v1
+        uses: posit-dev/setup-air@v1
 
       - name: Style code
         run: air format .
@@ -91,17 +91,17 @@ jobs:
       OCTOPUSR_SECRET_KEY: ${{ secrets.OCTOPUSR_SECRET_KEY }}
     steps:
       - name: Harden the runner
-        uses: step-security/harden-runner@915b120a271939d116035024da5a6671b2691ac9 # v2.10.1
+        uses: step-security/harden-runner@v2
         with:
           egress-policy: audit
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/checkout@v4
       - uses: ./.github/actions/setup-r-env
         with:
           extra-packages: any::rcmdcheck
           needs: check
           r-version: ${{ matrix.config.r }}
           http-user-agent: ${{ matrix.config.http-user-agent }}
-      - uses: r-lib/actions/check-r-package@a51a8012b0aab7c32ef9d19bf54da93f3254335e # v2.12.0
+      - uses: r-lib/actions/check-r-package@v2
         with:
           upload-snapshots: true
           build_args: 'c("--no-manual","--compact-vignettes=gs+qpdf")'
@@ -114,10 +114,10 @@ jobs:
       OCTOPUSR_SECRET_KEY: ${{ secrets.OCTOPUSR_SECRET_KEY }}
     steps:
       - name: Harden the runner
-        uses: step-security/harden-runner@915b120a271939d116035024da5a6671b2691ac9 # v2.10.1
+        uses: step-security/harden-runner@v2
         with:
           egress-policy: audit
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/checkout@v4
       - uses: ./.github/actions/setup-r-env
         with:
           extra-packages: any::covr, any::xml2
@@ -131,7 +131,7 @@ jobs:
           )
           covr::to_cobertura(cov)
         shell: Rscript {0}
-      - uses: codecov/codecov-action@57e3a136b779b570ffcdbf80b3bdc90e7fab3de2 # v6.0.0
+      - uses: codecov/codecov-action@v5
         with:
           fail_ci_if_error: ${{ github.event_name != 'pull_request' || secrets.CODECOV_TOKEN }}
           files: ./cobertura.xml
@@ -147,10 +147,10 @@ jobs:
       contents: write
     steps:
       - name: Harden the runner
-        uses: step-security/harden-runner@915b120a271939d116035024da5a6671b2691ac9 # v2.10.1
+        uses: step-security/harden-runner@v2
         with:
           egress-policy: audit
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - uses: actions/checkout@v4
       - uses: ./.github/actions/setup-r-env
         with:
           extra-packages: any::pkgdown, local::.
@@ -159,7 +159,7 @@ jobs:
         run: pkgdown::build_site_github_pages(new_process = FALSE, install = FALSE)
         shell: Rscript {0}
       - name: Deploy to GitHub pages
-        uses: JamesIves/github-pages-deploy-action@6c2d9db40f9296374acc17b90404b6e8864128c8 # v4.7.3
+        uses: JamesIves/github-pages-deploy-action@v4
         with:
           clean: false
           branch: gh-pages
