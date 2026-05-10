@@ -71,7 +71,35 @@ set_meter_details(meter_type = "electricity")
 
 # Set details for your gas meter
 set_meter_details(meter_type = "gas")
+
+# For users with solar panels or export generation:
+# Set separate import and export electricity meters
+set_meter_details(meter_type = "electricity", direction = "import")
+set_meter_details(meter_type = "electricity", direction = "export")
 ```
+
+## Import and Export Meters
+
+octopusR supports distinguishing between import and export meters for users with solar panels or other generation sources:
+
+``` r
+# Get import consumption (energy from grid)
+import_data <- get_consumption(meter_type = "electricity", direction = "import")
+
+# Get export consumption (energy to grid) 
+export_data <- get_consumption(meter_type = "electricity", direction = "export")
+
+# Combine import and export data with net consumption
+combined_data <- combine_consumption(
+  period_from = "2023-01-01",
+  period_to = "2023-01-31"
+)
+```
+
+The `combine_consumption()` function provides columns for:
+- `import_consumption`: Energy imported from the grid
+- `export_consumption`: Energy exported to the grid  
+- `net_consumption`: Net energy consumption (import - export)
 
 You can use the other functions in the package to interact with the API.
 For example, you can use the `get_consumption()` function to retrieve

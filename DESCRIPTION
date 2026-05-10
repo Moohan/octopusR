@@ -2,7 +2,7 @@ Package: octopusR
 Title: Interact with the 'Octopus Energy' API
 Version: 1.0.1.9000
 Authors@R: 
-    person("James", "Hayes", email = "jamesmcmahon0@gmail.com", role = c("aut", "cre"),
+    person("James", "Hayes", , "jamesmcmahon0@gmail.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-5380-2029"))
 Description: A simple wrapper for the 'Octopus Energy' REST API
     <https://developer.octopus.energy/rest/>. It handles authentication,
@@ -13,6 +13,8 @@ License: MIT + file LICENSE
 URL: https://github.com/Moohan/octopusR,
     https://moohan.github.io/octopusR/
 BugReports: https://github.com/Moohan/octopusR/issues
+Depends:
+    R (>= 4.1.0)
 Imports: 
     askpass,
     cli,
@@ -35,5 +37,5 @@ Config/testthat/start-first: get_consumption
 Encoding: UTF-8
 Language: en-GB
 LazyData: true
-Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.3
+Config/roxygen2/markdown: true
+Config/roxygen2/version: 8.0.0

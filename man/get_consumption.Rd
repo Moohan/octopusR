@@ -6,15 +6,16 @@
 \usage{
 get_consumption(
   meter_type = c("electricity", "gas"),
-  mpan_mprn = get_meter_details(meter_type)[["mpan_mprn"]],
-  serial_number = get_meter_details(meter_type)[["serial_number"]],
+  mpan_mprn = NULL,
+  serial_number = NULL,
+  direction = NULL,
   api_key = get_api_key(),
   period_from = NULL,
   period_to = NULL,
   tz = NULL,
   order_by = c("-period", "period"),
-  group_by = c("hour", "day", "week", "month", "quarter"),
-  page_size = NULL
+  page_size = NULL,
+  group_by = c("hour", "day", "week", "month", "quarter")
 )
 }
 \arguments{
@@ -25,6 +26,9 @@ MPRN.}
 
 \item{serial_number}{The meter's serial number.}
 
+\item{direction}{For electricity meters, specify "import", "export", or NULL
+(default). When NULL, uses the legacy single MPAN storage.}
+
 \item{api_key}{Your API key. If you are an Octopus Energy customer,
 you can generate an API key on the
 \href{https://octopus.energy/dashboard/developer/}{developer dashboard}.}
@@ -33,7 +37,7 @@ you can generate an API key on the
 This parameter can be provided on its own.}
 
 \item{period_to}{Show consumption to the given datetime (exclusive).
-This parameter also requires providing the \code{period_from} parameter
+This parameter also requires providing the 'period_from' parameter
 to create a range.}
 
 \item{tz}{a character string that specifies which time zone to parse the date with. The string
@@ -43,23 +47,24 @@ must be a time zone that is recognized by the user's OS.}
 returned in reverse order from latest available figure.
 Valid values:
 \itemize{
-\item \code{period}, to give results ordered forward.
-\item \code{-period}, (default), to give results ordered from most recent backwards.
+\item 'period', to give results ordered forward.
+\item '-period', (default), to give results ordered from most recent backwards.
 }}
+
+\item{page_size}{The number of results to return per page. This is intended
+for internal testing and may be removed in a future release.}
 
 \item{group_by}{Aggregates consumption over a specified time period.
 A day is considered to start and end at midnight in the server's time zone.
 The default is that consumption is returned in half-hour periods.
 Accepted values are:
 \itemize{
-\item \code{hour}
-\item \code{day}
-\item \code{week}
-\item \code{month}
-\item \code{quarter}
+\item 'hour'
+\item 'day'
+\item 'week'
+\item 'month'
+\item 'quarter'
 }}
-
-\item{page_size}{The number of results to return per page. This is intended for internal testing and may be removed in a future release.}
 }
 \value{
 a \link[tibble:tibble-package]{tibble} of the requested consumption data.
@@ -77,11 +82,12 @@ Unit of measurement:
 \subsection{Parsing dates}{
 
 To return dates properly parsed \link[lubridate:lubridate-package]{lubridate} is
-required. Use the \code{tz} parameter to specify a time zone e.g. \code{tz = "UTC"},
-the default (\code{tz = NULL}) will return the dates unparsed, as characters.
+required. Use the 'tz' parameter to specify a time zone
+e.g. \code{tz = "UTC"}, the default (\code{tz = NULL}) will return the dates
+unparsed, as characters.
 }
 }
 \note{
 For the fastest data aggregation, it is recommended to have either
-the \code{{data.table}} or \code{{vctrs}} packages installed.
+the \pkg{data.table} or \pkg{vctrs} packages installed.
 }

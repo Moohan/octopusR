@@ -2,7 +2,11 @@ CMD
 Codecov
 GSP
 MPAN
+MPANs
 MPRN
 OctopusR
+OpenSSF
 SMETS
-datetime
+lubridate
+pkgcheck
+tibble

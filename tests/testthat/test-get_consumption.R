@@ -16,7 +16,7 @@ create_mock_httr2_response <- function(results) {
   )
 }
 
-test_that("Can return electric consumption data sample", {
+test_consumption_sample <- function(meter_type) {
   mock_api <- function(...) {
     create_mock_api_response(
       count = 100,
@@ -27,60 +27,58 @@ test_that("Can return electric consumption data sample", {
       )
     )
   }
+  mock_meter <- structure(
+    list(mpan_mprn = "123", serial_number = "456"),
+    class = "octopus_meter-point"
+  )
+  mockery::stub(get_consumption, "get_meter_details", mock_meter)
   mockery::stub(get_consumption, "octopus_api", mock_api)
 
-  expect_message(
-    consumption_data <- get_consumption("electricity"),
+  testthat::expect_message(
+    consumption_data <- get_consumption(meter_type),
     "Returning 100 rows"
   )
 
-  expect_s3_class(consumption_data, "tbl_df")
-  expect_named(consumption_data, c("consumption", "interval_start", "interval_end"))
-  expect_equal(nrow(consumption_data), 100L)
-})
-
-test_that("Can return gas consumption data sample", {
-  mock_api <- function(...) {
-    create_mock_api_response(
-      count = 100,
-      results = tibble::tibble(
-        consumption = 1:100,
-        interval_start = "a",
-        interval_end = "b"
-      )
-    )
-  }
-  mockery::stub(get_consumption, "octopus_api", mock_api)
-
-  expect_message(
-    consumption_data <- get_consumption("gas"),
-    "Returning 100 rows"
+  testthat::expect_s3_class(consumption_data, "tbl_df")
+  testthat::expect_named(
+    consumption_data,
+    c("consumption", "interval_start", "interval_end")
   )
+  testthat::expect_equal(nrow(consumption_data), 100L)
+}
 
-  expect_s3_class(consumption_data, "tbl_df")
-  expect_named(consumption_data, c("consumption", "interval_start", "interval_end"))
-  expect_equal(nrow(consumption_data), 100L)
+testthat::test_that("Can return electric consumption data sample", {
+  test_consumption_sample("electricity")
 })
 
-test_that("errors properly with incorrect params", {
-  expect_error(
+testthat::test_that("Can return gas consumption data sample", {
+  test_consumption_sample("gas")
+})
+
+testthat::test_that("errors properly with incorrect params", {
+  testthat::expect_error(
     get_consumption(),
     "You must specify \"electricity\" or \"gas\" for `meter_type`"
   )
-  expect_error(
+  testthat::expect_error(
     get_consumption("electricity", period_to = Sys.Date()),
     "To use `period_to` you must also provide the `period_from` parameter"
   )
 })
 
-test_that("Correctly handles multi-page parallel requests", {
-  # This mock handles the two ways octopus_api is called in the multi-page scenario
+testthat::test_that("Correctly handles multi-page parallel requests", {
+  # This mock handles the two ways octopus_api is called in the multi-page
+  # scenario
   mock_api_multi_page <- function(path, query, ..., perform = TRUE) {
     if (perform) {
       # The first call to get page count
       create_mock_api_response(
         count = 30,
-        results = tibble::tibble(consumption = 1:10, interval_start = "a", interval_end = "b")
+        results = tibble::tibble(
+          consumption = 1:10,
+          interval_start = "a",
+          interval_end = "b"
+        )
       )
     } else {
       # The subsequent calls to build the request list
@@ -95,14 +93,27 @@ test_that("Correctly handles multi-page parallel requests", {
       # req is what mock_api_multi_page returned when perform=FALSE
       page_num <- req$page
       create_mock_httr2_response(
-        results = tibble::tibble(consumption = (1:10) + ((page_num - 1) * 10), interval_start = "a", interval_end = "b")
+        results = tibble::tibble(
+          consumption = (1:10) + ((page_num - 1) * 10),
+          interval_start = "a",
+          interval_end = "b"
+        )
       )
     })
   }
 
   # Stub the two external functions
+  mock_meter <- structure(
+    list(mpan_mprn = "123", serial_number = "456"),
+    class = "octopus_meter-point"
+  )
+  mockery::stub(get_consumption, "get_meter_details", mock_meter)
   mockery::stub(get_consumption, "octopus_api", mock_api_multi_page)
-  mockery::stub(get_consumption, "httr2::req_perform_parallel", mock_req_perform_parallel)
+  mockery::stub(
+    get_consumption,
+    "httr2::req_perform_parallel",
+    mock_req_perform_parallel
+  )
 
   # Use a date range to trigger the multi-page logic
   consumption_data <- get_consumption(
@@ -112,10 +123,10 @@ test_that("Correctly handles multi-page parallel requests", {
   )
 
   # Verify the result
-  expect_equal(nrow(consumption_data), 30)
-  expect_s3_class(consumption_data, "tbl_df")
+  testthat::expect_equal(nrow(consumption_data), 30)
+  testthat::expect_s3_class(consumption_data, "tbl_df")
   # Page 1 results are 1:10
   # Page 2 results are 11:20
   # Page 3 results are 21:30
-  expect_equal(consumption_data$consumption, 1:30)
+  testthat::expect_equal(consumption_data$consumption, 1:30)
 })

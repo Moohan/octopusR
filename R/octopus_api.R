@@ -1,8 +1,10 @@
-octopus_api <- function(path,
-                        query = NULL,
-                        api_key = NULL,
-                        use_api_key = FALSE,
-                        perform = TRUE) {
+octopus_api <- function(
+  path,
+  query = NULL,
+  api_key = NULL,
+  use_api_key = FALSE,
+  perform = TRUE
+) {
   if (use_api_key || !missing(api_key)) {
     if (missing(api_key)) {
       api_key <- get_api_key()
@@ -31,7 +33,9 @@ octopus_api <- function(path,
 
   parsed <- httr2::resp_body_json(resp, simplifyVector = TRUE)
 
-  parsed[["results"]] <- tibble::as_tibble(parsed[["results"]])
+  if ("results" %in% names(parsed) && !is.null(parsed[["results"]])) {
+    parsed[["results"]] <- tibble::as_tibble(parsed[["results"]])
+  }
 
   structure(
     list(
@@ -44,10 +48,23 @@ octopus_api <- function(path,
 }
 
 octopus_error_body <- function(resp) {
+  status <- httr2::resp_status(resp)
   body <- httr2::resp_body_json(resp, simplifyVector = TRUE)
-  if ("detail" %in% names(body)) {
-    body[["detail"]]
-  } else {
-    NULL
+  detail <- body[["detail"]] %||% "No further details provided by API."
+
+  if (status == 401) {
+    return(paste0(
+      "Authentication failed: ", detail,
+      " Please check your API key with set_api_key()."
+    ))
   }
+
+  if (status == 404) {
+    return(paste0(
+      "Resource not found: ", detail,
+      " Please verify your meter details (MPAN/MPRN)."
+    ))
+  }
+
+  detail
 }

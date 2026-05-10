@@ -22,14 +22,16 @@
 #'
 #' @examples
 #' get_products(is_green = TRUE)
-get_products <- function(is_variable = NULL,
-                         is_green = NULL,
-                         is_tracker = NULL,
-                         is_prepay = NULL,
-                         is_business = FALSE,
-                         available_at = Sys.Date(),
-                         authenticate = FALSE,
-                         api_key = NULL) {
+get_products <- function(
+  is_variable = NULL,
+  is_green = NULL,
+  is_tracker = NULL,
+  is_prepay = NULL,
+  is_business = FALSE,
+  available_at = Sys.Date(),
+  authenticate = FALSE,
+  api_key = NULL
+) {
   if (!missing(is_variable)) {
     check_logical(is_variable)
   }
@@ -78,5 +80,5 @@ get_products <- function(is_variable = NULL,
 
   products <- resp[["content"]][["results"]]
 
-  return(products)
+  products
 }
