@@ -14,7 +14,7 @@
     "name": "R",
     "url": "https://r-project.org"
   },
-  "runtimePlatform": "R version 4.1.2 (2021-11-01)",
+  "runtimePlatform": "R version 4.6.0 (2026-04-24)",
   "provider": {
     "@id": "https://cran.r-project.org",
     "@type": "Organization",
@@ -25,7 +25,7 @@
     {
       "@type": "Person",
       "givenName": "James",
-      "familyName": "McMahon",
+      "familyName": "Hayes",
       "email": "jamesmcmahon0@gmail.com",
       "@id": "https://orcid.org/0000-0002-5380-2029"
     }
@@ -34,7 +34,7 @@
     {
       "@type": "Person",
       "givenName": "James",
-      "familyName": "McMahon",
+      "familyName": "Hayes",
       "email": "jamesmcmahon0@gmail.com",
       "@id": "https://orcid.org/0000-0002-5380-2029"
     }
@@ -54,6 +54,30 @@
     },
     {
       "@type": "SoftwareApplication",
+      "identifier": "data.table",
+      "name": "data.table",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=data.table"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "jsonlite",
+      "name": "jsonlite",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=jsonlite"
+    },
+    {
+      "@type": "SoftwareApplication",
       "identifier": "lubridate",
       "name": "lubridate",
       "version": ">= 0.2.1",
@@ -64,6 +88,18 @@
         "url": "https://cran.r-project.org"
       },
       "sameAs": "https://CRAN.R-project.org/package=lubridate"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "mockery",
+      "name": "mockery",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=mockery"
     },
     {
       "@type": "SoftwareApplication",
@@ -89,10 +125,28 @@
         "url": "https://cran.r-project.org"
       },
       "sameAs": "https://CRAN.R-project.org/package=testthat"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "identifier": "vctrs",
+      "name": "vctrs",
+      "provider": {
+        "@id": "https://cran.r-project.org",
+        "@type": "Organization",
+        "name": "Comprehensive R Archive Network (CRAN)",
+        "url": "https://cran.r-project.org"
+      },
+      "sameAs": "https://CRAN.R-project.org/package=vctrs"
     }
   ],
   "softwareRequirements": {
     "1": {
+      "@type": "SoftwareApplication",
+      "identifier": "R",
+      "name": "R",
+      "version": ">= 4.1.0"
+    },
+    "2": {
       "@type": "SoftwareApplication",
       "identifier": "askpass",
       "name": "askpass",
@@ -104,7 +158,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=askpass"
     },
-    "2": {
+    "3": {
       "@type": "SoftwareApplication",
       "identifier": "cli",
       "name": "cli",
@@ -116,7 +170,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=cli"
     },
-    "3": {
+    "4": {
       "@type": "SoftwareApplication",
       "identifier": "glue",
       "name": "glue",
@@ -128,7 +182,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=glue"
     },
-    "4": {
+    "5": {
       "@type": "SoftwareApplication",
       "identifier": "httr2",
       "name": "httr2",
@@ -140,7 +194,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=httr2"
     },
-    "5": {
+    "6": {
       "@type": "SoftwareApplication",
       "identifier": "rlang",
       "name": "rlang",
@@ -152,7 +206,7 @@
       },
       "sameAs": "https://CRAN.R-project.org/package=rlang"
     },
-    "6": {
+    "7": {
       "@type": "SoftwareApplication",
       "identifier": "tibble",
       "name": "tibble",
@@ -166,7 +220,9 @@
     },
     "SystemRequirements": null
   },
-  "fileSize": "40.506KB",
-  "releaseNotes": "https://github.com/Moohan/octopusR/blob/master/NEWS.md",
-  "contIntegration": ["https://github.com/Moohan/octopusR/actions/workflows/R-CMD-check.yaml", "https://app.codecov.io/gh/Moohan/octopusR?branch=main", "https://github.com/Moohan/octopusR/actions?query=workflow%3Apkgcheck"]
+  "fileSize": "57.568KB",
+  "releaseNotes": "https://github.com/Moohan/octopusR/blob/main/NEWS.md",
+  "readme": "https://github.com/Moohan/octopusR/blob/main/README.md",
+  "contIntegration": ["https://github.com/Moohan/octopusR/actions/workflows/R-CMD-check.yaml", "https://app.codecov.io/gh/Moohan/octopusR?branch=main", "https://github.com/Moohan/octopusR/actions?query=workflow%3Apkgcheck"],
+  "developmentStatus": "https://www.repostatus.org/#active"
 }

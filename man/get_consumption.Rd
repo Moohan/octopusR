@@ -31,7 +31,7 @@ MPRN.}
 
 \item{api_key}{Your API key. If you are an Octopus Energy customer,
 you can generate an API key on the
-\href{https://octopus.energy/dashboard/developer/}{developer dashboard}.}
+[developer dashboard](https://octopus.energy/dashboard/developer/).}
 
 \item{period_from}{Show consumption from the given datetime (inclusive).
 This parameter can be provided on its own.}
@@ -46,10 +46,8 @@ must be a time zone that is recognized by the user's OS.}
 \item{order_by}{Ordering of results returned. Default is that results are
 returned in reverse order from latest available figure.
 Valid values:
-\itemize{
-\item 'period', to give results ordered forward.
-\item '-period', (default), to give results ordered from most recent backwards.
-}}
+* 'period', to give results ordered forward.
+* '-period', (default), to give results ordered from most recent backwards.}
 
 \item{page_size}{The number of results to return per page. This is intended
 for internal testing and may be removed in a future release.}
@@ -58,34 +56,29 @@ for internal testing and may be removed in a future release.}
 A day is considered to start and end at midnight in the server's time zone.
 The default is that consumption is returned in half-hour periods.
 Accepted values are:
-\itemize{
-\item 'hour'
-\item 'day'
-\item 'week'
-\item 'month'
-\item 'quarter'
-}}
+* 'hour'
+* 'day'
+* 'week'
+* 'month'
+* 'quarter'}
 }
 \value{
-a \link[tibble:tibble-package]{tibble} of the requested consumption data.
+a [tibble][tibble::tibble-package] of the requested consumption data.
 }
 \description{
 Return a list of consumption values for half-hour periods for a
 given meter-point and meter.
 
 Unit of measurement:
-\itemize{
-\item Electricity meters: kWh
-\item SMETS1 Secure gas meters: kWh
-\item SMETS2 gas meters: m^3
-}
-\subsection{Parsing dates}{
+* Electricity meters: kWh
+* SMETS1 Secure gas meters: kWh
+* SMETS2 gas meters: m^3
 
-To return dates properly parsed \link[lubridate:lubridate-package]{lubridate} is
+## Parsing dates
+To return dates properly parsed [lubridate][lubridate::lubridate-package] is
 required. Use the 'tz' parameter to specify a time zone
-e.g. \code{tz = "UTC"}, the default (\code{tz = NULL}) will return the dates
+e.g. `tz = "UTC"`, the default (`tz = NULL`) will return the dates
 unparsed, as characters.
-}
 }
 \note{
 For the fastest data aggregation, it is recommended to have either
