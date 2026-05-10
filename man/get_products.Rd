@@ -31,20 +31,20 @@ datetime.
 Defaults to current datetime, effectively showing products that are
 currently available.}
 
-\item{authenticate}{(boolean, default: FALSE) Use an \code{api_key} to
+\item{authenticate}{(boolean, default: FALSE) Use an `api_key` to
 authenticate. Only useful for organisations.}
 
 \item{api_key}{Your API key. If you are an Octopus Energy customer,
 you can generate an API key on the
-\href{https://octopus.energy/dashboard/developer/}{developer dashboard}.}
+[developer dashboard](https://octopus.energy/dashboard/developer/).}
 }
 \value{
-a \link[tibble:tibble-package]{tibble}
+a [tibble][tibble::tibble-package]
 }
 \description{
 By default, results will be public energy products but if
-authenticated organisations will also see products available to
-their organisation.
+ authenticated organisations will also see products available to
+ their organisation.
 }
 \examples{
 get_products(is_green = TRUE)
