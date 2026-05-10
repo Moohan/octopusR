@@ -13,6 +13,9 @@ concurrency:
 
 permissions: read-all
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   prereq:
     runs-on: ubuntu-latest
@@ -20,6 +23,7 @@ jobs:
       contents: write
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      OCTOPUSR_SECRET_KEY: ${{ secrets.OCTOPUSR_SECRET_KEY }}
     steps:
       - name: Harden the runner
         uses: step-security/harden-runner@8d3c67de8e2fe68ef647c8db1e6a09f647780f40 # v2.19.0
@@ -35,13 +39,15 @@ jobs:
       - name: Setup R
         uses: ./.github/actions/setup-r-env
         with:
-          extra-packages: any::roxygen2, any::devtools, any::desc, any::rmarkdown, any::codemetar
+          extra-packages: any::roxygen2, any::devtools, any::desc, any::rmarkdown, any::codemetar, any::knitr, any::spelling, any::vctrs, any::jsonlite, any::data.table, any::lubridate
           needs: check
 
+      - name: Install Air
+        uses: posit-dev/setup-air@cf390573ff4fe0f198f35df3a642b1409328d859 # v1
+
       - name: Style code
-        uses: posit-dev/air-action@cf390573ff4fe0f198f35df3a642b1409328d859 # v1
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+        run: air format .
+        shell: bash
 
       - name: Document package
         run: roxygen2::roxygenise()
@@ -66,6 +72,7 @@ jobs:
           git add .
           if ! git diff --cached --quiet; then
             git commit -m "chore: style, document, and normalize"
+            git_push_cmd="push"
             git push
           fi
 
