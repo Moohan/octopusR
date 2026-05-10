@@ -37,5 +37,5 @@ Config/testthat/start-first: get_consumption
 Encoding: UTF-8
 Language: en-GB
 LazyData: true
-Roxygen: list(markdown = TRUE)
+Config/roxygen2/markdown: true
 Config/roxygen2/version: 8.0.0
