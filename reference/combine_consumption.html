@@ -105,15 +105,7 @@ This is useful for users with solar panels or other export generation.</p>
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>a <a href="https://tibble.tidyverse.org/reference/tibble-package.html" class="external-link">tibble</a> with import_consumption,
-export_consumption, and net_consumption columns</p>
-    </div>
-    <div class="section level2">
-    <h2 id="note">Note<a class="anchor" aria-label="anchor" href="#note"></a></h2>
-    <p>Replacing NAs in vectors using logical indexing (e.g.,
-<code>x[is.na(x)] &lt;- 0</code>) provides a significant performance boost (~3-4x speedup
-and ~70% memory reduction) compared to <code>ifelse(is.na(x), 0, x)</code> in
-<code>combine_consumption</code>, as verified by <code>bench::mark()</code>.</p>
+    <p>a [tibble][tibble::tibble-package] with import_consumption, export_consumption, and net_consumption columns</p>
     </div>
 
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

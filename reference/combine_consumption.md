@@ -65,12 +65,5 @@ combine_consumption(
 
 ## Value
 
-a [tibble](https://tibble.tidyverse.org/reference/tibble-package.html)
-with import_consumption, export_consumption, and net_consumption columns
-
-## Note
-
-Replacing NAs in vectors using logical indexing (e.g.,
-`x[is.na(x)] <- 0`) provides a significant performance boost (~3-4x
-speedup and ~70% memory reduction) compared to `ifelse(is.na(x), 0, x)`
-in `combine_consumption`, as verified by `bench::mark()`.
+a \[tibble\]\[tibble::tibble-package\] with import_consumption,
+export_consumption, and net_consumption columns

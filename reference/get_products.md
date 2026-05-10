@@ -48,18 +48,18 @@ get_products(
 
 - authenticate:
 
-  (boolean, default: FALSE) Use an `api_key` to authenticate. Only
+  (boolean, default: FALSE) Use an \`api_key\` to authenticate. Only
   useful for organisations.
 
 - api_key:
 
   Your API key. If you are an Octopus Energy customer, you can generate
-  an API key on the [developer
-  dashboard](https://octopus.energy/dashboard/developer/).
+  an API key on the \[developer
+  dashboard\](https://octopus.energy/dashboard/developer/).
 
 ## Value
 
-a [tibble](https://tibble.tidyverse.org/reference/tibble-package.html)
+a \[tibble\]\[tibble::tibble-package\]
 
 ## Examples
 
