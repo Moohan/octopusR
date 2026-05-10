@@ -205,8 +205,7 @@ testing_meter <- function(meter_type = c("electricity", "gas")) {
 #' @param order_by Ordering of results returned
 #' @param group_by Aggregates consumption over a specified time period
 #'
-#' @return a [tibble][tibble::tibble-package] with import_consumption,
-#' export_consumption, and net_consumption columns
+#' @return a [tibble][tibble::tibble-package] with import_consumption, export_consumption, and net_consumption columns
 #' @export
 combine_consumption <- function(
   import_mpan = NULL,
@@ -316,16 +315,10 @@ combine_consumption <- function(
     )
 
     # Rename consumption columns
-    result$import_consumption <- ifelse(
-      is.na(result$consumption_import),
-      0,
-      result$consumption_import
-    )
-    result$export_consumption <- ifelse(
-      is.na(result$consumption_export),
-      0,
-      result$consumption_export
-    )
+    result$import_consumption <- result$consumption_import
+    result$import_consumption[is.na(result$import_consumption)] <- 0
+    result$export_consumption <- result$consumption_export
+    result$export_consumption[is.na(result$export_consumption)] <- 0
     result$consumption_import <- NULL
     result$consumption_export <- NULL
 
