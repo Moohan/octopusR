@@ -205,12 +205,7 @@ testing_meter <- function(meter_type = c("electricity", "gas")) {
 #' @param order_by Ordering of results returned
 #' @param group_by Aggregates consumption over a specified time period
 #'
-#' @return a [tibble][tibble::tibble-package] with import_consumption,
-#' export_consumption, and net_consumption columns
-#' @note Replacing NAs in vectors using logical indexing (e.g.,
-#' `x[is.na(x)] <- 0`) provides a significant performance boost (~3-4x speedup
-#' and ~70% memory reduction) compared to `ifelse(is.na(x), 0, x)` in
-#' `combine_consumption`, as verified by `bench::mark()`.
+#' @return a [tibble][tibble::tibble-package] with import_consumption, export_consumption, and net_consumption columns
 #' @export
 combine_consumption <- function(
   import_mpan = NULL,
