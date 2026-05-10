@@ -67,7 +67,11 @@ get_consumption <- function(
 
   # 1. Resolve meter details (Direct call for mockery stubbing)
   if (is.null(mpan_mprn) || is.null(serial_number)) {
-    meter_details <- get_meter_details(meter_type, direction)
+    meter_details <- get_meter_details(
+      meter_type,
+      direction,
+      include_gsp = FALSE
+    )
     mpan_mprn <- mpan_mprn %||% meter_details$mpan_mprn
     serial_number <- serial_number %||% meter_details$serial_number
   }
