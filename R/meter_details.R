@@ -180,12 +180,12 @@ testing_meter <- function(
       "sk_test_serial"
     )
 
+    # Maintain original structure for gas meters (no GSP field)
     structure(
       list(
         type = "gas",
         mpan_mprn = mprn,
-        serial_number = serial_number,
-        gsp = resolve_meter_gsp("gas", mprn, include_gsp)
+        serial_number = serial_number
       ),
       class = "octopus_meter-point"
     )
