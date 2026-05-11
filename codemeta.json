@@ -220,7 +220,7 @@
     },
     "SystemRequirements": null
   },
-  "fileSize": "56.964KB",
+  "fileSize": "57.568KB",
   "releaseNotes": "https://github.com/Moohan/octopusR/blob/main/NEWS.md",
   "readme": "https://github.com/Moohan/octopusR/blob/main/README.md",
   "contIntegration": ["https://github.com/Moohan/octopusR/actions/workflows/R-CMD-check.yaml", "https://app.codecov.io/gh/Moohan/octopusR?branch=main", "https://github.com/Moohan/octopusR/actions?query=workflow%3Apkgcheck"],
