@@ -39,7 +39,8 @@ combine_consumption(
 \item{group_by}{Aggregates consumption over a specified time period}
 }
 \value{
-a [tibble][tibble::tibble-package] with import_consumption, export_consumption, and net_consumption columns
+a [tibble][tibble::tibble-package] with import_consumption,
+export_consumption, and net_consumption columns
 }
 \description{
 Combine consumption data from import and export meters into a
