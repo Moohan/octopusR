@@ -1,15 +1,7 @@
-# Set the details for your gas/electricity meter
+# Set meter details
 
-Set the details for your gas/electricity meter. These will be stored as
-environment variables. You should add: \* \`OCTOPUSR_MPAN = \<electric
-MPAN\>\` (or \`OCTOPUSR_MPAN_IMPORT\`/ \`OCTOPUSR_MPAN_EXPORT\`) \*
-\`OCTOPUSR_MPRN = \<gas MPRN\>\` \* \`OCTOPUSR_ELEC_SERIAL_NUM =
-\<electric serial number\>\` (or
-\`OCTOPUSR_ELEC_SERIAL_NUM_IMPORT\`/\`OCTOPUSR_ELEC_SERIAL_NUM_EXPORT\`)
-\* \`OCTOPUSR_GAS_SERIAL_NUM = \<gas serial number\>\` to your
-\`.Renviron\` otherwise you will have to call this function every
-session. You can find your meter details (MPAN/MPRN and serial
-number(s)) on the \[developer
+Store your meter details in environment variables for the session. To
+find your meter details, check your \[Octopus Energy
 dashboard\](https://octopus.energy/dashboard/developer/).
 
 ## Usage

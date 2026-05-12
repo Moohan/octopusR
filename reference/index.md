@@ -13,4 +13,4 @@
 - [`set_api_key()`](https://moohan.github.io/octopusR/reference/set_api_key.md)
   : Set the Octopus API key
 - [`set_meter_details()`](https://moohan.github.io/octopusR/reference/set_meter_details.md)
-  : Set the details for your gas/electricity meter
+  : Set meter details
