@@ -16,17 +16,31 @@ permissions: read-all
 jobs:
   prereq:
     runs-on: ubuntu-latest
+   
+    container:
+      image: rocker/r-ver
+   
     permissions:
       contents: write
       pull-requests: write
+    
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       OCTOPUSR_SECRET_KEY: ${{ secrets.OCTOPUSR_SECRET_KEY }}
+    
     steps:
       - name: Harden the runner
         uses: step-security/harden-runner@v2
         with:
           egress-policy: audit
+
+      - name: Install git
+        run: |
+          apt-get update
+          DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends git
+
+      - name: Mark workspace as safe for Git
+        run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
 
       - name: Checkout repo
         uses: actions/checkout@v4
@@ -38,8 +52,18 @@ jobs:
       - name: Setup R
         uses: ./.github/actions/setup-r-env
         with:
-          extra-packages: any::roxygen2, any::devtools, any::desc, any::rmarkdown, any::codemetar, any::knitr, local::.
+          extra-packages: , local::.
           needs: check
+
+      - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          extra-packages: |
+            any::roxygen2
+            any::devtools
+            any::desc
+            any::rmarkdown
+            any::codemetar
+            any::knitr
 
       - name: Install Air
         uses: posit-dev/setup-air@v1
