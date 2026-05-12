@@ -16,30 +16,47 @@ permissions: read-all
 jobs:
   prereq:
     runs-on: ubuntu-latest
+    container:
+      image: rocker/r-ver
+   
     permissions:
       contents: write
       pull-requests: write
+    
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       OCTOPUSR_SECRET_KEY: ${{ secrets.OCTOPUSR_SECRET_KEY }}
+    
     steps:
       - name: Harden the runner
         uses: step-security/harden-runner@v2
         with:
           egress-policy: audit
 
+      - name: Install git
+        run: |
+          apt-get update
+          DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends git
+
+      - name: Mark workspace as safe for Git
+        run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
+
       - name: Checkout repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           fetch-depth: 0
           token: ${{ secrets.ACTIONS_TOKEN || github.token }}
           ref: ${{ github.head_ref || github.ref_name }}
 
-      - name: Setup R
-        uses: ./.github/actions/setup-r-env
+      - uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          extra-packages: any::roxygen2, any::devtools, any::desc, any::rmarkdown, any::codemetar, any::knitr, local::.
-          needs: check
+          extra-packages: |
+            any::roxygen2
+            any::devtools
+            any::desc
+            any::rmarkdown
+            any::codemetar
+            any::knitr
 
       - name: Install Air
         uses: posit-dev/setup-air@v1
@@ -95,6 +112,7 @@ jobs:
 
   check:
     needs: prereq
+    name: R-CMD-check – ${{ matrix.config.os }} (${{ matrix.config.r }})
     runs-on: ${{ matrix.config.os }}
     strategy:
       fail-fast: false
@@ -113,34 +131,53 @@ jobs:
         uses: step-security/harden-runner@v2
         with:
           egress-policy: audit
-      - uses: actions/checkout@v4
-      - uses: ./.github/actions/setup-r-env
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: r-lib/actions/setup-pandoc@a51a8012b0aab7c32ef9d19bf54da93f3254335e # v2.12.0
+      - uses: r-lib/actions/setup-r@a51a8012b0aab7c32ef9d19bf54da93f3254335e # v2.12.0
+        with:
+          r-version: ${{ matrix.config.r }}
+          http-user-agent: ${{ matrix.config.http-user-agent }}
+          use-public-rspm: true
+      - uses: r-lib/actions/setup-r-dependencies@a51a8012b0aab7c32ef9d19bf54da93f3254335e # v2.12.0
         with:
           extra-packages: any::rcmdcheck
           needs: check
-          r-version: ${{ matrix.config.r }}
-          http-user-agent: ${{ matrix.config.http-user-agent }}
-      - uses: r-lib/actions/check-r-package@v2
+      - uses: r-lib/actions/check-r-package@a51a8012b0aab7c32ef9d19bf54da93f3254335e # v2.12.0
         with:
           upload-snapshots: true
           build_args: 'c("--no-manual","--compact-vignettes=gs+qpdf")'
 
   coverage:
+    name: "Test coverage"
     needs: prereq
     runs-on: ubuntu-latest
+    container:
+      image: rocker/r-ver
+    
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       OCTOPUSR_SECRET_KEY: ${{ secrets.OCTOPUSR_SECRET_KEY }}
+      
     steps:
       - name: Harden the runner
         uses: step-security/harden-runner@v2
         with:
           egress-policy: audit
-      - uses: actions/checkout@v4
-      - uses: ./.github/actions/setup-r-env
+          
+      - name: Install required system packages
+        run: |
+          apt-get update
+          DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends git curl gpg
+    
+      - name: Checkout repo 
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Install R dependencies
+        uses: r-lib/actions/setup-r-dependencies@a51a8012b0aab7c32ef9d19bf54da93f3254335e # v2.12.0
         with:
           extra-packages: any::covr, any::xml2
           needs: coverage
+
       - name: Test coverage
         run: |
           cov <- covr::package_coverage(
@@ -150,16 +187,38 @@ jobs:
           )
           covr::to_cobertura(cov)
         shell: Rscript {0}
-      - uses: codecov/codecov-action@v5
+
+      - uses: codecov/codecov-action@57e3a136b779b570ffcdbf80b3bdc90e7fab3de2 # v6.0.0
         with:
+          # Fail if error if not on PR, or if on PR and token is given
           fail_ci_if_error: ${{ github.event_name != 'pull_request' || secrets.CODECOV_TOKEN }}
           files: ./cobertura.xml
+          plugins: noop
+          disable_search: true
           token: ${{ secrets.CODECOV_TOKEN }}
+
+      - name: Show testthat output
+        if: always()
+        run: |
+          ## --------------------------------------------------------------------
+          find '${{ runner.temp }}/package' -name 'testthat.Rout*' -exec cat '{}' \; || true
+        shell: bash
+
+      - name: Upload test results
+        if: failure()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: coverage-test-failures
+          path: ${{ runner.temp }}/package
 
   pkgdown:
     needs: [check, coverage]
     if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
     runs-on: ubuntu-latest
+    container:
+      image: rocker/r-ver
+    concurrency:
+      group: pkgdown
     permissions:
       contents: write
     env:
@@ -169,16 +228,30 @@ jobs:
         uses: step-security/harden-runner@v2
         with:
           egress-policy: audit
-      - uses: actions/checkout@v4
-      - uses: ./.github/actions/setup-r-env
+      - name: Install git and rsync
+        run: |
+          apt-get update
+          DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends git rsync
+   
+      - name: Checkout repo
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Setup Pandoc
+        uses: r-lib/actions/setup-pandoc@a51a8012b0aab7c32ef9d19bf54da93f3254335e # v2.12.0
+
+      - name: Install dependencies
+        uses: r-lib/actions/setup-r-dependencies@a51a8012b0aab7c32ef9d19bf54da93f3254335e # v2.12.0
         with:
           extra-packages: any::pkgdown, local::.
           needs: website
+
       - name: Build site
         run: pkgdown::build_site_github_pages(new_process = FALSE, install = FALSE)
         shell: Rscript {0}
-      - name: Deploy to GitHub pages
-        uses: JamesIves/github-pages-deploy-action@v4
+
+      - name: Deploy to GitHub pages 🚀
+        if: github.event_name != 'pull_request'
+        uses: JamesIves/github-pages-deploy-action@d92aa235d04922e8f08b40ce78cc5442fcfbfa2f # v4.8.0
         with:
           clean: false
           branch: gh-pages
