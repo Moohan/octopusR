@@ -49,12 +49,6 @@ jobs:
           token: ${{ secrets.ACTIONS_TOKEN || github.token }}
           ref: ${{ github.head_ref || github.ref_name }}
 
-      - name: Setup R
-        uses: ./.github/actions/setup-r-env
-        with:
-          extra-packages: , local::.
-          needs: check
-
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
           extra-packages: |
