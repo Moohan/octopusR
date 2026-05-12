@@ -15,6 +15,7 @@ Energy account with [my referral code
 octopusR can be installed from CRAN.
 
 ``` r
+
 install.packages("octopusR")
 ```
 
@@ -22,6 +23,7 @@ If you would like the development version, it can be installed from
 GitHub, using the [remotes](https://remotes.r-lib.org) package:
 
 ``` r
+
 # Install remotes if needed
 if (!require("remotes")) install.packages("remotes")
 remotes::install_github("moohan/octopusR")
@@ -37,6 +39,7 @@ your API key, you can use
 to interactively input and store the API key for the session:
 
 ``` r
+
 library(octopusR)
 
 # Set your API key
@@ -47,6 +50,7 @@ Once you have authenticated with the API, you may also want to set your
 electric and/or gas meter details.
 
 ``` r
+
 # Set details for your electricity meter
 set_meter_details(meter_type = "electricity")
 
@@ -60,6 +64,7 @@ For example, you can use the
 function to retrieve data about your energy usage:
 
 ``` r
+
 # Get data about your energy usage
 energy_usage <- get_consumption(meter_type = "elec")
 #> ℹ Returning 100 rows only as a date range wasn't provided.
