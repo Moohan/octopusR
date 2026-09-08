@@ -29,6 +29,5 @@ No return value, called for side effects.
 }
 \description{
 Store your meter details in environment variables for the
-session. To find your meter details, check your [Octopus Energy
-dashboard](https://octopus.energy/dashboard/developer/).
+session. To find your meter details, check your \href{https://octopus.energy/dashboard/developer/}{Octopus Energy dashboard}.
 }
