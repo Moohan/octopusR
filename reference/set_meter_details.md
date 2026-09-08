@@ -1,8 +1,8 @@
 # Set meter details
 
 Store your meter details in environment variables for the session. To
-find your meter details, check your \[Octopus Energy
-dashboard\](https://octopus.energy/dashboard/developer/).
+find your meter details, check your [Octopus Energy
+dashboard](https://octopus.energy/dashboard/developer/).
 
 ## Usage
 

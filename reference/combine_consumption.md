@@ -65,5 +65,5 @@ combine_consumption(
 
 ## Value
 
-a \[tibble\]\[tibble::tibble-package\] with import_consumption,
-export_consumption, and net_consumption columns
+a [tibble](https://tibble.tidyverse.org/reference/tibble-package.html)
+with import_consumption, export_consumption, and net_consumption columns

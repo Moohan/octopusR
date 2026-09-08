@@ -48,24 +48,24 @@ get_products(
 
 - authenticate:
 
-  (boolean, default: FALSE) Use an \`api_key\` to authenticate. Only
+  (boolean, default: FALSE) Use an `api_key` to authenticate. Only
   useful for organisations.
 
 - api_key:
 
   Your API key. If you are an Octopus Energy customer, you can generate
-  an API key on the \[developer
-  dashboard\](https://octopus.energy/dashboard/developer/).
+  an API key on the [developer
+  dashboard](https://octopus.energy/dashboard/developer/).
 
 ## Value
 
-a \[tibble\]\[tibble::tibble-package\]
+a [tibble](https://tibble.tidyverse.org/reference/tibble-package.html)
 
 ## Examples
 
 ``` r
 get_products(is_green = TRUE)
-#> # A tibble: 11 × 16
+#> # A tibble: 12 × 16
 #>    code        direction full_name display_name description is_variable is_green
 #>    <chr>       <chr>     <chr>     <chr>        <chr>       <lgl>       <lgl>   
 #>  1 AGILE-24-1… IMPORT    Agile Oc… Agile Octop… With Agile… TRUE        TRUE    
@@ -73,12 +73,13 @@ get_products(is_green = TRUE)
 #>  3 COOP-SEG-E… EXPORT    Co-op Sm… Co-op Smart… This is ou… FALSE       TRUE    
 #>  4 COOP-SEG-F… EXPORT    Co-op Sm… Co-op Smart… This is ou… FALSE       TRUE    
 #>  5 CP-12M-26-… IMPORT    Co-op Co… Co-op Commu… This fixed… FALSE       TRUE    
-#>  6 LP-SEG-EO-… EXPORT    my londo… my london s… This is ou… FALSE       TRUE    
-#>  7 LP-SEG-FIX… EXPORT    my londo… my london s… This is ou… FALSE       TRUE    
-#>  8 OUTGOING-P… EXPORT    Prime Ou… Prime Outgo… Two rate e… FALSE       TRUE    
-#>  9 OUTGOING-S… EXPORT    Octopus … Octopus Out… Outgoing S… FALSE       TRUE    
+#>  6 CP-18M-26-… IMPORT    Co-op Co… Co-op Commu… This fixed… FALSE       TRUE    
+#>  7 LP-SEG-EO-… EXPORT    my londo… my london s… This is ou… FALSE       TRUE    
+#>  8 LP-SEG-FIX… EXPORT    my londo… my london s… This is ou… FALSE       TRUE    
+#>  9 OUTGOING-P… EXPORT    Prime Ou… Prime Outgo… Two rate e… FALSE       TRUE    
 #> 10 OUTGOING-S… EXPORT    Octopus … Octopus Out… Outgoing S… FALSE       TRUE    
-#> 11 OUTGOING-V… EXPORT    Outgoing… Outgoing Oc… Outgoing O… TRUE        TRUE    
+#> 11 OUTGOING-S… EXPORT    Octopus … Octopus Out… Outgoing S… FALSE       TRUE    
+#> 12 OUTGOING-V… EXPORT    Outgoing… Outgoing Oc… Outgoing O… TRUE        TRUE    
 #> # ℹ 9 more variables: is_tracker <lgl>, is_prepay <lgl>, is_business <lgl>,
 #> #   is_restricted <lgl>, term <int>, available_from <chr>, available_to <lgl>,
 #> #   links <list>, brand <chr>
